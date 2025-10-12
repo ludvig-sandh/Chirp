@@ -48,7 +48,9 @@
 #include <vector>
 #include <cassert>
 #include <thread>
+
 #include "portaudio.h"
+#include "AudioPreset.h"
 
 #define NUM_SECONDS   (10)
 #define SAMPLE_RATE   (44100)
@@ -220,7 +222,12 @@ public:
 class Mixer
 {
 public:
-    Mixer() : stream(0), randomGen(Frequency(16)), sine(Frequency(2220.0)), lfo(Frequency(62.0))
+    Mixer(std::shared_ptr<AudioPreset> preset)
+        : stream(0)
+        , randomGen(Frequency(16))
+        , sine(Frequency(2220.0))
+        , lfo(Frequency(62.0))
+        , m_preset(preset)
     {
         sprintf( message, "No Message" );
     }
@@ -321,18 +328,19 @@ private:
         (void) statusFlags;
         (void) inputBuffer;
 
+        float volume = m_preset->volume.load();
+
         for( i=0; i<framesPerBuffer; i++ )
         {
             float lfoValue = lfo.getNextSample() * 50 - 0.5; // Shift to [-0.5, 0.5]
             float pitch = randomGen.getNextSample() * 64.0 + lfoValue;
             sine.frequency.setPitch(pitch);
-            float value = sine.getNextSample();
+            float value = sine.getNextSample() * volume;
             *out++ = value;  /* left */
             *out++ = value;  /* right */
         }
 
         return paContinue;
-
     }
 
     /* This routine will be called by the PortAudio engine when audio is needed.
@@ -371,6 +379,7 @@ private:
     RandomSignalGenerator randomGen;
     Sine sine;
     Saw lfo;
+    std::shared_ptr<AudioPreset> m_preset;
     char message[20];
 };
 
@@ -398,6 +407,11 @@ private:
 /*******************************************************************/
 class AudioEngine {
 public:
+    AudioEngine(std::shared_ptr<AudioPreset> preset)
+        : m_preset(preset)
+        , m_mixer(preset)
+    {}
+
     void Start(std::atomic<bool>& running) {
         printf("PortAudio Test: output wave. SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
 
@@ -421,5 +435,6 @@ public:
         }
     }
 private:
+    std::shared_ptr<AudioPreset> m_preset;
     Mixer m_mixer;
 };
