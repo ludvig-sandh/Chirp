@@ -4,11 +4,12 @@
 // Important to include GUIManager first since it includes all imgui-related headers.
 // They need to be included first in order not to cause any conflicts with preferred integral types.
 #include "GUIManager.cpp"
-#include "AudioEngine.cpp"
-#include "AudioPreset.h"
+#include "AudioEngine.hpp"
+#include "AudioPreset.hpp"
 
 #include <memory>
 #include <iostream>
+#include <thread>
 #include <atomic>
 
 class MainApplication {
