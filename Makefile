@@ -19,8 +19,10 @@ BUILD_DIR := build
 BIN_DIR := bin
 TARGET = $(BIN_DIR)/chirp
 
-IMGUI_DIR = src/external/imgui
 SRC_DIR = src
+AUDIO_DIR = src/audio
+GUI_DIR = src/gui
+IMGUI_DIR = src/external/imgui
 
 # Source files
 SRCS := $(IMGUI_DIR)/imgui.cpp \
@@ -30,6 +32,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(IMGUI_DIR)/imgui_widgets.cpp \
 		$(IMGUI_DIR)/backends/imgui_impl_glfw.cpp \
 		$(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp \
+		$(AUDIO_DIR)/AudioEngine.cpp \
 		src/main.cpp
 
 # Object files in build/, preserving directory structure
@@ -38,9 +41,9 @@ OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
-CXXFLAGS = -std=c++11 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
+CXXFLAGS = -std=c++23 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(SRC_DIR) -I$(AUDIO_DIR) -I$(GUI_DIR)
 CXXFLAGS += -g -Wall -Wformat
-LIBS =
+LIBS = -lportaudio
 
 ##---------------------------------------------------------------------
 ## OPENGL ES
@@ -87,6 +90,10 @@ endif
 
 # Default target
 all: $(TARGET)
+	@echo "Build complete for $(ECHO_MESSAGE)"
+
+debug: CXXFLAGS += -g -O0
+debug: $(TARGET)
 	@echo "Build complete for $(ECHO_MESSAGE)"
 
 # Link the main binary
