@@ -50,60 +50,13 @@
 #include <thread>
 #include <unordered_set>
 
+#include "portaudio.h"
 #include "AudioEngine.hpp"
 #include "AudioBackend.hpp"
 #include "Frequency.hpp"
 #include "AudioPreset.hpp"
-#include "portaudio.h"
-
-
-// class RandomSignalGenerator {
-// public:
-//     RandomSignalGenerator(Frequency freq) {
-//         numSamplesPerPeriod = SAMPLE_RATE / freq.getAbsolute();
-//         generateRandValueHelper();
-//         lastRandValue = generateRandValueHelper();
-//         nextRandValue = generateRandValueHelper();
-//     }
-
-//     float getNextSample() {
-//         float t = static_cast<float>(sampleCount) / numSamplesPerPeriod;
-//         float toReturn = cubicInterpolate(lastRandValue, nextRandValue, t);
-
-//         sampleCount++;
-//         if (sampleCount == numSamplesPerPeriod) {
-//             sampleCount = 0;
-//             lastRandValue = nextRandValue;
-//             nextRandValue = generateRandValueHelper();
-//         }
-
-//         return toReturn;
-//     }
-// private:
-//     float generateRandValueHelper() {
-//         return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-//     }
-
-//     // Simple cubic Hermite interpolation between y0 and y1
-//     // t = fraction [0,1]
-//     // Optional tangents m0 and m1; default to 0 for simple smoothness
-//     float cubicInterpolate(float y0, float y1, float t, float m0 = 0.0, float m1 = 0.0) {
-//         float t2 = t * t;
-//         float t3 = t2 * t;
-
-//         float h00 = 2*t3 - 3*t2 + 1;
-//         float h10 = t3 - 2*t2 + t;
-//         float h01 = -2*t3 + 3*t2;
-//         float h11 = t3 - t2;
-
-//         return h00*y0 + h10*m0 + h01*y1 + h11*m1;
-//     }
-
-//     float lastRandValue;
-//     float nextRandValue;
-//     int sampleCount = 0;
-//     int numSamplesPerPeriod;
-// };
+#include "Oscillator.hpp"
+#include "Waveform.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset)
     : m_preset(preset)
@@ -144,9 +97,10 @@ void AudioEngine::Start(std::atomic<bool>& running) {
 
 void AudioEngine::InitAudioProcessorTree() {
     // TODO: Read configuration from file?
-    m_rootProcessor = std::make_shared<Sine>(Frequency(440));
+    std::shared_ptr<Waveform> sine = std::make_shared<Sine>();
+    m_rootProcessor = std::make_shared<Oscillator>(sine, Frequency(440));
 
     m_rootProcessor->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        dynamic_cast<Waveform *>(self)->targetVolume = preset.volume.load();
+        dynamic_cast<Generator *>(self)->targetVolume = preset.volume.load();
     });
 }

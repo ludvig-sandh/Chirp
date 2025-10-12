@@ -32,10 +32,15 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(IMGUI_DIR)/imgui_widgets.cpp \
 		$(IMGUI_DIR)/backends/imgui_impl_glfw.cpp \
 		$(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp \
-		$(AUDIO_DIR)/AudioEngine.cpp \
 		$(AUDIO_DIR)/AudioBackend.cpp \
+		$(AUDIO_DIR)/AudioEngine.cpp \
 		$(AUDIO_DIR)/AudioProcessor.cpp \
+		$(AUDIO_DIR)/Envelope.cpp \
 		$(AUDIO_DIR)/Frequency.cpp \
+		$(AUDIO_DIR)/Generator.cpp \
+		$(AUDIO_DIR)/Oscillator.cpp \
+		$(AUDIO_DIR)/RandomLFO.cpp \
+		$(AUDIO_DIR)/Waveform.cpp \
 		$(GUI_DIR)/GUIManager.cpp \
 		src/main.cpp
 
