@@ -7,7 +7,7 @@ class Generator : public AudioProcessor {
 public:
     virtual ~Generator() = default;
 
-    void ProcessImpl(const AudioBuffer &buffer) override;
+    void ProcessFrame(AudioBufferFrame& frame) override;
 
     // Computes the next sample in the signal to generate
     virtual float GetNextSample() = 0;

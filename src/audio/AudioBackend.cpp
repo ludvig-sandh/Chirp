@@ -10,9 +10,6 @@
 
 AudioBackend::AudioBackend(AudioEngine *engine)
     : stream(0)
-    // , randomGen(Frequency(16))
-    // , sine(Frequency(2220.0))
-    // , lfo(Frequency(62.0))
     , m_engine(engine)
 {
     sprintf( message, "No Message" );
@@ -113,18 +110,6 @@ int AudioBackend::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
     buffer.statusFlags = &statusFlags;
 
     m_engine->ProcessBuffer(buffer);
-
-    // float volume = m_preset->volume.load();
-
-    // for( i=0; i<framesPerBuffer; i++ )
-    // {
-    //     float lfoValue = lfo.getNextSample() * 50 - 0.5; // Shift to [-0.5, 0.5]
-    //     float pitch = randomGen.getNextSample() * 64.0 + lfoValue;
-    //     sine.frequency.setPitch(pitch);
-    //     float value = sine.getNextSample() * volume;
-    //     *out++ = value;  /* left */
-    //     *out++ = value;  /* right */
-    // }
 
     return paContinue;
 }

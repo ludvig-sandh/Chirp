@@ -2,11 +2,10 @@
 
 #include "LFO.hpp"
 #include "Frequency.hpp"
-#include "AudioEngine.hpp"
 
-class RandomSignalGenerator: LFO {
+class RandomLFO: public LFO {
 public:
-    RandomSignalGenerator(Frequency freq);
+    RandomLFO(Frequency freq);
 
     float GetNextSample() override;
 

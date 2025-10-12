@@ -8,6 +8,7 @@
 
 #include "Frequency.hpp"
 #include "AudioBackend.hpp"
+#include "LFO.hpp"
 
 // Represents a node in a tree showing how audio is routed throughout the engine.
 class AudioProcessor {
@@ -18,13 +19,16 @@ public:
     void AddChild(std::shared_ptr<AudioProcessor> child);
 
     void SetCallbackForReadingPreset(std::function<void(AudioProcessor *, const AudioPreset&)> callback);
+    void AddLFO(std::shared_ptr<LFO> lfo);
+    virtual void ClearModulations() {};
 
     void Process(const AudioBuffer& buffer, const AudioPreset& preset);
 
-    virtual void ProcessImpl(const AudioBuffer &buffer) = 0;
+    virtual void ProcessFrame(AudioBufferFrame& frame) = 0;
 
 private:
     std::unordered_set<std::shared_ptr<AudioProcessor>> m_children;
+    std::unordered_set<std::shared_ptr<LFO>> m_lfos;
     std::optional<std::function<void(AudioProcessor *, const AudioPreset&)>> m_presetCallback;
 };
 

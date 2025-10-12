@@ -19,6 +19,13 @@ struct AudioBuffer {
     const PaStreamCallbackFlags *statusFlags;
 };
 
+struct AudioBufferFrame {
+    const float * inputFrame;
+    float *outputFrame; // Only supposed to write to this
+    unsigned long framesPerBuffer;
+    unsigned long frameIdx;
+};
+
 class ScopedPaHandler
 {
 public:

@@ -57,6 +57,7 @@
 #include "AudioPreset.hpp"
 #include "Oscillator.hpp"
 #include "Waveform.hpp"
+#include "RandomLFO.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset)
     : m_preset(preset)
@@ -98,9 +99,29 @@ void AudioEngine::Start(std::atomic<bool>& running) {
 void AudioEngine::InitAudioProcessorTree() {
     // TODO: Read configuration from file?
     std::shared_ptr<Waveform> sine = std::make_shared<Sine>();
-    m_rootProcessor = std::make_shared<Oscillator>(sine, Frequency(440));
+    std::shared_ptr<Waveform> saw = std::make_shared<Saw>();
+    std::shared_ptr<Waveform> sq = std::make_shared<Square>();
+    std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(sine, Frequency(2220));
 
-    m_rootProcessor->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
+    std::shared_ptr<LFO> rnd = std::make_shared<RandomLFO>(Frequency(16));
+    rnd->callback = [](LFO *lfo, AudioProcessor *ap) {
+        Oscillator *osc = dynamic_cast<Oscillator *>(ap);
+        osc->frequency.AddPitchModulation(lfo->GetNextSample() * 64);
+    };
+
+    std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(sine, Frequency(62));
+    vibrato->callback = [](LFO *lfo, AudioProcessor *ap) {
+        Oscillator *osc = dynamic_cast<Oscillator *>(ap);
+        osc->frequency.AddPitchModulation(lfo->GetNextSample() - 0.5);
+    };
+
+    sineOsc->AddLFO(rnd); // Connect the rnd LFO to the sine oscillator
+    sineOsc->AddLFO(vibrato);
+
+    sineOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         dynamic_cast<Generator *>(self)->targetVolume = preset.volume.load();
     });
+
+    // Set root
+    m_rootProcessor = sineOsc;
 }

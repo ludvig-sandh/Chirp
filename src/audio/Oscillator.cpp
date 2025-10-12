@@ -1,6 +1,10 @@
 #include "Oscillator.hpp"
 #include "AudioEngine.hpp"
 
+void Oscillator::ClearModulations() {
+    frequency.ClearModulations();
+}
+
 float Oscillator::GetNextSample() {
     float dt = 1.0 / SAMPLE_RATE;
     m_timeSinceStart += dt;

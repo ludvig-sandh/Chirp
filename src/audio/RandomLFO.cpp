@@ -1,13 +1,14 @@
 #include "RandomLFO.hpp"
+#include "AudioEngine.hpp"
 
-RandomSignalGenerator::RandomSignalGenerator(Frequency freq) {
+RandomLFO::RandomLFO(Frequency freq) {
     numSamplesPerPeriod = SAMPLE_RATE / freq.GetAbsolute();
     GenerateRandValueHelper();
     lastRandValue = GenerateRandValueHelper();
     nextRandValue = GenerateRandValueHelper();
 }
 
-float RandomSignalGenerator::GetNextSample() {
+float RandomLFO::GetNextSample() {
     float t = static_cast<float>(sampleCount) / numSamplesPerPeriod;
     float toReturn = CubicInterpolate(lastRandValue, nextRandValue, t);
 
@@ -21,11 +22,11 @@ float RandomSignalGenerator::GetNextSample() {
     return toReturn;
 }
 
-float RandomSignalGenerator::GenerateRandValueHelper() {
+float RandomLFO::GenerateRandValueHelper() {
     return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
 
-float RandomSignalGenerator::CubicInterpolate(float y0, float y1, float t, float m0, float m1) {
+float RandomLFO::CubicInterpolate(float y0, float y1, float t, float m0, float m1) {
     float t2 = t * t;
     float t3 = t2 * t;
 
