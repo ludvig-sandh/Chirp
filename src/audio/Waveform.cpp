@@ -4,7 +4,7 @@
 #include <cmath>
 
 float Sine::GetSampleAt(float currentOffset) {
-    return std::sin(currentOffset * 2.0 * M_PI);
+    return std::sin(currentOffset * 2.0 * M_PI) / 2.0 + 0.5; // Shift to [0, 1] interval
 }
 
 float Square::GetSampleAt(float currentOffset) {
