@@ -147,6 +147,6 @@ void AudioEngine::InitAudioProcessorTree() {
     m_rootProcessor = std::make_shared<Sine>(Frequency(440));
 
     m_rootProcessor->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        dynamic_cast<Waveform *>(self)->outputVolume = preset.volume.load();
+        dynamic_cast<Waveform *>(self)->targetVolume = preset.volume.load();
     });
 }

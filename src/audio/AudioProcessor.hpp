@@ -69,7 +69,8 @@ public:
     virtual float GetNextSampleImpl(float currentOffset) = 0;
 
     Frequency frequency;
-    float outputVolume = 1.0;
+    float currentVolume = 0.0; // Rather smooth from 0 to selected volume than from full volume (click sound at startup)
+    float targetVolume = 1.0;
 
 private:
     float m_currentOffset = 0.0;
