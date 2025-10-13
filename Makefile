@@ -119,4 +119,4 @@ clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
 
 # Phony targets
-.PHONY: all clean
+.PHONY: all debug clean
