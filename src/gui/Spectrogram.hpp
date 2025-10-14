@@ -18,6 +18,8 @@ public:
     // create texture once. Must be done after GL context has been initialized
     void InitTexture();
 
+    void ReallocateTexture();
+
 private:
     // Dimensions of spectrogram
     static const int FFT_SIZE = 512;
@@ -26,5 +28,6 @@ private:
 
     GLuint m_spectrogramTex = 0;
     int m_currentColumn = 0;
+    int m_specHeight = 0; // dynamically set from magnitudes.size()
     std::vector<std::vector<float>> m_magnitudeHistory;
 };
