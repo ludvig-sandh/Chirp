@@ -43,6 +43,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(AUDIO_DIR)/Waveform.cpp \
 		$(AUDIO_DIR)/Mixer.cpp \
 		$(GUI_DIR)/GUIManager.cpp \
+		$(GUI_DIR)/Spectrogram.cpp \
 		src/main.cpp
 
 # Object files in build/, preserving directory structure

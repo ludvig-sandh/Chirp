@@ -11,6 +11,7 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #include "AudioPreset.hpp"
+#include "Spectrogram.hpp"
 
 #include <memory>
 #include <iostream>
@@ -35,6 +36,7 @@ private:
     std::shared_ptr<AudioPreset> m_preset;
     GLFWwindow *m_window;
     ImGuiIO *m_io;
+    Spectrogram m_spectrogram;
 
     // Background color
     static inline ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

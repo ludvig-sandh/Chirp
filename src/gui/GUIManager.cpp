@@ -10,6 +10,9 @@ GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset) : m_preset(preset) {
         std::cerr << "Couldn't initialize window\n";
         exit(0);
     }
+
+    // Now that the GL context and window has been initialized
+    m_spectrogram.InitTexture();
 }
 
 GUIManager::~GUIManager() {
@@ -38,8 +41,6 @@ void GUIManager::RunMainLoop() {
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            static int counter = 0;
-
             ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
@@ -48,10 +49,9 @@ void GUIManager::RunMainLoop() {
             ImGui::SliderFloat("Volume", &volumeTemp, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             m_preset->volume.store(volumeTemp);
 
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
+            std::vector<float> test(256, 1.0);
+            m_spectrogram.PushColumn(test);
+            m_spectrogram.Show();
 
             float framerate = m_io->Framerate;
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
