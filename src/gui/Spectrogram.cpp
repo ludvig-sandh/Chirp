@@ -47,7 +47,7 @@ void Spectrogram::Show() {
 
     ImGui::Begin("Spectrogram");
     ImGui::Image((ImTextureID)(intptr_t)m_spectrogramTex,
-                 ImVec2(SPEC_WIDTH, m_specHeight));
+                 ImVec2(SPEC_WIDTH, SPEC_HEIGHT));
     ImGui::End();
 }
 
