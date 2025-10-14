@@ -111,6 +111,11 @@ int AudioBackend::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
 
     m_engine->ProcessBuffer(buffer);
 
+    // Temporary fix for reducing the way too loud volume
+    for (unsigned long i = 0; i < framesPerBuffer * 2; i++) {
+        ((float*)outputBuffer)[i] *= 0.5;
+    }
+
     return paContinue;
 }
 

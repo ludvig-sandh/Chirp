@@ -1,6 +1,7 @@
 #include "Waveform.hpp"
 #include "AudioEngine.hpp"
 
+#include <random>
 #include <cmath>
 
 float Sine::GetSampleAt(float currentOffset) {
@@ -13,4 +14,9 @@ float Square::GetSampleAt(float currentOffset) {
 
 float Saw::GetSampleAt(float currentOffset) {
     return currentOffset;
+}
+
+float WhiteNoise::GetSampleAt(float currentOffset) {
+    // Generate a random sample in range [0.0, 1.0]
+    return m_dist(m_gen);
 }

@@ -41,6 +41,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(AUDIO_DIR)/Oscillator.cpp \
 		$(AUDIO_DIR)/RandomLFO.cpp \
 		$(AUDIO_DIR)/Waveform.cpp \
+		$(AUDIO_DIR)/Mixer.cpp \
 		$(GUI_DIR)/GUIManager.cpp \
 		src/main.cpp
 

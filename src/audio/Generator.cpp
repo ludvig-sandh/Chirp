@@ -6,6 +6,6 @@ void Generator::ProcessFrame(AudioBufferFrame& frame) {
 
     currentVolume += volumeStep;
     float value = GetNextSample() * currentVolume;
-    *frame.outputFrame = value;     /* left */
-    *(frame.outputFrame + 1) = value; /* right */
+    *frame.outputFrame += value;     /* left */
+    *(frame.outputFrame + 1) += value; /* right */
 }

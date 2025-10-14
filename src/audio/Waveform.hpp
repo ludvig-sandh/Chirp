@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Frequency.hpp"
+#include <random>
 
 // Base class for representing waveforms, such as sine waves or more complex waves  
 class Waveform {
@@ -22,4 +23,13 @@ public:
 class Saw final : public Waveform {
 public:
     float GetSampleAt(float offset) override;
+};
+
+class WhiteNoise final : public Waveform {
+public:
+    WhiteNoise() : m_gen(1337), m_dist(0.0, 1.0) {}
+    float GetSampleAt(float offset) override;
+private:
+    std::mt19937 m_gen;
+    std::uniform_real_distribution<float> m_dist;
 };

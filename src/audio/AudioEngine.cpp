@@ -15,6 +15,7 @@
 #include "Oscillator.hpp"
 #include "Waveform.hpp"
 #include "RandomLFO.hpp"
+#include "Mixer.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset)
     : m_preset(preset)
@@ -58,7 +59,11 @@ void AudioEngine::InitAudioProcessorTree() {
     std::shared_ptr<Waveform> sine = std::make_shared<Sine>();
     std::shared_ptr<Waveform> saw = std::make_shared<Saw>();
     std::shared_ptr<Waveform> sq = std::make_shared<Square>();
+    std::shared_ptr<Waveform> noise = std::make_shared<WhiteNoise>();
     std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(sine, Frequency(2220));
+    std::shared_ptr<AudioProcessor> sawOsc = std::make_shared<Oscillator>(saw, Frequency(555));
+    std::shared_ptr<AudioProcessor> noiseOsc = std::make_shared<Oscillator>(noise, Frequency(555));
+    std::shared_ptr<AudioProcessor> mixer = std::make_shared<Mixer>();
 
     std::shared_ptr<LFO> rnd = std::make_shared<RandomLFO>(Frequency(16));
     rnd->callback = [](LFO *lfo, AudioProcessor *ap) {
@@ -75,10 +80,14 @@ void AudioEngine::InitAudioProcessorTree() {
     sineOsc->AddLFO(rnd); // Connect the rnd LFO to the sine oscillator
     sineOsc->AddLFO(vibrato);
 
-    sineOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        dynamic_cast<Generator *>(self)->targetVolume = preset.volume.load();
+    mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
+        dynamic_cast<Mixer *>(self)->targetGain = preset.volume.load();
     });
 
+    mixer->AddChild(sineOsc);
+    mixer->AddChild(noiseOsc);
+    dynamic_cast<Oscillator *>(noiseOsc.get())->targetVolume = 0.2;
+
     // Set root
-    m_rootProcessor = sineOsc;
+    m_rootProcessor = mixer;
 }
