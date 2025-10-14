@@ -24,6 +24,7 @@ AUDIO_DIR = src/audio
 GUI_DIR = src/gui
 HELPER_DIR = src/helper
 FFT_DIR = src/fft
+EXT_DIR = src/external
 IMGUI_DIR = src/external/imgui
 
 # Source files
@@ -47,6 +48,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(GUI_DIR)/GUIManager.cpp \
 		$(GUI_DIR)/Spectrogram.cpp \
 		$(FFT_DIR)/FFTComputer.cpp \
+		$(FFT_DIR)/FFTHelper.cpp \
 		src/main.cpp
 
 # Object files in build/, preserving directory structure
@@ -55,7 +57,7 @@ OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
-CXXFLAGS = -std=c++23 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(SRC_DIR) -I$(AUDIO_DIR) -I$(GUI_DIR) -I$(HELPER_DIR) -I$(FFT_DIR)
+CXXFLAGS = -std=c++23 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(SRC_DIR) -I$(AUDIO_DIR) -I$(GUI_DIR) -I$(HELPER_DIR) -I$(FFT_DIR) -I$(EXT_DIR)
 CXXFLAGS += -g -Wall -Wformat
 LIBS = -lportaudio
 

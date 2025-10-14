@@ -41,8 +41,6 @@ void AudioEngine::ProcessBuffer(const AudioBuffer &buffer) {
 }
 
 void AudioEngine::Start(std::atomic<bool>& running) {
-    printf("PortAudio Test: output wave. SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
-
     ScopedPaHandler paInit;
     if (paInit.result() != paNoError) {
         std::cerr << "An error occurred while using the portaudio stream\n";
@@ -81,13 +79,15 @@ void AudioEngine::InitAudioProcessorTree() {
         osc->frequency.AddPitchModulation(lfo->GetNextSample() * 64);
     };
 
-    std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(sine, Frequency(62));
+    // std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(saw, Frequency(62));
+    std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(saw, Frequency(0.5));
     vibrato->callback = [](LFO *lfo, AudioProcessor *ap) {
         Oscillator *osc = dynamic_cast<Oscillator *>(ap);
-        osc->frequency.AddPitchModulation(lfo->GetNextSample() - 0.5);
+        // osc->frequency.AddPitchModulation(lfo->GetNextSample() - 0.5);
+        osc->frequency.AddPitchModulation(60 * lfo->GetNextSample() - 12);
     };
 
-    sineOsc->AddLFO(rnd); // Connect the rnd LFO to the sine oscillator
+    // sineOsc->AddLFO(rnd); // Connect the rnd LFO to the sine oscillator
     sineOsc->AddLFO(vibrato);
 
     mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
@@ -95,7 +95,7 @@ void AudioEngine::InitAudioProcessorTree() {
     });
 
     mixer->AddChild(sineOsc);
-    mixer->AddChild(noiseOsc);
+    // mixer->AddChild(noiseOsc);
     dynamic_cast<Oscillator *>(noiseOsc.get())->targetVolume = 0.2;
 
     // Set root

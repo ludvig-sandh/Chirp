@@ -23,11 +23,9 @@ public:
 
 private:
     void StoreNewResult(std::shared_ptr<std::vector<float>> result);
-    static std::shared_ptr<std::vector<float>> FFTHelper(std::vector<float>& window);
 
     ProducerConsumer<std::vector<float>> m_producerConsumer;
 
-    static const size_t s_fftSize = 1024;
     std::vector<float> m_fftBuffer;
 
     // Lock free way to regularly update a result while another thread is reading it

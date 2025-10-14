@@ -4,7 +4,6 @@
 #include <optional>
 #include <mutex>
 #include <condition_variable>
-#include <iostream>
 
 // A bounded buffer but for just one item rather than a buffer.
 template <typename T>
