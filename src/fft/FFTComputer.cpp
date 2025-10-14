@@ -36,13 +36,15 @@ void FFTComputer::Start(std::atomic<bool>& running) {
             continue;
         }
 
-        // Extend fft buffer with the new audio
+        // Extend fft buffer with the new audio chunk
         m_fftBuffer.reserve(m_fftBuffer.size() + distance(audioToExtend->begin(), audioToExtend->end()));
         m_fftBuffer.insert(m_fftBuffer.end(), audioToExtend->begin(), audioToExtend->end());
 
-        if (m_fftBuffer.size() > 0) {
-            std::shared_ptr<std::vector<float>> fft_magnitude = FFTHelper::ComputeFFTMagnitude(m_fftBuffer);
-            m_fftBuffer.clear(); // Clear window
+        if (m_fftBuffer.size() > 1024) {
+            std::shared_ptr<std::vector<float>> fft_magnitude = FFTHelper::ComputeFFTMagnitudeDB(m_fftBuffer);
+
+            // Pop oldest audio chunk from the fft buffer
+            m_fftBuffer.erase(m_fftBuffer.begin(), m_fftBuffer.begin() + audioToExtend->size());
             StoreNewResult(fft_magnitude);
         }
     }
