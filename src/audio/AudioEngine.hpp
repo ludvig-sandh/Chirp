@@ -6,6 +6,7 @@
 #include "AudioBackend.hpp"
 #include "AudioPreset.hpp"
 #include "AudioProcessor.hpp"
+#include "FFTComputer.hpp"
 
 #define NUM_SECONDS   (10)
 #define SAMPLE_RATE   (44100)
@@ -19,7 +20,7 @@
 
 class AudioEngine {
 public:
-    AudioEngine(std::shared_ptr<AudioPreset> preset);
+    AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
 
     // Recurse from the root of the tree
     void ProcessBuffer(const AudioBuffer &buffer);
@@ -29,6 +30,7 @@ private:
     void InitAudioProcessorTree();
 
     std::shared_ptr<AudioPreset> m_preset;
+    std::shared_ptr<FFTComputer> m_fftComputer;
     AudioBackend m_backend;
     std::shared_ptr<AudioProcessor> m_rootProcessor;
 };

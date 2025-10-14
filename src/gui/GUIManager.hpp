@@ -12,6 +12,7 @@
 
 #include "AudioPreset.hpp"
 #include "Spectrogram.hpp"
+#include "FFTComputer.hpp"
 
 #include <memory>
 #include <iostream>
@@ -20,7 +21,7 @@
 // RAII class for managing the GLFW window
 class GUIManager {
 public:
-    GUIManager(std::shared_ptr<AudioPreset> preset);
+    GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
 
     ~GUIManager();
 
@@ -34,6 +35,8 @@ private:
     void DeinitAux();
 
     std::shared_ptr<AudioPreset> m_preset;
+    std::shared_ptr<FFTComputer> m_fftComputer;
+
     GLFWwindow *m_window;
     ImGuiIO *m_io;
     Spectrogram m_spectrogram;

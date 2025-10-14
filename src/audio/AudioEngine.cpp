@@ -17,8 +17,9 @@
 #include "RandomLFO.hpp"
 #include "Mixer.hpp"
 
-AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset)
+AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
+    , m_fftComputer(fftComputer)
     , m_backend(this)
 {
     InitAudioProcessorTree();
@@ -28,6 +29,14 @@ AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset)
 void AudioEngine::ProcessBuffer(const AudioBuffer &buffer) {
     if (m_rootProcessor) {
         m_rootProcessor->Process(buffer, *m_preset.get());
+
+        // Temporary fix for reducing the way too loud volume
+        for (unsigned long i = 0; i < buffer.framesPerBuffer * 2; i++) {
+            ((float*)buffer.outputBuffer)[i] *= 0.5;
+        }
+
+        // Send buffer to FFT thread
+        m_fftComputer->ProvideAudioBuffer(buffer);
     }
 }
 
@@ -48,10 +57,11 @@ void AudioEngine::Start(std::atomic<bool>& running) {
             }
             m_backend.stop();
         }
-
+        
         m_backend.close();
         printf("Audio stopped.\n");
     }
+    m_fftComputer->FinishedProducing();
 }
 
 void AudioEngine::InitAudioProcessorTree() {

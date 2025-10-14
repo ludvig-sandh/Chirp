@@ -12,7 +12,7 @@ AudioBackend::AudioBackend(AudioEngine *engine)
     : stream(0)
     , m_engine(engine)
 {
-    sprintf( message, "No Message" );
+    // sprintf( message, "No Message" );
 }
 
 bool AudioBackend::open(PaDeviceIndex index)
@@ -27,7 +27,7 @@ bool AudioBackend::open(PaDeviceIndex index)
     const PaDeviceInfo* pInfo = Pa_GetDeviceInfo(index);
     if (pInfo != 0)
     {
-        printf("Output device name: '%s'\r", pInfo->name);
+        // printf("Output device name: '%s'\r", pInfo->name);
     }
 
     outputParameters.channelCount = 2;       /* stereo output */
@@ -111,11 +111,6 @@ int AudioBackend::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
 
     m_engine->ProcessBuffer(buffer);
 
-    // Temporary fix for reducing the way too loud volume
-    for (unsigned long i = 0; i < framesPerBuffer * 2; i++) {
-        ((float*)outputBuffer)[i] *= 0.5;
-    }
-
     return paContinue;
 }
 
@@ -135,7 +130,7 @@ int AudioBackend::paCallback( const void *inputBuffer, void *outputBuffer,
 
 void AudioBackend::paStreamFinishedMethod()
 {
-    printf( "Stream Completed: %s\n", message );
+    // printf( "Stream Completed: %s\n", message );
 }
 
 void AudioBackend::paStreamFinished(void* userData)
