@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
+#include "LevelsHistory.hpp"
 #include <vector>
 #include <array>
 #include <utility>
@@ -29,7 +30,11 @@ private:
     static const size_t maxVolumeBars = s_texHeight - 2; // Leave 1 pixel gap on top and bottom
 
     static const std::array<unsigned char, 3> s_bgColor;
+    static const std::array<unsigned char, 3> s_secondaryColor;
     static const std::array<unsigned char, 3> s_highlightColor;
+
+    LevelsHistory m_leftHistory;
+    LevelsHistory m_rightHistory;
 
     GLuint m_levelsTex = 0;
 };

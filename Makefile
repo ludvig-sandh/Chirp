@@ -48,6 +48,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(GUI_DIR)/GUIManager.cpp \
 		$(GUI_DIR)/Spectrogram.cpp \
 		$(GUI_DIR)/LevelsDisplay.cpp \
+		$(GUI_DIR)/LevelsHistory.cpp \
 		$(FFT_DIR)/FFTComputer.cpp \
 		$(FFT_DIR)/FFTHelper.cpp \
 		src/main.cpp
