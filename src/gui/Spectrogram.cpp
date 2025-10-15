@@ -40,7 +40,6 @@ void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
                     GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
 }
 
-// render in imgui
 void Spectrogram::Show() {
     if (m_specHeight == 0) return;
 
@@ -65,8 +64,8 @@ void Spectrogram::ReallocateTexture() {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
                  m_specWidth, m_specHeight, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
 void Spectrogram::MagnitudeToRGB(float mag, unsigned char& r, unsigned char& g, unsigned char& b)

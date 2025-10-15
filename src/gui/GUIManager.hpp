@@ -13,6 +13,7 @@
 #include "AudioPreset.hpp"
 #include "Spectrogram.hpp"
 #include "FFTComputer.hpp"
+#include "LevelsDisplay.hpp"
 
 #include <memory>
 #include <iostream>
@@ -40,6 +41,7 @@ private:
     GLFWwindow *m_window;
     ImGuiIO *m_io;
     Spectrogram m_spectrogram;
+    LevelsDisplay m_levelsDisplay;
 
     // Background color
     static inline ImVec4 clear_color = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);

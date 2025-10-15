@@ -5,10 +5,12 @@
 #include <vector>
 #include <memory>
 #include <mutex>
+#include <utility>
 
 class FFTComputer {
 public:
-    std::shared_ptr<std::vector<float>> GetLastResult() const;
+    std::shared_ptr<std::vector<float>> GetLastFFTResult() const;
+    std::shared_ptr<std::pair<float, float>> GetLastAudioLevels() const;
 
     // Called by audio thread to produce audio data
     void ProvideAudioBuffer(const AudioBuffer& buffer);
@@ -20,7 +22,8 @@ public:
     void FinishedProducing();
 
 private:
-    void StoreNewResult(std::shared_ptr<std::vector<float>> result);
+    void StoreNewFFTResult(std::shared_ptr<std::vector<float>> result);
+    void StoreNewAudioLevels(std::pair<float, float> levels);
 
     ProducerConsumer<std::vector<float>> m_producerConsumer;
 
@@ -28,6 +31,7 @@ private:
 
     // Lock free way to regularly update a result while another thread is reading it
     std::atomic<std::shared_ptr<std::vector<float>>> m_lastResult;
+    std::atomic<std::shared_ptr<std::pair<float, float>>> m_lastAudioLevels;
 
     std::mutex m_resultMtx;
 };

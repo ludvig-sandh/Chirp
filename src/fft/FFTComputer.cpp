@@ -4,12 +4,20 @@
 #include <cassert>
 #include <iostream>
 
-std::shared_ptr<std::vector<float>> FFTComputer::GetLastResult() const {
+std::shared_ptr<std::vector<float>> FFTComputer::GetLastFFTResult() const {
     return m_lastResult.load(std::memory_order_acquire);
 }
 
-void FFTComputer::StoreNewResult(std::shared_ptr<std::vector<float>> result) {
+std::shared_ptr<std::pair<float, float>> FFTComputer::GetLastAudioLevels() const {
+    return m_lastAudioLevels.load(std::memory_order_acquire);
+}
+
+void FFTComputer::StoreNewFFTResult(std::shared_ptr<std::vector<float>> result) {
     m_lastResult.store(result, std::memory_order_release);
+}
+
+void FFTComputer::StoreNewAudioLevels(std::pair<float, float> result) {
+    m_lastAudioLevels.store(std::make_shared<std::pair<float, float>>(result), std::memory_order_release);
 }
 
 void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
@@ -17,12 +25,16 @@ void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
     unsigned long outputLength = buffer.framesPerBuffer;
     std::unique_ptr<std::vector<float>> output = std::make_unique<std::vector<float>>(outputLength);
     float *read = static_cast<float*>(buffer.outputBuffer);
+    std::pair<float, float> audioLevels = std::make_pair(0.0f, 0.0f);
     for (size_t i = 0; i < outputLength; i++) {
         float left = *read++;
         float right = *read++;
+        audioLevels.first = std::max(audioLevels.first, left);
+        audioLevels.second = std::max(audioLevels.second, right);
         (*output).at(i) = (left + right) / 2.0; // Average across channels
     }
 
+    StoreNewAudioLevels(audioLevels);
     m_producerConsumer.Produce(std::move(output));
 }
 
@@ -45,7 +57,7 @@ void FFTComputer::Start(std::atomic<bool>& running) {
 
             // Pop oldest audio chunk from the fft buffer
             m_fftBuffer.erase(m_fftBuffer.begin(), m_fftBuffer.begin() + audioToExtend->size());
-            StoreNewResult(fft_magnitude);
+            StoreNewFFTResult(fft_magnitude);
         }
     }
 

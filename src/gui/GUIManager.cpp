@@ -2,6 +2,8 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "GUIManager.hpp"
+#include <utility>
+#include <iostream>
 
 // RAII class for managing the GLFW window
 GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
@@ -15,6 +17,7 @@ GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTC
 
     // Now that the GL context and window has been initialized
     m_spectrogram.InitTexture();
+    m_levelsDisplay.InitTexture();
 }
 
 GUIManager::~GUIManager() {
@@ -51,10 +54,16 @@ void GUIManager::RunMainLoop() {
             ImGui::SliderFloat("Volume", &volumeTemp, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             m_preset->volume.store(volumeTemp);
 
-            std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastResult();
+            std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
             if (column != nullptr) {
                 m_spectrogram.PushColumn(*column.get());
                 m_spectrogram.Show();
+            }
+
+            std::shared_ptr<std::pair<float, float>> levels = m_fftComputer->GetLastAudioLevels();
+            if (levels != nullptr) {
+                m_levelsDisplay.UpdateLevels(*levels.get());
+                m_levelsDisplay.Show();
             }
 
             float framerate = m_io->Framerate;

@@ -3,7 +3,6 @@
 #include "imgui.h"
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include <vector>
-#include <iostream>
 
 class Spectrogram {
 public:
