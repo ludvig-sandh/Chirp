@@ -16,6 +16,7 @@
 #include "Waveform.hpp"
 #include "RandomLFO.hpp"
 #include "Mixer.hpp"
+#include "LowPassFilter.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
@@ -100,6 +101,18 @@ void AudioEngine::InitAudioProcessorTree() {
     // mixer->AddChild(noiseOsc);
     dynamic_cast<Oscillator *>(noiseOsc.get())->gain.Set(0.2f);
 
+    std::shared_ptr<AudioProcessor> lpFilter = std::make_shared<LowPassFilter>(
+        m_preset->lpFilterCutoff.load(),
+        m_preset->lpFilterSteepness.load()
+    );
+    lpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
+        LowPassFilter *f = dynamic_cast<LowPassFilter*>(self);
+        f->SetCutoff(preset.lpFilterCutoff.load());
+        f->SetSteepness(preset.lpFilterSteepness.load());
+    });
+
+    lpFilter->AddChild(mixer);
+
     // Set root
-    m_rootProcessor = mixer;
+    m_rootProcessor = lpFilter;
 }

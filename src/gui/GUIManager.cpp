@@ -58,6 +58,17 @@ void GUIManager::RunMainLoop() {
             ImGui::SliderFloat("Master pan", &panTemp, 0.0f, 1.0f);
             m_preset->masterPan.store(panTemp);
 
+            float lpFilterCutoffTemp = m_preset->lpFilterCutoff.load();
+            ImGui::SliderFloat("Low-pass filter cutoff (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
+            m_preset->lpFilterCutoff.store(lpFilterCutoffTemp);
+
+            static const char* items[] = { "6 dB/oct", "12 dB/oct", "18 dB/oct", "24 dB/oct" };
+            int currentItem = m_preset->lpFilterSteepness.load() - 1;
+            if (ImGui::Combo("Slope", &currentItem, items, IM_ARRAYSIZE(items))) {
+                int selectedSlope = (currentItem + 1);
+                m_preset->lpFilterSteepness.store(selectedSlope);
+            }
+
             std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
             if (column != nullptr) {
                 m_spectrogram.PushColumn(*column.get());

@@ -2,9 +2,10 @@
 
 #include "AudioProcessor.hpp"
 
-// Simple effect that's entire purpose is to group together other processors and control the combined output gain
+// The Mixer class doesn't provide any extra functionality, but is a great semantically to use
+// if the only thing you need is to group together outputs.
 class Mixer : public AudioProcessor {
 public:
-    void ClearModulations() override;
-    void ProcessFrame(AudioBufferFrame& frame) override;
+    // Empty implementation means audio passes through.
+    void ProcessFrame(AudioBufferFrame& frame) override {}
 };
