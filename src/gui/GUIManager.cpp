@@ -52,8 +52,10 @@ void GUIManager::RunMainLoop() {
             m_preset->volume.store(volumeTemp);
 
             std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastResult();
-            m_spectrogram.PushColumn(*column.get());
-            m_spectrogram.Show();
+            if (column != nullptr) {
+                m_spectrogram.PushColumn(*column.get());
+                m_spectrogram.Show();
+            }
 
             float framerate = m_io->Framerate;
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);

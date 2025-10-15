@@ -7,8 +7,6 @@
 
 class Spectrogram {
 public:
-    Spectrogram() : m_magnitudeHistory(SPEC_WIDTH, std::vector<float>(SPEC_HEIGHT, 0.0)) {}
-
     // update per audio block
     void PushColumn(const std::vector<float>& magnitudes);
 
@@ -21,13 +19,15 @@ public:
     void ReallocateTexture();
 
 private:
-    // Dimensions of spectrogram
-    static const int FFT_SIZE = 512;
-    static const int SPEC_HEIGHT = FFT_SIZE / 2;
-    static const int SPEC_WIDTH = 512; // number of time slices visible
+    static void MagnitudeToRGB(float mag, unsigned char& r, unsigned char& g, unsigned char& b);
+
+    // Dimensions of spectrogram UI element
+    static const int UI_SPEC_HEIGHT = 256;
+    static const int UI_SPEC_WIDTH = 512;
 
     GLuint m_spectrogramTex = 0;
     int m_currentColumn = 0;
     int m_specHeight = 0; // dynamically set from magnitudes.size()
+    const int m_specWidth = 256; // number of time slices visible
     std::vector<std::vector<float>> m_magnitudeHistory;
 };

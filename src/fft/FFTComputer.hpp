@@ -8,8 +8,6 @@
 
 class FFTComputer {
 public:
-    FFTComputer() : m_lastResult(std::make_shared<std::vector<float>>(256, 0.0)) {}
-
     std::shared_ptr<std::vector<float>> GetLastResult() const;
 
     // Called by audio thread to produce audio data

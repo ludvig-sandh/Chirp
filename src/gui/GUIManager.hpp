@@ -42,5 +42,5 @@ private:
     Spectrogram m_spectrogram;
 
     // Background color
-    static inline ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    static inline ImVec4 clear_color = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);
 };
