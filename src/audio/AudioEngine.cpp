@@ -26,7 +26,7 @@ AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FF
 }
 
 // Recurse from the root of the tree
-void AudioEngine::ProcessBuffer(const AudioBuffer &buffer) {
+void AudioEngine::ProcessBuffer(AudioBuffer &buffer) {
     if (m_rootProcessor) {
         m_rootProcessor->Process(buffer, *m_preset.get());
 
@@ -91,12 +91,14 @@ void AudioEngine::InitAudioProcessorTree() {
     sineOsc->AddLFO(vibrato);
 
     mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        dynamic_cast<Mixer *>(self)->targetGain = preset.volume.load();
+        Mixer *m = dynamic_cast<Mixer*>(self);
+        m->gain.Set(preset.masterVolume.load());
+        m->pan.Set(preset.masterPan.load());
     });
 
     mixer->AddChild(sineOsc);
     // mixer->AddChild(noiseOsc);
-    dynamic_cast<Oscillator *>(noiseOsc.get())->targetVolume = 0.2;
+    dynamic_cast<Oscillator *>(noiseOsc.get())->gain.Set(0.2f);
 
     // Set root
     m_rootProcessor = mixer;

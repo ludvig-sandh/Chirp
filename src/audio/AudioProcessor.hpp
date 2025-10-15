@@ -9,6 +9,8 @@
 #include "Frequency.hpp"
 #include "AudioBackend.hpp"
 #include "LFO.hpp"
+#include "Gain.hpp"
+#include "Pan.hpp"
 
 // Represents a node in a tree showing how audio is routed throughout the engine.
 class AudioProcessor {
@@ -22,11 +24,17 @@ public:
     void AddLFO(std::shared_ptr<LFO> lfo);
     virtual void ClearModulations() {};
 
-    void Process(const AudioBuffer& buffer, const AudioPreset& preset);
+    void Process(AudioBuffer& buffer, const AudioPreset& preset);
 
     virtual void ProcessFrame(AudioBufferFrame& frame) = 0;
 
+    Gain gain;
+    Pan pan;
+
 private:
+    // Applies output gain and panning
+    void ApplyGain(AudioBufferFrame& frame); 
+
     std::unordered_set<std::shared_ptr<AudioProcessor>> m_children;
     std::unordered_set<std::shared_ptr<LFO>> m_lfos;
     std::optional<std::function<void(AudioProcessor *, const AudioPreset&)>> m_presetCallback;

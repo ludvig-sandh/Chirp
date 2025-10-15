@@ -50,9 +50,13 @@ void GUIManager::RunMainLoop() {
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 
-            float volumeTemp = m_preset->volume.load();
-            ImGui::SliderFloat("Volume", &volumeTemp, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            m_preset->volume.store(volumeTemp);
+            float volumeTemp = m_preset->masterVolume.load();
+            ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
+            m_preset->masterVolume.store(volumeTemp);
+
+            float panTemp = m_preset->masterPan.load();
+            ImGui::SliderFloat("Master pan", &panTemp, 0.0f, 1.0f);
+            m_preset->masterPan.store(panTemp);
 
             std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
             if (column != nullptr) {

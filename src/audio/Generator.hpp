@@ -11,8 +11,4 @@ public:
 
     // Computes the next sample in the signal to generate
     virtual float GetNextSample() = 0;
-
-    // TODO: Turn this pair into its own type
-    float currentVolume = 0.0; // Rather smooth from 0 to selected volume than from full volume (click sound at startup)
-    float targetVolume = 1.0;
 };

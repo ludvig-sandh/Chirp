@@ -21,7 +21,7 @@ public:
     AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
 
     // Recurse from the root of the tree
-    void ProcessBuffer(const AudioBuffer &buffer);
+    void ProcessBuffer(AudioBuffer &buffer);
 
     void Start(std::atomic<bool>& running);
 private:

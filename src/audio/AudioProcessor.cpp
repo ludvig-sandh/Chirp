@@ -15,7 +15,7 @@ void AudioProcessor::AddLFO(std::shared_ptr<LFO> lfo) {
     m_lfos.insert(lfo);
 }
 
-void AudioProcessor::Process(const AudioBuffer& buffer, const AudioPreset& preset) {
+void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
     // Process all children first
     for (const std::shared_ptr<AudioProcessor>& child : m_children) {
         child->Process(buffer, preset);
@@ -45,9 +45,15 @@ void AudioProcessor::Process(const AudioBuffer& buffer, const AudioPreset& prese
         frame.frameIdx = i;
         
         ProcessFrame(frame);
+        ApplyGain(frame);
 
         // TODO: Set this to 'num channels' instead of magic numbers
         in += 2;
         out += 2;
     }
+}
+
+void AudioProcessor::ApplyGain(AudioBufferFrame& frame) {
+    *frame.outputFrame *= gain.Get() * pan.GetLeftGain(); /* left */
+    *(frame.outputFrame + 1) *= gain.Get() * pan.GetRightGain(); /* right */
 }

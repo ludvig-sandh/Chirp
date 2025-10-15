@@ -7,8 +7,4 @@ class Mixer : public AudioProcessor {
 public:
     void ClearModulations() override;
     void ProcessFrame(AudioBufferFrame& frame) override;
-    
-    float targetGain = 1.0;
-private:
-    float m_currentGain = 0.0;
 };

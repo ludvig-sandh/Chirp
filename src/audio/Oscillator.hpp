@@ -12,6 +12,7 @@ public:
     // Clears all modulations accumulated from LFOs in the last frame so they can modulate the next one
     virtual void ClearModulations() override;
 
+    // Returns the next sample for this oscillator. Must be called once every frame or it will become desynched.
     float GetNextSample() override;
     
     Frequency frequency;
