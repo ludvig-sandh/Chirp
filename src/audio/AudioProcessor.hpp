@@ -30,6 +30,8 @@ public:
 
     Gain gain;
     Pan pan;
+    bool isOn = true;
+    float mix = 1.0f;
 
 private:
     void ApplyGainAndPan(AudioBufferFrame& frame); 

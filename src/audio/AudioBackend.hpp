@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <algorithm>
 #include <memory>
 #include <unordered_set>
 
@@ -21,6 +22,13 @@ struct AudioBuffer {
 struct AudioBufferFrame {
     float left;
     float right;
+
+    static AudioBufferFrame Blend(const AudioBufferFrame& processed, const AudioBufferFrame& unprocessed, float mix) {
+        mix = std::clamp(mix, 0.0f, 1.0f);
+        float leftBlended = processed.left * mix + unprocessed.left * (1.0f - mix);
+        float rightBlended = processed.right * mix + unprocessed.right * (1.0f - mix);
+        return AudioBufferFrame{leftBlended, rightBlended};
+    }
 };
 
 class ScopedPaHandler

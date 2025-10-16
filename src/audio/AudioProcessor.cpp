@@ -38,14 +38,21 @@ void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
 
         float leftOutput = *out;
         float rightOutput = *(out + 1);
-        AudioBufferFrame frame{leftOutput, rightOutput};
+        AudioBufferFrame bypassedFrame{leftOutput, rightOutput};
+        AudioBufferFrame processedFrame(bypassedFrame);
 
-        ProcessFrame(frame);
-        ApplyGainAndPan(frame);
+        AudioBufferFrame result;
+        if (isOn) {
+            ProcessFrame(processedFrame);
+            ApplyGainAndPan(processedFrame);
+            result = AudioBufferFrame::Blend(processedFrame, bypassedFrame, mix);
+        }else {
+            result = bypassedFrame;
+        }
         
         // Write back output to buffer
-        *out++ = frame.left;
-        *out++ = frame.right;
+        *out++ = result.left;
+        *out++ = result.right;
     }
 }
 
