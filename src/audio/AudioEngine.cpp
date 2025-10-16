@@ -69,7 +69,8 @@ void AudioEngine::InitAudioProcessorTree() {
     std::shared_ptr<Waveform> saw = std::make_shared<Saw>();
     std::shared_ptr<Waveform> sq = std::make_shared<Square>();
     std::shared_ptr<Waveform> noise = std::make_shared<WhiteNoise>();
-    std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(sine, Frequency(2220));
+    std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(saw, Frequency(200));
+    // std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(sine, Frequency(2220));
     std::shared_ptr<AudioProcessor> sawOsc = std::make_shared<Oscillator>(saw, Frequency(555));
     std::shared_ptr<AudioProcessor> noiseOsc = std::make_shared<Oscillator>(noise, Frequency(555));
     std::shared_ptr<AudioProcessor> mixer = std::make_shared<Mixer>();
@@ -84,12 +85,12 @@ void AudioEngine::InitAudioProcessorTree() {
     std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(saw, Frequency(0.5));
     vibrato->callback = [](LFO *lfo, AudioProcessor *ap) {
         Oscillator *osc = dynamic_cast<Oscillator *>(ap);
-        // osc->frequency.AddPitchModulation(lfo->GetNextSample() - 0.5);
-        osc->frequency.AddPitchModulation(60 * lfo->GetNextSample() - 12);
+        osc->frequency.AddPitchModulation(lfo->GetNextSample() - 0.5);
+        // osc->frequency.AddPitchModulation(12 * 10 * lfo->GetNextSample());
     };
 
     // sineOsc->AddLFO(rnd); // Connect the rnd LFO to the sine oscillator
-    sineOsc->AddLFO(vibrato);
+    // sineOsc->AddLFO(vibrato);
 
     mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Mixer *m = dynamic_cast<Mixer*>(self);
@@ -98,7 +99,7 @@ void AudioEngine::InitAudioProcessorTree() {
     });
 
     mixer->AddChild(sineOsc);
-    // mixer->AddChild(noiseOsc);
+    mixer->AddChild(noiseOsc);
     dynamic_cast<Oscillator *>(noiseOsc.get())->gain.Set(0.2f);
 
     std::shared_ptr<AudioProcessor> lpFilter = std::make_shared<LowPassFilter>(
@@ -109,6 +110,8 @@ void AudioEngine::InitAudioProcessorTree() {
         LowPassFilter *f = dynamic_cast<LowPassFilter*>(self);
         f->SetCutoff(preset.lpFilterCutoff.load());
         f->SetSteepness(preset.lpFilterSteepness.load());
+        f->isOn = preset.lpFilterOn.load();
+        f->mix = preset.lpFilterMix.load();
     });
 
     lpFilter->AddChild(mixer);

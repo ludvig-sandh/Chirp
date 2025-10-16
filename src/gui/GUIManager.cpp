@@ -58,8 +58,16 @@ void GUIManager::RunMainLoop() {
             ImGui::SliderFloat("Master pan", &panTemp, 0.0f, 1.0f);
             m_preset->masterPan.store(panTemp);
 
+            bool filterOnTemp = m_preset->lpFilterOn.load();
+            ImGui::Checkbox("Low-pass filter", &filterOnTemp);
+            m_preset->lpFilterOn.store(filterOnTemp);
+
+            float lpFilterMixTemp = m_preset->lpFilterMix.load();
+            ImGui::SliderFloat("Filter mix", &lpFilterMixTemp, 0.0f, 1.0f);
+            m_preset->lpFilterMix.store(lpFilterMixTemp);
+
             float lpFilterCutoffTemp = m_preset->lpFilterCutoff.load();
-            ImGui::SliderFloat("Low-pass filter cutoff (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
+            ImGui::SliderFloat("Cutoff frequency (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
             m_preset->lpFilterCutoff.store(lpFilterCutoffTemp);
 
             static const char* items[] = { "6 dB/oct", "12 dB/oct", "18 dB/oct", "24 dB/oct" };
