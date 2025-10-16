@@ -1,7 +1,7 @@
 #include "Generator.hpp"
 
-void Generator::ProcessFrame(AudioBufferFrame& frame) {
+void Generator::ProcessFrame(AudioBufferFrame& output) {
     float value = GetNextSample();
-    *frame.outputFrame += value;     /* left */
-    *(frame.outputFrame + 1) += value; /* right */
+    output.left += value;
+    output.right += value;
 }

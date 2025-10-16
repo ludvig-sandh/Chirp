@@ -10,9 +10,9 @@ LowPassFilter::LowPassFilter(float cutoff, unsigned int steepness)
     SetSteepness(steepness);
 }
 
-void LowPassFilter::ProcessFrame(AudioBufferFrame& frame) {
-    float left = *frame.outputFrame;
-    float right = *(frame.outputFrame + 1);
+void LowPassFilter::ProcessFrame(AudioBufferFrame& output) {
+    float left = output.left;
+    float right = output.right;
     for (size_t i = 0; i < m_numStages; ++i) {
         m_stages[0][i] += m_alpha * (left - m_stages[0][i]);
         left = m_stages[0][i];
@@ -21,8 +21,8 @@ void LowPassFilter::ProcessFrame(AudioBufferFrame& frame) {
         right = m_stages[1][i];
     }
 
-    *frame.outputFrame = left;
-    *(frame.outputFrame + 1) = right;
+    output.left = left;
+    output.right = right;
 }
 
 void LowPassFilter::SetCutoff(float cutoff) {

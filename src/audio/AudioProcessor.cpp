@@ -26,7 +26,6 @@ void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
         m_presetCallback->operator()(this, preset);
     }
 
-    const float *in = buffer.inputBuffer;
     float *out = buffer.outputBuffer;
     for (unsigned long i = 0; i < buffer.framesPerBuffer; i++) {
         // Update and apply LFOs, but first clear all modulations since they accumulate and reset within a single frame
@@ -37,23 +36,20 @@ void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
             }
         }
 
-        // Construct frame to process
-        AudioBufferFrame frame;
-        frame.inputFrame = in;
-        frame.outputFrame = out;
-        frame.framesPerBuffer = buffer.framesPerBuffer;
-        frame.frameIdx = i;
-        
-        ProcessFrame(frame);
-        ApplyGain(frame);
+        float leftOutput = *out;
+        float rightOutput = *(out + 1);
+        AudioBufferFrame frame{leftOutput, rightOutput};
 
-        // TODO: Set this to 'num channels' instead of magic numbers
-        in += 2;
-        out += 2;
+        ProcessFrame(frame);
+        ApplyGainAndPan(frame);
+        
+        // Write back output to buffer
+        *out++ = frame.left;
+        *out++ = frame.right;
     }
 }
 
-void AudioProcessor::ApplyGain(AudioBufferFrame& frame) {
-    *frame.outputFrame *= gain.Get() * pan.GetLeftGain(); /* left */
-    *(frame.outputFrame + 1) *= gain.Get() * pan.GetRightGain(); /* right */
+void AudioProcessor::ApplyGainAndPan(AudioBufferFrame& output) {
+    output.left *= gain.Get() * pan.GetLeftGain();
+    output.right *= gain.Get() * pan.GetRightGain();
 }

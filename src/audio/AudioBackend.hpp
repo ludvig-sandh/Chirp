@@ -12,7 +12,6 @@
 class AudioEngine;
 
 struct AudioBuffer {
-    const float *inputBuffer;
     float *outputBuffer;
     unsigned long framesPerBuffer;
     const PaStreamCallbackTimeInfo *timeInfo;
@@ -20,10 +19,8 @@ struct AudioBuffer {
 };
 
 struct AudioBufferFrame {
-    const float * inputFrame;
-    float *outputFrame; // Only supposed to write to this
-    unsigned long framesPerBuffer;
-    unsigned long frameIdx;
+    float left;
+    float right;
 };
 
 class ScopedPaHandler

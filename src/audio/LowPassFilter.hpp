@@ -9,7 +9,7 @@ class LowPassFilter final : public AudioProcessor {
 public:
     LowPassFilter(float cutoff, unsigned int steepness);
 
-    void ProcessFrame(AudioBufferFrame& frame) override;
+    void ProcessFrame(AudioBufferFrame& output) override;
 
     void SetCutoff(float cutoff);
 

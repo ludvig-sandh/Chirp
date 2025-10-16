@@ -26,14 +26,13 @@ public:
 
     void Process(AudioBuffer& buffer, const AudioPreset& preset);
 
-    virtual void ProcessFrame(AudioBufferFrame& frame) = 0;
+    virtual void ProcessFrame(AudioBufferFrame& output) = 0;
 
     Gain gain;
     Pan pan;
 
 private:
-    // Applies output gain and panning
-    void ApplyGain(AudioBufferFrame& frame); 
+    void ApplyGainAndPan(AudioBufferFrame& frame); 
 
     std::unordered_set<std::shared_ptr<AudioProcessor>> m_children;
     std::unordered_set<std::shared_ptr<LFO>> m_lfos;

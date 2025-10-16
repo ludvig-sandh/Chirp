@@ -103,7 +103,6 @@ int AudioBackend::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
     PaStreamCallbackFlags statusFlags)
 {
     AudioBuffer buffer;
-    buffer.inputBuffer = (float*)inputBuffer;
     buffer.outputBuffer = (float*)outputBuffer;
     buffer.framesPerBuffer = framesPerBuffer;
     buffer.timeInfo = timeInfo;
