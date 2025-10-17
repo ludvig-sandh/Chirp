@@ -76,7 +76,7 @@ void AudioEngine::InitAudioProcessorTree() {
     std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(sine, Frequency(2220));
     std::shared_ptr<AudioProcessor> sawOsc = std::make_shared<Oscillator>(saw, Frequency(555));
     std::shared_ptr<AudioProcessor> noiseOsc = std::make_shared<Oscillator>(noise, Frequency(555));
-    dynamic_cast<Oscillator *>(noiseOsc.get())->gain.Set(0.4f);
+    dynamic_cast<Oscillator *>(noiseOsc.get())->gain.SetLinear(0.4f);
 
     std::shared_ptr<LFO> rnd = std::make_shared<RandomLFO>(Frequency(16));
     rnd->callback = [](LFO *lfo, AudioProcessor *ap) {
@@ -135,7 +135,7 @@ void AudioEngine::InitAudioProcessorTree() {
     std::shared_ptr<AudioProcessor> mixer = std::make_shared<Mixer>();
     mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Mixer *m = dynamic_cast<Mixer*>(self);
-        m->gain.Set(preset.masterVolume.load());
+        m->gain.SetLinear(preset.masterVolume.load());
         m->pan.Set(preset.masterPan.load());
     });
 

@@ -5,15 +5,24 @@
 class Gain {
 public:
     // Updates the target gain
-    void Set(float gain);
+    void SetLinear(float linear);
+    void SetDecibels(float dB);
+    
+    float GetLinear() const;
+    float GetDecibels() const;
 
-    // Returns the current gain and updates it towards the target gain.
-    // Should be called once for each sample
-    float Get();
+    // Applies the current gain and updates it towards the target gain.
+    // Should be called once for each sample.
+    float Apply(float sample);
 
 private:
-    float m_currentGain = 0.0;
-    float m_targetGain = 1.0;
+    float m_currentLinear = 0.0;
+    float m_targetLinear = 1.0;
+
+    const float s_maxLinear = 1.0f;
+    const float s_minLinear = 0.0f;
+    const float s_maxDecibels = 0.0f;
+    const float s_minDecibels = -100.0f;
 
     // The rate at which currentGain should reach targetGain
     // Eg. 0.01 would mean it closes in by 1% each sample.

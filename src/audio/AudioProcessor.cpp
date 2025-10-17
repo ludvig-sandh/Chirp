@@ -59,6 +59,8 @@ void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
 }
 
 void AudioProcessor::ApplyGainAndPan(AudioBufferFrame& output) {
-    output.left *= gain.Get() * pan.GetLeftGain();
-    output.right *= gain.Get() * pan.GetRightGain();
+    output.left = gain.Apply(output.left);
+    output.left = pan.ApplyLeftGain(output.left);
+    output.right = gain.Apply(output.right);
+    output.right = pan.ApplyRightGain(output.right);
 }

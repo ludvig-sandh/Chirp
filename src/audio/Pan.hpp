@@ -5,8 +5,8 @@
 class Pan {
 public:
     void Set(float pan);
-    float GetRightGain();
-    float GetLeftGain();
+    float ApplyRightGain(float sample);
+    float ApplyLeftGain(float sample);
 private:
     Gain m_rightGain;
     Gain m_leftGain;

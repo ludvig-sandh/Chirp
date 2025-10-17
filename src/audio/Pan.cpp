@@ -6,14 +6,14 @@ void Pan::Set(float pan) {
     pan = std::clamp(pan, 0.0f, 1.0f);
     float rightGainVal = std::min(pan, 0.5f) * 2.0;
     float leftGainVal = std::min(1.0f - pan, 0.5f) * 2.0;
-    m_rightGain.Set(rightGainVal);
-    m_leftGain.Set(leftGainVal);
+    m_rightGain.SetLinear(rightGainVal);
+    m_leftGain.SetLinear(leftGainVal);
 }
 
-float Pan::GetRightGain() {
-    return m_rightGain.Get();
+float Pan::ApplyRightGain(float sample) {
+    return m_rightGain.Apply(sample);
 }
 
-float Pan::GetLeftGain() {
-    return m_leftGain.Get();
+float Pan::ApplyLeftGain(float sample) {
+    return m_leftGain.Apply(sample);
 }
