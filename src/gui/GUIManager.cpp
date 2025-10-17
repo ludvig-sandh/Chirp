@@ -99,7 +99,7 @@ void GUIManager::RunMainLoop() {
             m_preset->reverbOn.store(reverbOnTemp);
 
             float reverbFeedbackTemp = m_preset->reverbFeedback.load();
-            ImGui::SliderFloat("Reverb feedback", &reverbFeedbackTemp, 0.0f, 1.0f);
+            ImGui::SliderFloat("Reverb feedback", &reverbFeedbackTemp, 0.0f, 0.8f);
             m_preset->reverbFeedback.store(reverbFeedbackTemp);
 
             float reverbDampTemp = m_preset->reverbDamp.load();
