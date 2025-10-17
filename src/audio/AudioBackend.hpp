@@ -23,6 +23,12 @@ struct AudioBufferFrame {
     float left;
     float right;
 
+    // Clamp the amplitude to avoid the possibility of going deaf
+    void ClipToValidRange() {
+        left = std::clamp(left, -1.0f, 1.0f);
+        right = std::clamp(right, -1.0f, 1.0f);
+    }
+
     static AudioBufferFrame Blend(const AudioBufferFrame& processed, const AudioBufferFrame& unprocessed, float mix) {
         mix = std::clamp(mix, 0.0f, 1.0f);
         float leftBlended = processed.left * mix + unprocessed.left * (1.0f - mix);

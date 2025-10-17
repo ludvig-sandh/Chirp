@@ -49,6 +49,8 @@ void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
         }else {
             result = bypassedFrame;
         }
+
+        result.ClipToValidRange();
         
         // Write back output to buffer
         *out++ = result.left;

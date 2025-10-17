@@ -58,24 +58,56 @@ void GUIManager::RunMainLoop() {
             ImGui::SliderFloat("Master pan", &panTemp, 0.0f, 1.0f);
             m_preset->masterPan.store(panTemp);
 
-            bool filterOnTemp = m_preset->lpFilterOn.load();
-            ImGui::Checkbox("Low-pass filter", &filterOnTemp);
-            m_preset->lpFilterOn.store(filterOnTemp);
+
+            bool lpFilterOnTemp = m_preset->lpFilterOn.load();
+            ImGui::Checkbox("Low-pass filter", &lpFilterOnTemp);
+            m_preset->lpFilterOn.store(lpFilterOnTemp);
 
             float lpFilterMixTemp = m_preset->lpFilterMix.load();
-            ImGui::SliderFloat("Filter mix", &lpFilterMixTemp, 0.0f, 1.0f);
+            ImGui::SliderFloat("LP Filter mix", &lpFilterMixTemp, 0.0f, 1.0f);
             m_preset->lpFilterMix.store(lpFilterMixTemp);
 
             float lpFilterCutoffTemp = m_preset->lpFilterCutoff.load();
-            ImGui::SliderFloat("Cutoff frequency (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
+            ImGui::SliderFloat("LP Cutoff frequency (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
             m_preset->lpFilterCutoff.store(lpFilterCutoffTemp);
 
-            static const char* items[] = { "6 dB/oct", "12 dB/oct", "18 dB/oct", "24 dB/oct" };
-            int currentItem = m_preset->lpFilterSteepness.load() - 1;
-            if (ImGui::Combo("Slope", &currentItem, items, IM_ARRAYSIZE(items))) {
-                int selectedSlope = (currentItem + 1);
-                m_preset->lpFilterSteepness.store(selectedSlope);
-            }
+            float lpFilterQTemp = m_preset->lpFilterQ.load();
+            ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.0f, 3.0f);
+            m_preset->lpFilterQ.store(lpFilterQTemp);
+
+
+            bool hpFilterOnTemp = m_preset->hpFilterOn.load();
+            ImGui::Checkbox("High-pass filter", &hpFilterOnTemp);
+            m_preset->hpFilterOn.store(hpFilterOnTemp);
+
+            float hpFilterMixTemp = m_preset->hpFilterMix.load();
+            ImGui::SliderFloat("HP Filter mix", &hpFilterMixTemp, 0.0f, 1.0f);
+            m_preset->hpFilterMix.store(hpFilterMixTemp);
+
+            float hpFilterCutoffTemp = m_preset->hpFilterCutoff.load();
+            ImGui::SliderFloat("HP Cutoff frequency (Hz)", &hpFilterCutoffTemp, 0.0f, 20000.0f);
+            m_preset->hpFilterCutoff.store(hpFilterCutoffTemp);
+
+            float hpFilterQTemp = m_preset->hpFilterQ.load();
+            ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.0f, 3.0f);
+            m_preset->hpFilterQ.store(hpFilterQTemp);
+
+
+            bool reverbOnTemp = m_preset->reverbOn.load();
+            ImGui::Checkbox("Reverb", &reverbOnTemp);
+            m_preset->reverbOn.store(reverbOnTemp);
+
+            float reverbFeedbackTemp = m_preset->reverbFeedback.load();
+            ImGui::SliderFloat("Reverb feedback", &reverbFeedbackTemp, 0.0f, 1.0f);
+            m_preset->reverbFeedback.store(reverbFeedbackTemp);
+
+            float reverbDampTemp = m_preset->reverbDamp.load();
+            ImGui::SliderFloat("Reverb damp", &reverbDampTemp, 0.0f, 1.0f);
+            m_preset->reverbDamp.store(reverbDampTemp);
+
+            float reverbWetTemp = m_preset->reverbWet.load();
+            ImGui::SliderFloat("Reverb wet", &reverbWetTemp, 0.0f, 1.0f);
+            m_preset->reverbWet.store(reverbWetTemp);
 
             std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
             if (column != nullptr) {
