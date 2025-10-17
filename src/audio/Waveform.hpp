@@ -27,7 +27,7 @@ public:
 
 class WhiteNoise final : public Waveform {
 public:
-    WhiteNoise() : m_gen(1337), m_dist(0.0, 1.0) {}
+    WhiteNoise() : m_gen(1337), m_dist(-1.0f, 1.0f) {}
     float GetSampleAt(float offset) override;
 private:
     std::mt19937 m_gen;
