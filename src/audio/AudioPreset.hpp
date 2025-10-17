@@ -4,7 +4,13 @@
 
 struct AudioPreset {
     std::atomic<float> masterVolume { 0.05f };
-    std::atomic<float> masterPan { 0.5f };
+
+    std::atomic<bool> chirpOn { true };
+    std::atomic<float> chirpVolume { 1.0f };
+    std::atomic<float> chirpPan { 0.5f };
+
+    std::atomic<bool> noiseOn { true };
+    std::atomic<float> noiseVolume { 0.4f };
 
     std::atomic<bool> lpFilterOn { true };
     std::atomic<float> lpFilterMix { 1.0f };

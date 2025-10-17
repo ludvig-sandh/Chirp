@@ -47,18 +47,42 @@ void GUIManager::RunMainLoop() {
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Preset control"); // Create a window
 
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+            ImGui::Text("Global settings");
 
             float volumeTemp = m_preset->masterVolume.load();
             ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
             m_preset->masterVolume.store(volumeTemp);
 
-            float panTemp = m_preset->masterPan.load();
-            ImGui::SliderFloat("Master pan", &panTemp, 0.0f, 1.0f);
-            m_preset->masterPan.store(panTemp);
+            ImGui::Separator();
+            ImGui::Text("Chirp settings");
 
+            bool chirpOnTemp = m_preset->chirpOn.load();
+            ImGui::Checkbox("Chirp sounds", &chirpOnTemp);
+            m_preset->chirpOn.store(chirpOnTemp);
+
+            float chirpVolumeTemp = m_preset->chirpVolume.load();
+            ImGui::SliderFloat("Chirp volume", &chirpVolumeTemp, 0.0f, 1.0f);
+            m_preset->chirpVolume.store(chirpVolumeTemp);
+
+            float chirpPanTemp = m_preset->chirpPan.load();
+            ImGui::SliderFloat("Chirp pan", &chirpPanTemp, 0.0f, 1.0f);
+            m_preset->chirpPan.store(chirpPanTemp);
+
+            ImGui::Separator();
+            ImGui::Text("Noise settings");
+
+            bool noiseOnTemp = m_preset->noiseOn.load();
+            ImGui::Checkbox("White noise", &noiseOnTemp);
+            m_preset->noiseOn.store(noiseOnTemp);
+
+            float noiseVolumeTemp = m_preset->noiseVolume.load();
+            ImGui::SliderFloat("White noise level", &noiseVolumeTemp, 0.0f, 1.0f);
+            m_preset->noiseVolume.store(noiseVolumeTemp);
+
+            ImGui::Separator();
+            ImGui::Text("LP filter settings");
 
             bool lpFilterOnTemp = m_preset->lpFilterOn.load();
             ImGui::Checkbox("Low-pass filter", &lpFilterOnTemp);
@@ -76,6 +100,8 @@ void GUIManager::RunMainLoop() {
             ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.0f, 3.0f);
             m_preset->lpFilterQ.store(lpFilterQTemp);
 
+            ImGui::Separator();
+            ImGui::Text("HP filter settings");
 
             bool hpFilterOnTemp = m_preset->hpFilterOn.load();
             ImGui::Checkbox("High-pass filter", &hpFilterOnTemp);
@@ -93,6 +119,8 @@ void GUIManager::RunMainLoop() {
             ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.0f, 3.0f);
             m_preset->hpFilterQ.store(hpFilterQTemp);
 
+            ImGui::Separator();
+            ImGui::Text("Reverb settings");
 
             bool reverbOnTemp = m_preset->reverbOn.load();
             ImGui::Checkbox("Reverb", &reverbOnTemp);
@@ -110,6 +138,7 @@ void GUIManager::RunMainLoop() {
             ImGui::SliderFloat("Reverb wet", &reverbWetTemp, 0.0f, 1.0f);
             m_preset->reverbWet.store(reverbWetTemp);
 
+            
             std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
             if (column != nullptr) {
                 m_spectrogram.PushColumn(*column.get());

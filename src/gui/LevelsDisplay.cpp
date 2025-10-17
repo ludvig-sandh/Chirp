@@ -77,7 +77,7 @@ void LevelsDisplay::UpdateLevels(const AudioBufferFrame& levels) {
 }
 
 void LevelsDisplay::Show() {
-    ImGui::Begin("Audio levels");
+    ImGui::Begin("Lvl");
     ImGui::Image((ImTextureID)(intptr_t)m_levelsTex,
                  ImVec2(s_UIWidth, s_UIHeight));
     ImGui::End();

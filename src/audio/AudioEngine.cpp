@@ -66,17 +66,20 @@ void AudioEngine::Start(std::atomic<bool>& running) {
     m_fftComputer->FinishedProducing();
 }
 
+// TODO: Read configuration from file?
 void AudioEngine::InitAudioProcessorTree() {
-    // TODO: Read configuration from file?
     std::shared_ptr<Waveform> sine = std::make_shared<Sine>();
     std::shared_ptr<Waveform> saw = std::make_shared<Saw>();
-    std::shared_ptr<Waveform> sq = std::make_shared<Square>();
     std::shared_ptr<Waveform> noise = std::make_shared<WhiteNoise>();
-    // std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(saw, Frequency(200));
+
+    // Chirp
     std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(sine, Frequency(2220));
-    std::shared_ptr<AudioProcessor> sawOsc = std::make_shared<Oscillator>(saw, Frequency(555));
-    std::shared_ptr<AudioProcessor> noiseOsc = std::make_shared<Oscillator>(noise, Frequency(555));
-    dynamic_cast<Oscillator *>(noiseOsc.get())->gain.SetLinear(0.4f);
+    sineOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
+        Oscillator *sine = dynamic_cast<Oscillator*>(self);
+        sine->isOn = preset.chirpOn.load();
+        sine->gain.SetLinear(preset.chirpVolume.load());
+        sine->pan.Set(preset.chirpPan.load());
+    });
 
     std::shared_ptr<LFO> rnd = std::make_shared<RandomLFO>(Frequency(16));
     rnd->callback = [](LFO *lfo, AudioProcessor *ap) {
@@ -85,17 +88,25 @@ void AudioEngine::InitAudioProcessorTree() {
     };
 
     std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(saw, Frequency(62));
-    // std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(saw, Frequency(0.5));
     vibrato->callback = [](LFO *lfo, AudioProcessor *ap) {
         Oscillator *osc = dynamic_cast<Oscillator *>(ap);
         osc->frequency.AddPitchModulation(lfo->GetNextSample() - 0.5);
-        // osc->frequency.AddPitchModulation(12 * 10 * lfo->GetNextSample());
     };
-
 
     sineOsc->AddLFO(rnd); // Connect the rnd LFO to the sine oscillator
     sineOsc->AddLFO(vibrato);
 
+    
+    // Noise
+    std::shared_ptr<AudioProcessor> noiseOsc = std::make_shared<Oscillator>(noise, Frequency(555));
+    noiseOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
+        Oscillator *noise = dynamic_cast<Oscillator*>(self);
+        noise->isOn = preset.noiseOn.load();
+        noise->gain.SetLinear(preset.noiseVolume.load());
+    });
+
+
+    // Low pass
     std::shared_ptr<AudioProcessor> lpFilter = std::make_shared<LowPassFilter>(
         m_preset->lpFilterCutoff.load(),
         m_preset->lpFilterQ.load()
@@ -110,6 +121,7 @@ void AudioEngine::InitAudioProcessorTree() {
     lpFilter->AddChild(noiseOsc);
 
 
+    // High pass
     std::shared_ptr<AudioProcessor> hpFilter = std::make_shared<HighPassFilter>(
         m_preset->hpFilterCutoff.load(),
         m_preset->hpFilterQ.load()
@@ -123,6 +135,7 @@ void AudioEngine::InitAudioProcessorTree() {
     hpFilter->AddChild(lpFilter);
 
 
+    // Reverb
     std::shared_ptr<AudioProcessor> reverb = std::make_shared<Reverb>();
     reverb->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Reverb *f = dynamic_cast<Reverb *>(self);
@@ -132,11 +145,11 @@ void AudioEngine::InitAudioProcessorTree() {
     reverb->AddChild(hpFilter);
 
 
+    // Global mixer
     std::shared_ptr<AudioProcessor> mixer = std::make_shared<Mixer>();
     mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Mixer *m = dynamic_cast<Mixer*>(self);
         m->gain.SetLinear(preset.masterVolume.load());
-        m->pan.Set(preset.masterPan.load());
     });
 
     mixer->AddChild(reverb);
