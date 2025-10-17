@@ -3,12 +3,13 @@
 
 #include <cassert>
 #include <iostream>
+#include <math.h>
 
 std::shared_ptr<std::vector<float>> FFTComputer::GetLastFFTResult() const {
     return m_lastResult.load(std::memory_order_acquire);
 }
 
-std::shared_ptr<std::pair<float, float>> FFTComputer::GetLastAudioLevels() const {
+std::shared_ptr<AudioBufferFrame> FFTComputer::GetLastAudioLevels() const {
     return m_lastAudioLevels.load(std::memory_order_acquire);
 }
 
@@ -16,8 +17,8 @@ void FFTComputer::StoreNewFFTResult(std::shared_ptr<std::vector<float>> result) 
     m_lastResult.store(result, std::memory_order_release);
 }
 
-void FFTComputer::StoreNewAudioLevels(std::pair<float, float> result) {
-    m_lastAudioLevels.store(std::make_shared<std::pair<float, float>>(result), std::memory_order_release);
+void FFTComputer::StoreNewAudioLevels(AudioBufferFrame result) {
+    m_lastAudioLevels.store(std::make_shared<AudioBufferFrame>(result), std::memory_order_release);
 }
 
 void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
@@ -25,16 +26,25 @@ void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
     unsigned long outputLength = buffer.framesPerBuffer;
     std::unique_ptr<std::vector<float>> output = std::make_unique<std::vector<float>>(outputLength);
     float *read = static_cast<float*>(buffer.outputBuffer);
-    std::pair<float, float> audioLevels = std::make_pair(0.0f, 0.0f);
+    AudioBufferFrame rms{0.0f, 0.0f};
     for (size_t i = 0; i < outputLength; i++) {
         float left = *read++;
         float right = *read++;
-        audioLevels.first = std::max(audioLevels.first, left);
-        audioLevels.second = std::max(audioLevels.second, right);
+
+        // Sum of squares (RMS)
+        rms.left += left * left;
+        rms.right += right * right;;
+        
         (*output).at(i) = (left + right) / 2.0; // Average across channels
     }
 
-    StoreNewAudioLevels(audioLevels);
+    // Mean and root (RMS)
+    rms.left /= static_cast<float>(outputLength);
+    rms.right /= static_cast<float>(outputLength);
+    rms.left = std::sqrtf(rms.left);
+    rms.right = std::sqrtf(rms.right);
+
+    StoreNewAudioLevels(rms);
     m_producerConsumer.Produce(std::move(output));
 }
 

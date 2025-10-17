@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "GUIManager.hpp"
+#include "AudioBackend.hpp"
 #include <utility>
 #include <iostream>
 
@@ -115,7 +116,7 @@ void GUIManager::RunMainLoop() {
                 m_spectrogram.Show();
             }
 
-            std::shared_ptr<std::pair<float, float>> levels = m_fftComputer->GetLastAudioLevels();
+            std::shared_ptr<AudioBufferFrame> levels = m_fftComputer->GetLastAudioLevels();
             if (levels != nullptr) {
                 m_levelsDisplay.UpdateLevels(*levels.get());
                 m_levelsDisplay.Show();

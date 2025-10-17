@@ -19,6 +19,7 @@
 #include "BaseFilter.hpp"
 #include "LowPassFilter.hpp"
 #include "HighPassFilter.hpp"
+#include "Reverb.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)

@@ -16,10 +16,10 @@ void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, in
     std::memcpy(&pixels[pixelIndex * 3], rgb.data(), 3 * sizeof(unsigned char));
 }
 
-void LevelsDisplay::UpdateLevels(const std::pair<float, float>& levels) {
+void LevelsDisplay::UpdateLevels(const AudioBufferFrame& levels) {
     // Convert to dB normalized in range [0, 1]
-    double dbL = 20.0 * std::log10(levels.first);
-    double dbR = 20.0 * std::log10(levels.second);
+    double dbL = 20.0 * std::log10(levels.left);
+    double dbR = 20.0 * std::log10(levels.right);
     const double minDb = -100.0;
     const double maxDb = 0.0;
     double normL = std::clamp((dbL - minDb) / (maxDb - minDb), 0.0, 1.0);

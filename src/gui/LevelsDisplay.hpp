@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include "LevelsHistory.hpp"
+#include "AudioBackend.hpp"
 #include <vector>
 #include <array>
 #include <utility>
@@ -10,7 +11,7 @@
 
 class LevelsDisplay {
 public:
-    void UpdateLevels(const std::pair<float, float>& levels);
+    void UpdateLevels(const AudioBufferFrame& levels);
 
     // Render in imgui
     void Show();
