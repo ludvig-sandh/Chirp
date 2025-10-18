@@ -102,13 +102,15 @@ int AudioBackend::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
     const PaStreamCallbackTimeInfo* timeInfo,
     PaStreamCallbackFlags statusFlags)
 {
-    AudioBuffer buffer;
-    buffer.outputBuffer = (float*)outputBuffer;
-    buffer.framesPerBuffer = framesPerBuffer;
-    buffer.timeInfo = timeInfo;
-    buffer.statusFlags = &statusFlags;
+    // Process the entire audio graph
+    AudioBuffer buffer = m_engine->ProcessBuffer(framesPerBuffer);
 
-    m_engine->ProcessBuffer(buffer);
+    // Copy result back to output buffer
+    float *out = (float*)outputBuffer;
+    for (const AudioBufferFrame& frame : buffer.outputBuffer) {
+        *out++ = frame.left;
+        *out++ = frame.right;
+    }
 
     return paContinue;
 }

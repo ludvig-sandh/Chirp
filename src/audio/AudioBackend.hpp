@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <algorithm>
 #include <memory>
+#include <vector>
 #include <unordered_set>
+#include <cassert>
 
 #include "Frequency.hpp"
 #include "AudioPreset.hpp"
@@ -12,16 +14,9 @@
 // Forward declaration
 class AudioEngine;
 
-struct AudioBuffer {
-    float *outputBuffer;
-    unsigned long framesPerBuffer;
-    const PaStreamCallbackTimeInfo *timeInfo;
-    const PaStreamCallbackFlags *statusFlags;
-};
-
 struct AudioBufferFrame {
-    float left;
-    float right;
+    float left = 0.0f;
+    float right = 0.0f;
 
     // Clamp the amplitude to avoid the possibility of going deaf
     void ClipToValidRange() {
@@ -34,6 +29,32 @@ struct AudioBufferFrame {
         float leftBlended = processed.left * mix + unprocessed.left * (1.0f - mix);
         float rightBlended = processed.right * mix + unprocessed.right * (1.0f - mix);
         return AudioBufferFrame{leftBlended, rightBlended};
+    }
+};
+
+struct AudioBuffer {
+    std::vector<AudioBufferFrame> outputBuffer;
+    size_t numFrames;
+
+    AudioBuffer(size_t numFrames) : outputBuffer(numFrames), numFrames(numFrames) {}
+
+    AudioBuffer(float *initBuffer, size_t numFrames)
+        : outputBuffer(numFrames)
+        , numFrames(numFrames)
+    {
+        float *out = initBuffer;
+        for (size_t i = 0; i < numFrames; i++) {
+            outputBuffer[i].left = *out++;
+            outputBuffer[i].right = *out++;
+        }
+    }
+
+    void Add(const AudioBuffer& other) {
+        assert(numFrames == other.numFrames && "ERROR: Tried to add two audio buffers of different sizes together.");
+        for (size_t i = 0; i < numFrames; i++) {
+            outputBuffer[i].left += other.outputBuffer[i].left;
+            outputBuffer[i].right += other.outputBuffer[i].right;
+        }
     }
 };
 

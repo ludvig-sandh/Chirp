@@ -19,14 +19,15 @@ public:
     virtual ~AudioProcessor() = default;
 
     void AddChild(std::shared_ptr<AudioProcessor> child);
-
+    
     void SetCallbackForReadingPreset(std::function<void(AudioProcessor *, const AudioPreset&)> callback);
     void AddLFO(std::shared_ptr<LFO> lfo);
     virtual void ClearModulations() {};
-
-    void Process(AudioBuffer& buffer, const AudioPreset& preset);
-
+    
+    AudioBuffer Process(size_t numFrames, const AudioPreset& preset);
+    
     virtual void ProcessFrame(AudioBufferFrame& output) = 0;
+    void ClearVisited();
 
     Gain gain;
     Pan pan;
@@ -35,6 +36,9 @@ public:
 
 private:
     void ApplyGainAndPan(AudioBufferFrame& frame); 
+
+    bool m_visited = false;
+    std::unique_ptr<AudioBuffer> m_currentResult;
 
     std::unordered_set<std::shared_ptr<AudioProcessor>> m_children;
     std::unordered_set<std::shared_ptr<LFO>> m_lfos;

@@ -15,10 +15,28 @@ void AudioProcessor::AddLFO(std::shared_ptr<LFO> lfo) {
     m_lfos.insert(lfo);
 }
 
-void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
+AudioBuffer AudioProcessor::Process(size_t numFrames, const AudioPreset& preset) {
+    if (m_visited) {
+        assert(m_currentResult != nullptr);
+        // Don't compute the result of this node twice
+        return *m_currentResult;
+    }
+    m_visited = true;
+
+    if (m_currentResult == nullptr || m_currentResult->outputBuffer.size() != numFrames) {
+        m_currentResult = std::make_unique<AudioBuffer>(numFrames);
+    }else {
+        // Zero the buffer from last time
+        for (size_t i = 0; i < numFrames; i++) {
+            m_currentResult->outputBuffer[i].left = 0.0f;
+            m_currentResult->outputBuffer[i].right = 0.0f;
+        }
+    }
+
     // Process all children first
     for (const std::shared_ptr<AudioProcessor>& child : m_children) {
-        child->Process(buffer, preset);
+        AudioBuffer childBuf = child->Process(numFrames, preset);
+        m_currentResult->Add(childBuf);
     }
 
     // Process the output from the children via self, but first update any properties in response to GUI state
@@ -26,8 +44,7 @@ void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
         m_presetCallback->operator()(this, preset);
     }
 
-    float *out = buffer.outputBuffer;
-    for (unsigned long i = 0; i < buffer.framesPerBuffer; i++) {
+    for (AudioBufferFrame& frame : m_currentResult->outputBuffer) {
         // Update and apply LFOs, but first clear all modulations since they accumulate and reset within a single frame
         ClearModulations();
         for (std::shared_ptr<LFO> lfo : m_lfos) {
@@ -36,25 +53,27 @@ void AudioProcessor::Process(AudioBuffer& buffer, const AudioPreset& preset) {
             }
         }
 
-        float leftOutput = *out;
-        float rightOutput = *(out + 1);
-        AudioBufferFrame bypassedFrame{leftOutput, rightOutput};
-        AudioBufferFrame processedFrame(bypassedFrame);
+        AudioBufferFrame bypassedFrame(frame);
+        AudioBufferFrame processedFrame(frame);
 
-        AudioBufferFrame result;
         if (isOn) {
             ProcessFrame(processedFrame);
             ApplyGainAndPan(processedFrame);
-            result = AudioBufferFrame::Blend(processedFrame, bypassedFrame, mix);
+            frame = AudioBufferFrame::Blend(processedFrame, bypassedFrame, mix);
         }else {
-            result = bypassedFrame;
+            frame = bypassedFrame;
         }
 
-        result.ClipToValidRange();
-        
-        // Write back output to buffer
-        *out++ = result.left;
-        *out++ = result.right;
+        frame.ClipToValidRange();
+    }
+
+    return *m_currentResult;
+}
+
+void AudioProcessor::ClearVisited() {
+    m_visited = false;
+    for (const std::shared_ptr<AudioProcessor>& child : m_children) {
+        child->ClearVisited();
     }
 }
 

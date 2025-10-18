@@ -18,7 +18,7 @@ void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
     m_magnitudeHistory[m_currentColumn] = magnitudes;
     m_currentColumn = (m_currentColumn + 1) % m_specWidth;
 
-    // Prepare pixels (dynamic height!)
+    // Prepare pixels
     std::vector<unsigned char> pixels(m_specHeight * m_specHeight * 3, 0);
     for (int column_idx = 0; column_idx < m_specWidth; column_idx++) {
         int x = (m_currentColumn + column_idx) % m_specWidth;

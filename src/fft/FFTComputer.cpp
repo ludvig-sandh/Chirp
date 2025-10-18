@@ -23,24 +23,21 @@ void FFTComputer::StoreNewAudioLevels(AudioBufferFrame result) {
 
 void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
     // Copy over the output buffer into a vector we can "produce"
-    unsigned long outputLength = buffer.framesPerBuffer;
-    std::unique_ptr<std::vector<float>> output = std::make_unique<std::vector<float>>(outputLength);
-    float *read = static_cast<float*>(buffer.outputBuffer);
-    AudioBufferFrame rms{0.0f, 0.0f};
-    for (size_t i = 0; i < outputLength; i++) {
-        float left = *read++;
-        float right = *read++;
+    std::unique_ptr<std::vector<float>> output = std::make_unique<std::vector<float>>();
+    output->reserve(buffer.numFrames);
 
+    AudioBufferFrame rms{0.0f, 0.0f};
+    for (const AudioBufferFrame& frame : buffer.outputBuffer) {
         // Sum of squares (RMS)
-        rms.left += left * left;
-        rms.right += right * right;;
+        rms.left += frame.left * frame.left;
+        rms.right += frame.right * frame.right;
         
-        (*output).at(i) = (left + right) / 2.0; // Average across channels
+        output->push_back((frame.left + frame.right) / 2.0f); // Average across channels
     }
 
     // Mean and root (RMS)
-    rms.left /= static_cast<float>(outputLength);
-    rms.right /= static_cast<float>(outputLength);
+    rms.left /= static_cast<float>(buffer.numFrames);
+    rms.right /= static_cast<float>(buffer.numFrames);
     rms.left = std::sqrtf(rms.left);
     rms.right = std::sqrtf(rms.right);
 

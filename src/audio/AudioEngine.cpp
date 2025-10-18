@@ -30,18 +30,19 @@ AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FF
 }
 
 // Recurse from the root of the tree
-void AudioEngine::ProcessBuffer(AudioBuffer &buffer) {
+AudioBuffer AudioEngine::ProcessBuffer(size_t numFrames) {
     if (m_rootProcessor) {
-        m_rootProcessor->Process(buffer, *m_preset.get());
+        m_rootProcessor->ClearVisited();
 
-        // Temporary fix for reducing the way too loud volume
-        for (unsigned long i = 0; i < buffer.framesPerBuffer * 2; i++) {
-            ((float*)buffer.outputBuffer)[i] *= 0.5;
-        }
+        AudioBuffer result = m_rootProcessor->Process(numFrames, *m_preset.get());
 
         // Send buffer to FFT thread
-        m_fftComputer->ProvideAudioBuffer(buffer);
+        m_fftComputer->ProvideAudioBuffer(result);
+        
+        return result;
     }
+
+    return AudioBuffer(numFrames);
 }
 
 void AudioEngine::Start(std::atomic<bool>& running) {
