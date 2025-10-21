@@ -7,7 +7,7 @@ Envelope::Envelope(float attack, float hold, float dec, float sus) : m_attack(at
 
 float Envelope::GetNextSample() {
     // Progress time
-    m_timeSinceStart += 1 / SAMPLE_RATE;
+    m_timeSinceStart += 1.0f / SAMPLE_RATE;
 
     if (m_timeSinceStart < m_attack) {
         return m_timeSinceStart / m_attack;

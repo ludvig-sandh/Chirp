@@ -1,9 +1,10 @@
 #include "Oscillator.hpp"
 #include "AudioEngine.hpp"
 
-Voice::Voice(std::unique_ptr<Waveform> wf, Frequency freq)
-    : m_wf(std::move(wf))
-    , freq(freq)
+Voice::Voice(Frequency freq, std::unique_ptr<Waveform> wf, const Envelope& env)
+    : freq(freq)
+    , m_wf(std::move(wf))
+    , m_env(env)
 {}
 
 float Voice::GetNextSample() {
@@ -14,7 +15,7 @@ float Voice::GetNextSample() {
     // Loop back to always be in range [0, 1]
     m_currentPhase -= static_cast<int>(m_currentPhase);
     
-    return m_wf->GetSampleAt(m_currentPhase);
+    return m_wf->GetSampleAt(m_currentPhase) * m_env.GetNextSample();
 }
 
 void Voice::SetWaveformType(WaveformInfo::Type type) {
@@ -22,7 +23,12 @@ void Voice::SetWaveformType(WaveformInfo::Type type) {
 }
 
 void Oscillator::NoteOn(Frequency freq) {
-    Voice v(Waveform::ConstructWaveform(m_waveformType), freq);
+    if (m_voices.find(freq.GetAbsolute()) != m_voices.end()) {
+        // Don't replay a note that is already currently playing
+        return;
+    }
+    
+    Voice v(freq, Waveform::ConstructWaveform(m_waveformType), m_env);
     m_voices.emplace(freq.GetAbsolute(), std::move(v));
 }
 
@@ -40,6 +46,11 @@ void Oscillator::SetWaveformType(WaveformInfo::Type type) {
     for (auto& [_, voice] : m_voices) {
         voice.SetWaveformType(type);
     }
+}
+
+// Update the envelope used for note volume
+void Oscillator::SetEnvelope(Envelope envelope) {
+    m_env = envelope;
 }
 
 void Oscillator::AddPitchModulation(float semitones) {

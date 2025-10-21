@@ -169,10 +169,24 @@ void AudioEngine::InitChirpAudioProcessorTree() {
 void AudioEngine::InitSynthAudioProcessorTree() {
     // Osc1
     std::shared_ptr<AudioProcessor> oscA = std::make_shared<Oscillator>(WaveformInfo::Type::Sine);
-    dynamic_cast<Oscillator*>(oscA.get())->NoteOn(Frequency(440.0f));
+    dynamic_cast<Oscillator*>(oscA.get())->NoteOn(Frequency(Note(Key::A)));
     oscA->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Oscillator *oscA = dynamic_cast<Oscillator*>(self);
+
+        // TODO: Remove this temporary way to play a note and replace with actual keyboard input
+        if (preset.hpFilterMix < 0.5f) {
+            oscA->NoteOff(Frequency(Note(Key::A)));
+        }else {
+            oscA->NoteOn(Frequency(Note(Key::A)));
+        }
+
         oscA->SetWaveformType(preset.oscAWaveform.load());
+        oscA->SetEnvelope(Envelope(
+            preset.oscAAttack.load(),
+            preset.oscAHold.load(),
+            preset.oscADec.load(),
+            preset.oscASus.load()
+        ));
         oscA->isOn = preset.oscAOn.load();
         oscA->gain.SetLinear(preset.oscAVolume.load());
         oscA->pan.Set(preset.oscAPan.load());

@@ -31,8 +31,13 @@ struct AudioPreset {
     std::atomic<float> reverbWet { 0.5f };
     std::atomic<bool> reverbOn { true };
 
-    std::atomic<WaveformInfo::Type> oscAWaveform { WaveformInfo::Type::Sine };
+    std::atomic<WaveformInfo::Type> oscAWaveform { WaveformInfo::Type::Saw };
     std::atomic<bool> oscAOn { true };
     std::atomic<float> oscAVolume { 0.7f };
     std::atomic<float> oscAPan { 0.5f };
+
+    std::atomic<float> oscAAttack { 0.0f };
+    std::atomic<float> oscAHold { 0.0f };
+    std::atomic<float> oscADec { 0.0f };
+    std::atomic<float> oscASus { 1.0f };
 };
