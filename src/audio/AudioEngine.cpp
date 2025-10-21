@@ -203,6 +203,8 @@ void AudioEngine::InitSynthAudioProcessorTree() {
             preset.oscADec.load(),
             preset.oscASus.load()
         ));
+        oscA->SetOctave(preset.oscAOctave.load());
+
         oscA->isOn = preset.oscAOn.load();
         oscA->gain.SetLinear(preset.oscAVolume.load());
         oscA->pan.Set(preset.oscAPan.load());

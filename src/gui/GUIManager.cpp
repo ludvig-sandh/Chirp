@@ -237,6 +237,10 @@ void GUIManager::DrawSynthUI() {
     ImGui::SliderFloat("Pan", &oscAPanTemp, 0.0f, 1.0f);
     m_preset->oscAPan.store(oscAPanTemp);
 
+    int oscAOctaveTemp = m_preset->oscAOctave.load();
+    ImGui::SliderInt("Octave", &oscAOctaveTemp, 1, 7);
+    m_preset->oscAOctave.store(oscAOctaveTemp);
+
 
     ImGui::Separator();
     ImGui::Text("Oscillator A envelope");
