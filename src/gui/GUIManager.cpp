@@ -234,6 +234,31 @@ void GUIManager::DrawSynthUI() {
     ImGui::SliderFloat("Pan", &oscAPanTemp, 0.0f, 1.0f);
     m_preset->oscAPan.store(oscAPanTemp);
 
+
+    ImGui::Separator();
+    ImGui::Text("Oscillator A envelope");
+
+    // --- Attack ---
+    float oscAAttackTemp = m_preset->oscAAttack.load();
+    ImGui::SliderFloat("Attack (s)", &oscAAttackTemp, 0.0f, 2.0f);
+    m_preset->oscAAttack.store(oscAAttackTemp);
+
+    // --- Hold ---
+    float oscAHoldTemp = m_preset->oscAHold.load();
+    ImGui::SliderFloat("Hold (s)", &oscAHoldTemp, 0.0f, 2.0f);
+    m_preset->oscAHold.store(oscAHoldTemp);
+
+    // --- Decay ---
+    float oscADecTemp = m_preset->oscADec.load();
+    ImGui::SliderFloat("Decay (s)", &oscADecTemp, 0.0f, 2.0f);
+    m_preset->oscADec.store(oscADecTemp);
+
+    // --- Sustain ---
+    float oscASusTemp = m_preset->oscASus.load();
+    ImGui::SliderFloat("Sustain (level)", &oscASusTemp, 0.0f, 1.0f);
+    m_preset->oscASus.store(oscASusTemp);
+
+
     ImGui::Separator();
     ImGui::Text("LP filter settings");
 
