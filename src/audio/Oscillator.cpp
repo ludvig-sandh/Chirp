@@ -19,7 +19,11 @@ float Voice::GetNextSample() {
 
 void Oscillator::NoteOn(Frequency freq) {
     Voice v(m_factory(), freq);
-    m_voices.push_back(std::move(v));
+    m_voices.emplace(freq.GetAbsolute(), std::move(v));
+}
+
+void Oscillator::NoteOff(Frequency freq) {
+    m_voices.erase(freq.GetAbsolute());
 }
 
 void Oscillator::SetWaveformFactory(WaveformFactoryFn factory) {
@@ -27,21 +31,21 @@ void Oscillator::SetWaveformFactory(WaveformFactoryFn factory) {
 }
 
 void Oscillator::AddPitchModulation(float semitones) {
-    for (Voice& v : m_voices) {
-        v.freq.AddPitchModulation(semitones);
+    for (auto& [_, voice] : m_voices) {
+        voice.freq.AddPitchModulation(semitones);
     }
 }
 
 void Oscillator::ClearModulations() {
-    for (Voice& v : m_voices) {
-        v.freq.ClearModulations();
+    for (auto& [_, voice] : m_voices) {
+        voice.freq.ClearModulations();
     }
 }
 
 float Oscillator::GetNextSample() {
     float sample = 0.0f;
-    for (Voice& v : m_voices) {
-        sample += v.GetNextSample();
+    for (auto& [_, voice] : m_voices) {
+        sample += voice.GetNextSample();
     }
     return sample;
 }

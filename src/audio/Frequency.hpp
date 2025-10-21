@@ -40,7 +40,7 @@ public:
     void ClearModulations();
     void AddPitchModulation(float semitones);
 
-    float GetAbsolute();
+    float GetAbsolute() const;
 
 private:
     static float ConvertNoteToHz(Note note);
