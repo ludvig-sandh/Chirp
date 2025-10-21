@@ -37,6 +37,8 @@ private:
     GLFWwindow *InitAux();
     void DeinitAux();
 
+    void HandleKeyboardInput();
+
     std::shared_ptr<AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
 

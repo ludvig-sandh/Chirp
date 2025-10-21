@@ -169,15 +169,31 @@ void AudioEngine::InitChirpAudioProcessorTree() {
 void AudioEngine::InitSynthAudioProcessorTree() {
     // Osc1
     std::shared_ptr<AudioProcessor> oscA = std::make_shared<Oscillator>(WaveformInfo::Type::Sine);
-    dynamic_cast<Oscillator*>(oscA.get())->NoteOn(Frequency(Note(Key::A)));
     oscA->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Oscillator *oscA = dynamic_cast<Oscillator*>(self);
 
-        // TODO: Remove this temporary way to play a note and replace with actual keyboard input
-        if (preset.hpFilterMix < 0.5f) {
-            oscA->NoteOff(Frequency(Note(Key::A)));
-        }else {
-            oscA->NoteOn(Frequency(Note(Key::A)));
+        // Map all key inputs to notes and play the ones currently held down
+        std::vector<std::pair<const std::atomic<bool>*, Note>> keySettingPairs = {
+            { &preset.noteA5, Note(Key::A, 5) },
+            { &preset.noteAs5, Note(Key::As, 5) },
+            { &preset.noteB5, Note(Key::B, 5) },
+            { &preset.noteC5, Note(Key::C, 5) },
+            { &preset.noteCs5, Note(Key::Cs, 5) },
+            { &preset.noteD5, Note(Key::D, 5) },
+            { &preset.noteDs5, Note(Key::Ds, 5) },
+            { &preset.noteE5, Note(Key::E, 5) },
+            { &preset.noteF5, Note(Key::F, 5) },
+            { &preset.noteFs5, Note(Key::Fs, 5) },
+            { &preset.noteG5, Note(Key::G, 5) },
+            { &preset.noteGs5, Note(Key::Gs, 5) }
+        };
+
+        for (auto& [keySettingPtr, note] : keySettingPairs) {
+            if (keySettingPtr->load()) {
+                oscA->NoteOn(Frequency(note));
+            }else {
+                oscA->NoteOff(Frequency(note));
+            }
         }
 
         oscA->SetWaveformType(preset.oscAWaveform.load());
