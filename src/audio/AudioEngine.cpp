@@ -108,21 +108,21 @@ void AudioEngine::InitChirpAudioProcessorTree() {
     dynamic_cast<Oscillator*>(noiseOsc.get())->NoteOn(Frequency(555.0f));
     noiseOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Oscillator *noise = dynamic_cast<Oscillator*>(self);
-        noise->isOn = preset.noiseOn.load();
-        noise->gain.SetLinear(preset.noiseVolume.load());
+        noise->isOn = preset.chirpNoiseOn.load();
+        noise->gain.SetLinear(preset.chirpNoiseVolume.load());
     });
 
 
     // Low pass
     std::shared_ptr<AudioProcessor> lpFilter = std::make_shared<LowPassFilter>(
-        Frequency(m_preset->lpFilterCutoff.load()),
-        m_preset->lpFilterQ.load()
+        Frequency(m_preset->chirpLpFilterCutoff.load()),
+        m_preset->chirpLpFilterQ.load()
     );
     lpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         BaseFilter *f = dynamic_cast<BaseFilter*>(self);
-        f->SetCutoffAndPeaking(Frequency(preset.lpFilterCutoff.load()), preset.lpFilterQ.load());
-        f->isOn = preset.lpFilterOn.load();
-        f->mix = preset.lpFilterMix.load();
+        f->SetCutoffAndPeaking(Frequency(preset.chirpLpFilterCutoff.load()), preset.chirpLpFilterQ.load());
+        f->isOn = preset.chirpLpFilterOn.load();
+        f->mix = preset.chirpLpFilterMix.load();
     });
     lpFilter->AddChild(sineOsc);
     lpFilter->AddChild(noiseOsc);
@@ -130,14 +130,14 @@ void AudioEngine::InitChirpAudioProcessorTree() {
 
     // High pass
     std::shared_ptr<AudioProcessor> hpFilter = std::make_shared<HighPassFilter>(
-        Frequency(m_preset->hpFilterCutoff.load()),
-        m_preset->hpFilterQ.load()
+        Frequency(m_preset->chirpHpFilterCutoff.load()),
+        m_preset->chirpHpFilterQ.load()
     );
     hpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         BaseFilter *f = dynamic_cast<BaseFilter*>(self);
-        f->SetCutoffAndPeaking(Frequency(preset.hpFilterCutoff.load()), preset.hpFilterQ.load());
-        f->isOn = preset.hpFilterOn.load();
-        f->mix = preset.hpFilterMix.load();
+        f->SetCutoffAndPeaking(Frequency(preset.chirpHpFilterCutoff.load()), preset.chirpHpFilterQ.load());
+        f->isOn = preset.chirpHpFilterOn.load();
+        f->mix = preset.chirpHpFilterMix.load();
     });
     hpFilter->AddChild(lpFilter);
 
@@ -146,8 +146,8 @@ void AudioEngine::InitChirpAudioProcessorTree() {
     std::shared_ptr<AudioProcessor> reverb = std::make_shared<Reverb>();
     reverb->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Reverb *f = dynamic_cast<Reverb *>(self);
-        f->SetParams(preset.reverbFeedback.load(), preset.reverbDamp.load(), preset.reverbWet.load());
-        f->isOn = preset.reverbOn.load();
+        f->SetParams(preset.chirpReverbFeedback.load(), preset.chirpReverbDamp.load(), preset.chirpReverbWet.load());
+        f->isOn = preset.chirpReverbOn.load();
     });
     reverb->AddChild(hpFilter);
 
@@ -156,7 +156,7 @@ void AudioEngine::InitChirpAudioProcessorTree() {
     std::shared_ptr<AudioProcessor> mixer = std::make_shared<Mixer>();
     mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Mixer *m = dynamic_cast<Mixer*>(self);
-        m->gain.SetLinear(preset.masterVolume.load());
+        m->gain.SetLinear(preset.chirpMasterVolume.load());
     });
 
     mixer->AddChild(reverb);
@@ -201,50 +201,53 @@ void AudioEngine::InitSynthAudioProcessorTree() {
             }
         }
 
-        oscA->SetWaveformType(preset.oscAWaveform.load());
+        oscA->SetWaveformType(preset.synthOscAWaveform.load());
         oscA->SetEnvelope(Envelope(
-            preset.oscAAttack.load(),
-            preset.oscAHold.load(),
-            preset.oscADec.load(),
-            preset.oscASus.load()
+            preset.synthOscAAttack.load(),
+            preset.synthOscAHold.load(),
+            preset.synthOscADec.load(),
+            preset.synthOscASus.load()
         ));
-        oscA->SetOctave(preset.oscAOctave.load());
+        oscA->SetOctave(preset.synthOscAOctave.load());
 
-        oscA->isOn = preset.oscAOn.load();
-        oscA->gain.SetLinear(preset.oscAVolume.load());
-        oscA->pan.Set(preset.oscAPan.load());
+        oscA->isOn = preset.synthOscAOn.load();
+        oscA->gain.SetLinear(preset.synthOscAVolume.load());
+        oscA->pan.Set(preset.synthOscAPan.load());
     });
 
     // Low pass
     std::shared_ptr<AudioProcessor> lpFilter = std::make_shared<LowPassFilter>(
-        Frequency(m_preset->lpFilterCutoff.load()),
-        m_preset->lpFilterQ.load()
+        Frequency(m_preset->synthLpFilterCutoff.load()),
+        m_preset->synthLpFilterQ.load()
     );
     lpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         BaseFilter *f = dynamic_cast<BaseFilter*>(self);
-        f->SetCutoffAndPeaking(Frequency(preset.lpFilterCutoff.load()), preset.lpFilterQ.load());
-        f->isOn = preset.lpFilterOn.load();
-        f->mix = preset.lpFilterMix.load();
+        f->SetCutoffAndPeaking(Frequency(preset.synthLpFilterCutoff.load()), preset.synthLpFilterQ.load());
+        f->isOn = preset.synthLpFilterOn.load();
+        f->mix = preset.synthLpFilterMix.load();
     });
     lpFilter->AddChild(oscA);
 
-    filterEnv->callback = [](LFO *lfo, AudioProcessor *ap) {
+    filterEnv->callback = [preset = m_preset](LFO *lfo, AudioProcessor *ap) {
+        Envelope *env = dynamic_cast<Envelope*>(lfo);
+        env->attack = preset->synthOscALpCutoffAttack.load();
+        env->dec = preset->synthOscALpCutoffDec.load();
         LowPassFilter *osc = dynamic_cast<LowPassFilter*>(ap);
-        osc->AddCutoffModulation(lfo->GetNextSample() * 36.0f);
+        osc->AddCutoffModulation(lfo->GetNextSample() * preset->synthOscALpCutoffAmount.load());
     };
     lpFilter->AddLFO(filterEnv);
 
 
     // High pass
     std::shared_ptr<AudioProcessor> hpFilter = std::make_shared<HighPassFilter>(
-        Frequency(m_preset->hpFilterCutoff.load()),
-        m_preset->hpFilterQ.load()
+        Frequency(m_preset->synthHpFilterCutoff.load()),
+        m_preset->synthHpFilterQ.load()
     );
     hpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         BaseFilter *f = dynamic_cast<BaseFilter*>(self);
-        f->SetCutoffAndPeaking(Frequency(preset.hpFilterCutoff.load()), preset.hpFilterQ.load());
-        f->isOn = preset.hpFilterOn.load();
-        f->mix = preset.hpFilterMix.load();
+        f->SetCutoffAndPeaking(Frequency(preset.synthHpFilterCutoff.load()), preset.synthHpFilterQ.load());
+        f->isOn = preset.synthHpFilterOn.load();
+        f->mix = preset.synthHpFilterMix.load();
     });
     hpFilter->AddChild(lpFilter);
 
@@ -253,8 +256,8 @@ void AudioEngine::InitSynthAudioProcessorTree() {
     std::shared_ptr<AudioProcessor> reverb = std::make_shared<Reverb>();
     reverb->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Reverb *f = dynamic_cast<Reverb *>(self);
-        f->SetParams(preset.reverbFeedback.load(), preset.reverbDamp.load(), preset.reverbWet.load());
-        f->isOn = preset.reverbOn.load();
+        f->SetParams(preset.synthReverbFeedback.load(), preset.synthReverbDamp.load(), preset.synthReverbWet.load());
+        f->isOn = preset.synthReverbOn.load();
     });
     reverb->AddChild(hpFilter);
 
@@ -263,7 +266,7 @@ void AudioEngine::InitSynthAudioProcessorTree() {
     std::shared_ptr<AudioProcessor> mixer = std::make_shared<Mixer>();
     mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Mixer *m = dynamic_cast<Mixer*>(self);
-        m->gain.SetLinear(preset.masterVolume.load());
+        m->gain.SetLinear(preset.synthMasterVolume.load());
     });
 
     mixer->AddChild(reverb);
