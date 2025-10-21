@@ -13,12 +13,14 @@ public:
     Voice(Frequency freq, std::unique_ptr<Waveform> wf, const Envelope& env);
     float GetNextSample();
     void SetWaveformType(WaveformInfo::Type type);
+    void SetOctave(int octave);
 
     Frequency freq;
 
 private:
     std::unique_ptr<Waveform> m_wf;
     Envelope m_env;
+    int m_octave = 5;
     float m_currentPhase = 0.0f;
 };
 
@@ -38,6 +40,9 @@ public:
     // Update the envelope used for note volume
     void SetEnvelope(Envelope envelope);
 
+    // Updates the octave used for the root note A5 at 440Hz (5 is default, per definition)
+    void SetOctave(int octave);
+
     // Modulates the pitch of all voices
     void AddPitchModulation(float semitones);
 
@@ -51,4 +56,5 @@ private:
     WaveformInfo::Type m_waveformType;
     Envelope m_env;
     std::unordered_map<float, Voice> m_voices;
+    int octave = 5;
 };

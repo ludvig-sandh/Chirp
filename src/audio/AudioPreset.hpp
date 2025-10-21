@@ -37,6 +37,7 @@ struct AudioPreset {
     std::atomic<bool> oscAOn { true };
     std::atomic<float> oscAVolume { 0.7f };
     std::atomic<float> oscAPan { 0.5f };
+    std::atomic<int> oscAOctave { 5 };
 
     std::atomic<float> oscAAttack { 0.0f };
     std::atomic<float> oscAHold { 0.0f };

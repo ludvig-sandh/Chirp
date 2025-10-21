@@ -9,17 +9,21 @@ Voice::Voice(Frequency freq, std::unique_ptr<Waveform> wf, const Envelope& env)
 
 float Voice::GetNextSample() {
     float dt = 1.0 / SAMPLE_RATE;
-    float dOffset = dt * freq.GetAbsolute();
+    float dOffset = dt * freq.GetAbsolute() * std::pow(2.0f, static_cast<float>(m_octave) - 5.0f);
     m_currentPhase += dOffset;
 
     // Loop back to always be in range [0, 1]
     m_currentPhase -= static_cast<int>(m_currentPhase);
-    
+
     return m_wf->GetSampleAt(m_currentPhase) * m_env.GetNextSample();
 }
 
 void Voice::SetWaveformType(WaveformInfo::Type type) {
     m_wf = Waveform::ConstructWaveform(type);
+}
+
+void Voice::SetOctave(int octave) {
+    m_octave = octave;
 }
 
 void Oscillator::NoteOn(Frequency freq) {
@@ -51,6 +55,12 @@ void Oscillator::SetWaveformType(WaveformInfo::Type type) {
 // Update the envelope used for note volume
 void Oscillator::SetEnvelope(Envelope envelope) {
     m_env = envelope;
+}
+
+void Oscillator::SetOctave(int octave) {
+    for (auto& [_, voice] : m_voices) {
+        voice.SetOctave(octave);
+    }
 }
 
 void Oscillator::AddPitchModulation(float semitones) {
