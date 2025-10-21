@@ -24,8 +24,8 @@ void Frequency::ClearModulations() {
     m_pitchModulation = 0.0;
 }
 
-void Frequency::AddPitchModulation(float pitch) {
-    m_pitchModulation += pitch;
+void Frequency::AddPitchModulation(float semitones) {
+    m_pitchModulation += semitones;
 }
 
 float Frequency::GetAbsolute() {

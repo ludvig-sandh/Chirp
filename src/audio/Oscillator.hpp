@@ -5,9 +5,33 @@
 #include "Waveform.hpp"
 #include "LFO.hpp"
 
+class Voice {
+public:
+    Voice(std::unique_ptr<Waveform> wf, Frequency freq);
+    float GetNextSample();
+
+private:
+    std::unique_ptr<Waveform> m_wf;
+    float m_currentPhase = 0.0f;
+
+public:
+    Frequency freq;
+};
+
 class Oscillator final : public Generator, public LFO {
 public:
-    Oscillator(std::shared_ptr<Waveform>& wf, const Frequency& freq) : frequency(freq), m_waveform(wf) {}
+    using WaveformFactoryFn = std::function<std::unique_ptr<Waveform>()>;
+
+    explicit Oscillator(WaveformFactoryFn factory) : m_factory(std::move(factory)) {}
+
+    // Start a new voice
+    void NoteOn(Frequency freq);
+
+    // Update the waveform used by this oscillator
+    void SetWaveformFactory(WaveformFactoryFn factory);
+
+    // Modulates the pitch of all voices
+    void AddPitchModulation(float semitones);
 
     // Clears all modulations accumulated from LFOs in the last frame so they can modulate the next one
     virtual void ClearModulations() override;
@@ -15,10 +39,9 @@ public:
     // Returns the next sample for this oscillator. Must be called once every frame or it will become desynched.
     float GetNextSample() override;
     
-    Frequency frequency;
-
 private:
-    std::shared_ptr<Waveform> m_waveform;
+    WaveformFactoryFn m_factory;
+    std::vector<Voice> m_voices;
     float m_currentOffset = 0.0;
     float m_timeSinceStart = 0.0;
 };
