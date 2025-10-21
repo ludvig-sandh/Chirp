@@ -1,12 +1,13 @@
 #include "LowPassFilter.hpp"
 #include "AudioEngine.hpp"
 
-LowPassFilter::LowPassFilter(float cutoff, float Q) : BaseFilter(cutoff, Q) {
+LowPassFilter::LowPassFilter(Frequency cutoff, float Q) : BaseFilter(cutoff, Q) {
     ComputeAndApplyCoefficients();
 }
 
 void LowPassFilter::ComputeAndApplyCoefficients() {
-    float omega0 = 2.0f * M_PI * (m_cutoff + m_cutoffModulation) / SAMPLE_RATE;
+    float cutoffHz = std::clamp(m_cutoff.GetAbsolute(), s_minCutoff, s_maxCutoff);
+    float omega0 = 2.0f * M_PI * cutoffHz / SAMPLE_RATE;
     float alpha = std::sin(omega0) / (2.0f * m_Q);
     float cosOmega0 = std::cos(omega0);
 

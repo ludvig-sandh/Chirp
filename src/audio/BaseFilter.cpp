@@ -5,16 +5,15 @@
 
 #include <algorithm>
 
-BaseFilter::BaseFilter(float cutoff, float Q) : m_cutoff(cutoff), m_Q(Q) {}
+BaseFilter::BaseFilter(Frequency cutoff, float Q) : m_cutoff(cutoff), m_Q(Q) {}
 
 void BaseFilter::ProcessFrame(AudioBufferFrame& output) {
     output.left = m_leftFilter.Step(output.left);
     output.right = m_rightFilter.Step(output.right);
 }
 
-void BaseFilter::SetCutoff(float cutoff) {
-    m_cutoff = cutoff;
-    m_cutoff = std::clamp(m_cutoff, 20.0f, 20000.0f);
+void BaseFilter::SetCutoff(Frequency cutoff) {
+    m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), s_minCutoff, s_maxCutoff));
     ComputeAndApplyCoefficients();
 }
 
@@ -23,18 +22,17 @@ void BaseFilter::SetPeaking(float Q) {
     ComputeAndApplyCoefficients();
 }
 
-void BaseFilter::SetCutoffAndPeaking(float cutoff, float Q) {
-    m_cutoff = cutoff;
-    m_cutoff = std::clamp(m_cutoff, 20.0f, 20000.0f);
+void BaseFilter::SetCutoffAndPeaking(Frequency cutoff, float Q) {
+    m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), s_minCutoff, s_maxCutoff));
     m_Q = Q;
     ComputeAndApplyCoefficients();
 }
 
 void BaseFilter::ClearModulations() {
-    m_cutoffModulation = 0.0f;
+    m_cutoff.ClearModulations();
 }
 
-void BaseFilter::AddCutoffModulation(float deltaCutoff) {
-    m_cutoffModulation = std::clamp(m_cutoffModulation + deltaCutoff, 20.0f, 20000.0f);
+void BaseFilter::AddCutoffModulation(float semitones) {
+    m_cutoff.AddPitchModulation(semitones);
     ComputeAndApplyCoefficients();
 }

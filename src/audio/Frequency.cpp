@@ -16,8 +16,12 @@ Frequency::Frequency(Note note)
     , m_pitchModulation(0.0)
 {}
 
-void Frequency::SetPitch(float pitch) {
-    m_pitchBase = pitch;
+void Frequency::SetFrequency(float hertz) {
+    m_hertz = hertz;
+}
+
+void Frequency::SetPitch(float semitones) {
+    m_pitchBase = semitones;
 }
 
 void Frequency::ClearModulations() {

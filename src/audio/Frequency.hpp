@@ -32,10 +32,11 @@ struct Note {
 
 class Frequency {
 public:
-    Frequency(float hertz);
+    explicit Frequency(float hertz);
     Frequency(Note note);
 
-    void SetPitch(float pitch);
+    void SetFrequency(float hertz);
+    void SetPitch(float semitones);
 
     void ClearModulations();
     void AddPitchModulation(float semitones);
@@ -46,7 +47,7 @@ private:
     static float ConvertNoteToHz(Note note);
 
     float m_hertz = 440;
-    float m_pitchBase = 0.0;
-    float m_pitchModulation = 0.0; // In semitones (can be negative)
+    float m_pitchBase = 0.0; // In semitones (can be negative)
+    float m_pitchModulation = 0.0; // In semitones 
     static inline float m_notesPerOctave = 12.0;
 };
