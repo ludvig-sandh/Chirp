@@ -31,8 +31,10 @@ public:
     static void glfw_error_callback(int error, const char* description);
     
 private:
-    GLFWwindow *InitAux();
+    void DrawChirpUI();
+    void DrawSynthUI();
 
+    GLFWwindow *InitAux();
     void DeinitAux();
 
     std::shared_ptr<AudioPreset> m_preset;

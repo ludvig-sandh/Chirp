@@ -25,10 +25,12 @@ public:
 
     void Start(std::atomic<bool>& running);
 private:
-    void InitAudioProcessorTree();
+    void InitChirpAudioProcessorTree();
+    void InitSynthAudioProcessorTree();
 
     std::shared_ptr<AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
     AudioBackend m_backend;
-    std::shared_ptr<AudioProcessor> m_rootProcessor;
+    std::shared_ptr<AudioProcessor> m_chirpRoot;
+    std::shared_ptr<AudioProcessor> m_synthRoot;
 };
