@@ -26,14 +26,15 @@ void Voice::SetOctave(int octave) {
     m_octave = octave;
 }
 
-void Oscillator::NoteOn(Frequency freq) {
+bool Oscillator::NoteOn(Frequency freq) {
     if (m_voices.find(freq.GetAbsolute()) != m_voices.end()) {
         // Don't replay a note that is already currently playing
-        return;
+        return false;
     }
     
     Voice v(freq, Waveform::ConstructWaveform(m_waveformType), m_env);
     m_voices.emplace(freq.GetAbsolute(), std::move(v));
+    return true;
 }
 
 void Oscillator::NoteOff(Frequency freq) {

@@ -6,7 +6,7 @@ HighPassFilter::HighPassFilter(float cutoff, float Q) : BaseFilter(cutoff, Q) {
 }
 
 void HighPassFilter::ComputeAndApplyCoefficients() {
-    float omega0 = 2.0f * M_PI * m_cutoff / SAMPLE_RATE;
+    float omega0 = 2.0f * M_PI * (m_cutoff + m_cutoffModulation) / SAMPLE_RATE;
     float alpha = std::sin(omega0) / (2.0f * m_Q);
     float cosOmega0 = std::cos(omega0);
 

@@ -19,12 +19,16 @@ public:
     // If you want to set both, this call will only compute the coefficients once
     void SetCutoffAndPeaking(float cutoff, float Q);
 
+    void ClearModulations() override;
+    void AddCutoffModulation(float deltaCutoff);
+
 protected:
     // Is called every time cutoff or Q is modified, otherwise the changes won't take effect.
     virtual void ComputeAndApplyCoefficients() = 0;
 
     // Cutoff frequency
     float m_cutoff;
+    float m_cutoffModulation = 0.0f;
     float m_Q;
 
     BiquadFilter m_leftFilter;

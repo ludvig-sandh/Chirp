@@ -21,3 +21,7 @@ float Envelope::GetNextSample() {
     }
     return m_sus;
 }
+
+void Envelope::Restart() {
+    m_timeSinceStart = 0.0f;
+}

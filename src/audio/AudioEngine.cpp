@@ -167,9 +167,11 @@ void AudioEngine::InitChirpAudioProcessorTree() {
 }
 
 void AudioEngine::InitSynthAudioProcessorTree() {
+    std::shared_ptr<LFO> filterEnv = std::make_shared<Envelope>(0.0f, 0.0f, 0.4f, 0.0f);
+
     // Osc1
     std::shared_ptr<AudioProcessor> oscA = std::make_shared<Oscillator>(WaveformInfo::Type::Sine);
-    oscA->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
+    oscA->SetCallbackForReadingPreset([filterEnv](AudioProcessor *self, const AudioPreset& preset) {
         Oscillator *oscA = dynamic_cast<Oscillator*>(self);
 
         // Map all key inputs to notes and play the ones currently held down
@@ -190,7 +192,10 @@ void AudioEngine::InitSynthAudioProcessorTree() {
 
         for (auto& [keySettingPtr, note] : keySettingPairs) {
             if (keySettingPtr->load()) {
-                oscA->NoteOn(Frequency(note));
+                if (oscA->NoteOn(Frequency(note)) && filterEnv != nullptr) {
+                    // If we successfully started to play a new note, restart the cutoff envelope
+                    dynamic_cast<Envelope*>(filterEnv.get())->Restart();
+                }
             }else {
                 oscA->NoteOff(Frequency(note));
             }
@@ -222,6 +227,12 @@ void AudioEngine::InitSynthAudioProcessorTree() {
         f->mix = preset.lpFilterMix.load();
     });
     lpFilter->AddChild(oscA);
+
+    filterEnv->callback = [](LFO *lfo, AudioProcessor *ap) {
+        LowPassFilter *osc = dynamic_cast<LowPassFilter*>(ap);
+        osc->AddCutoffModulation(lfo->GetNextSample() * 5000.0f);
+    };
+    lpFilter->AddLFO(filterEnv);
 
 
     // High pass

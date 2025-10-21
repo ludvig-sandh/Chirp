@@ -28,8 +28,8 @@ class Oscillator final : public Generator, public LFO {
 public:
     explicit Oscillator(WaveformInfo::Type type) : m_waveformType(type) {}
 
-    // Start a new voice
-    void NoteOn(Frequency freq);
+    // Start a new voice. Returns true if started new note, and false if a note was already playing.
+    bool NoteOn(Frequency freq);
 
     // Stop an existing voice
     void NoteOff(Frequency freq);

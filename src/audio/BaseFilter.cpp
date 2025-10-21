@@ -29,3 +29,12 @@ void BaseFilter::SetCutoffAndPeaking(float cutoff, float Q) {
     m_Q = Q;
     ComputeAndApplyCoefficients();
 }
+
+void BaseFilter::ClearModulations() {
+    m_cutoffModulation = 0.0f;
+}
+
+void BaseFilter::AddCutoffModulation(float deltaCutoff) {
+    m_cutoffModulation = std::clamp(m_cutoffModulation + deltaCutoff, 20.0f, 20000.0f);
+    ComputeAndApplyCoefficients();
+}
