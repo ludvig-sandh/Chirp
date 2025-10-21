@@ -5,6 +5,8 @@
 #include "Waveform.hpp"
 #include "LFO.hpp"
 
+#include <unordered_map>
+
 class Voice {
 public:
     Voice(std::unique_ptr<Waveform> wf, Frequency freq);
@@ -27,6 +29,9 @@ public:
     // Start a new voice
     void NoteOn(Frequency freq);
 
+    // Stop an existing voice
+    void NoteOff(Frequency freq);
+
     // Update the waveform used by this oscillator
     void SetWaveformFactory(WaveformFactoryFn factory);
 
@@ -41,7 +46,5 @@ public:
     
 private:
     WaveformFactoryFn m_factory;
-    std::vector<Voice> m_voices;
-    float m_currentOffset = 0.0;
-    float m_timeSinceStart = 0.0;
+    std::unordered_map<float, Voice> m_voices;
 };

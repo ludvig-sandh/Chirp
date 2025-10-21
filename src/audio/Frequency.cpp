@@ -28,7 +28,7 @@ void Frequency::AddPitchModulation(float semitones) {
     m_pitchModulation += semitones;
 }
 
-float Frequency::GetAbsolute() {
+float Frequency::GetAbsolute() const {
     // The maximum pitch we should support is half the sample rate (Nyquist theorem)
     // Otherwise we'd get foldback aliasing.
     float actual = m_hertz * std::pow(2.0, (m_pitchBase + m_pitchModulation) / m_notesPerOctave);
