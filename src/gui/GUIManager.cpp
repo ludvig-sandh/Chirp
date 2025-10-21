@@ -3,6 +3,8 @@
 
 #include "GUIManager.hpp"
 #include "AudioBackend.hpp"
+#include "Waveform.hpp"
+#include "AppMode.hpp"
 #include <utility>
 #include <iostream>
 
@@ -49,111 +51,28 @@ void GUIManager::RunMainLoop() {
         {
             ImGui::Begin("Preset control"); // Create a window
 
-            ImGui::Text("Global settings");
-
-            float volumeTemp = m_preset->masterVolume.load();
-            ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
-            m_preset->masterVolume.store(volumeTemp);
-
-            ImGui::Separator();
-            ImGui::Text("Chirp settings");
-
-            bool chirpOnTemp = m_preset->chirpOn.load();
-            ImGui::Checkbox("Chirp sounds", &chirpOnTemp);
-            m_preset->chirpOn.store(chirpOnTemp);
-
-            float chirpVolumeTemp = m_preset->chirpVolume.load();
-            ImGui::SliderFloat("Chirp volume", &chirpVolumeTemp, 0.0f, 1.0f);
-            m_preset->chirpVolume.store(chirpVolumeTemp);
-
-            float chirpPanTemp = m_preset->chirpPan.load();
-            ImGui::SliderFloat("Chirp pan", &chirpPanTemp, 0.0f, 1.0f);
-            m_preset->chirpPan.store(chirpPanTemp);
-
-            ImGui::Separator();
-            ImGui::Text("Noise settings");
-
-            bool noiseOnTemp = m_preset->noiseOn.load();
-            ImGui::Checkbox("White noise", &noiseOnTemp);
-            m_preset->noiseOn.store(noiseOnTemp);
-
-            float noiseVolumeTemp = m_preset->noiseVolume.load();
-            ImGui::SliderFloat("White noise level", &noiseVolumeTemp, 0.0f, 1.0f);
-            m_preset->noiseVolume.store(noiseVolumeTemp);
-
-            ImGui::Separator();
-            ImGui::Text("LP filter settings");
-
-            bool lpFilterOnTemp = m_preset->lpFilterOn.load();
-            ImGui::Checkbox("Low-pass filter", &lpFilterOnTemp);
-            m_preset->lpFilterOn.store(lpFilterOnTemp);
-
-            float lpFilterMixTemp = m_preset->lpFilterMix.load();
-            ImGui::SliderFloat("LP Filter mix", &lpFilterMixTemp, 0.0f, 1.0f);
-            m_preset->lpFilterMix.store(lpFilterMixTemp);
-
-            float lpFilterCutoffTemp = m_preset->lpFilterCutoff.load();
-            ImGui::SliderFloat("LP Cutoff frequency (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
-            m_preset->lpFilterCutoff.store(lpFilterCutoffTemp);
-
-            float lpFilterQTemp = m_preset->lpFilterQ.load();
-            ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.0f, 3.0f);
-            m_preset->lpFilterQ.store(lpFilterQTemp);
-
-            ImGui::Separator();
-            ImGui::Text("HP filter settings");
-
-            bool hpFilterOnTemp = m_preset->hpFilterOn.load();
-            ImGui::Checkbox("High-pass filter", &hpFilterOnTemp);
-            m_preset->hpFilterOn.store(hpFilterOnTemp);
-
-            float hpFilterMixTemp = m_preset->hpFilterMix.load();
-            ImGui::SliderFloat("HP Filter mix", &hpFilterMixTemp, 0.0f, 1.0f);
-            m_preset->hpFilterMix.store(hpFilterMixTemp);
-
-            float hpFilterCutoffTemp = m_preset->hpFilterCutoff.load();
-            ImGui::SliderFloat("HP Cutoff frequency (Hz)", &hpFilterCutoffTemp, 0.0f, 20000.0f);
-            m_preset->hpFilterCutoff.store(hpFilterCutoffTemp);
-
-            float hpFilterQTemp = m_preset->hpFilterQ.load();
-            ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.0f, 3.0f);
-            m_preset->hpFilterQ.store(hpFilterQTemp);
-
-            ImGui::Separator();
-            ImGui::Text("Reverb settings");
-
-            bool reverbOnTemp = m_preset->reverbOn.load();
-            ImGui::Checkbox("Reverb", &reverbOnTemp);
-            m_preset->reverbOn.store(reverbOnTemp);
-
-            float reverbFeedbackTemp = m_preset->reverbFeedback.load();
-            ImGui::SliderFloat("Reverb feedback", &reverbFeedbackTemp, 0.0f, 0.8f);
-            m_preset->reverbFeedback.store(reverbFeedbackTemp);
-
-            float reverbDampTemp = m_preset->reverbDamp.load();
-            ImGui::SliderFloat("Reverb damp", &reverbDampTemp, 0.0f, 1.0f);
-            m_preset->reverbDamp.store(reverbDampTemp);
-
-            float reverbWetTemp = m_preset->reverbWet.load();
-            ImGui::SliderFloat("Reverb wet", &reverbWetTemp, 0.0f, 1.0f);
-            m_preset->reverbWet.store(reverbWetTemp);
-
-            
-            std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
-            if (column != nullptr) {
-                m_spectrogram.PushColumn(*column.get());
-                m_spectrogram.Show();
+            AppMode currentModeTemp = m_preset->appMode.load();
+            if (ImGui::BeginTabBar("ModeTabs")) {
+                if (ImGui::BeginTabItem("Chirp mode")) {
+                    currentModeTemp = AppMode::Chirp;
+                    ImGui::EndTabItem();
+                }
+                if (ImGui::BeginTabItem("Synth mode")) {
+                    currentModeTemp = AppMode::Synth;
+                    ImGui::EndTabItem();
+                }
+                ImGui::EndTabBar();
             }
+            m_preset->appMode.store(currentModeTemp);
 
-            std::shared_ptr<AudioBufferFrame> levels = m_fftComputer->GetLastAudioLevels();
-            if (levels != nullptr) {
-                m_levelsDisplay.UpdateLevels(*levels.get());
-                m_levelsDisplay.Show();
+            switch (currentModeTemp) {
+                case AppMode::Chirp:
+                    DrawChirpUI();
+                    break;
+                case AppMode::Synth:
+                    DrawSynthUI();
+                    break;
             }
-
-            float framerate = m_io->Framerate;
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
-            ImGui::End();
         }
 
         // Rendering
@@ -166,6 +85,228 @@ void GUIManager::RunMainLoop() {
 
         glfwSwapBuffers(m_window);
     }
+}
+
+void GUIManager::DrawChirpUI() {
+    ImGui::Text("Global settings");
+
+    float volumeTemp = m_preset->masterVolume.load();
+    ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
+    m_preset->masterVolume.store(volumeTemp);
+
+    ImGui::Separator();
+    ImGui::Text("Chirp settings");
+
+    bool chirpOnTemp = m_preset->chirpOn.load();
+    ImGui::Checkbox("Chirp sounds", &chirpOnTemp);
+    m_preset->chirpOn.store(chirpOnTemp);
+
+    float chirpVolumeTemp = m_preset->chirpVolume.load();
+    ImGui::SliderFloat("Chirp volume", &chirpVolumeTemp, 0.0f, 1.0f);
+    m_preset->chirpVolume.store(chirpVolumeTemp);
+
+    float chirpPanTemp = m_preset->chirpPan.load();
+    ImGui::SliderFloat("Chirp pan", &chirpPanTemp, 0.0f, 1.0f);
+    m_preset->chirpPan.store(chirpPanTemp);
+
+    ImGui::Separator();
+    ImGui::Text("Noise settings");
+
+    bool noiseOnTemp = m_preset->noiseOn.load();
+    ImGui::Checkbox("White noise", &noiseOnTemp);
+    m_preset->noiseOn.store(noiseOnTemp);
+
+    float noiseVolumeTemp = m_preset->noiseVolume.load();
+    ImGui::SliderFloat("White noise level", &noiseVolumeTemp, 0.0f, 1.0f);
+    m_preset->noiseVolume.store(noiseVolumeTemp);
+
+    ImGui::Separator();
+    ImGui::Text("LP filter settings");
+
+    bool lpFilterOnTemp = m_preset->lpFilterOn.load();
+    ImGui::Checkbox("Low-pass filter", &lpFilterOnTemp);
+    m_preset->lpFilterOn.store(lpFilterOnTemp);
+
+    float lpFilterMixTemp = m_preset->lpFilterMix.load();
+    ImGui::SliderFloat("LP Filter mix", &lpFilterMixTemp, 0.0f, 1.0f);
+    m_preset->lpFilterMix.store(lpFilterMixTemp);
+
+    float lpFilterCutoffTemp = m_preset->lpFilterCutoff.load();
+    ImGui::SliderFloat("LP Cutoff frequency (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
+    m_preset->lpFilterCutoff.store(lpFilterCutoffTemp);
+
+    float lpFilterQTemp = m_preset->lpFilterQ.load();
+    ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.0f, 3.0f);
+    m_preset->lpFilterQ.store(lpFilterQTemp);
+
+    ImGui::Separator();
+    ImGui::Text("HP filter settings");
+
+    bool hpFilterOnTemp = m_preset->hpFilterOn.load();
+    ImGui::Checkbox("High-pass filter", &hpFilterOnTemp);
+    m_preset->hpFilterOn.store(hpFilterOnTemp);
+
+    float hpFilterMixTemp = m_preset->hpFilterMix.load();
+    ImGui::SliderFloat("HP Filter mix", &hpFilterMixTemp, 0.0f, 1.0f);
+    m_preset->hpFilterMix.store(hpFilterMixTemp);
+
+    float hpFilterCutoffTemp = m_preset->hpFilterCutoff.load();
+    ImGui::SliderFloat("HP Cutoff frequency (Hz)", &hpFilterCutoffTemp, 0.0f, 20000.0f);
+    m_preset->hpFilterCutoff.store(hpFilterCutoffTemp);
+
+    float hpFilterQTemp = m_preset->hpFilterQ.load();
+    ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.0f, 3.0f);
+    m_preset->hpFilterQ.store(hpFilterQTemp);
+
+    ImGui::Separator();
+    ImGui::Text("Reverb settings");
+
+    bool reverbOnTemp = m_preset->reverbOn.load();
+    ImGui::Checkbox("Reverb", &reverbOnTemp);
+    m_preset->reverbOn.store(reverbOnTemp);
+
+    float reverbFeedbackTemp = m_preset->reverbFeedback.load();
+    ImGui::SliderFloat("Reverb feedback", &reverbFeedbackTemp, 0.0f, 0.8f);
+    m_preset->reverbFeedback.store(reverbFeedbackTemp);
+
+    float reverbDampTemp = m_preset->reverbDamp.load();
+    ImGui::SliderFloat("Reverb damp", &reverbDampTemp, 0.0f, 1.0f);
+    m_preset->reverbDamp.store(reverbDampTemp);
+
+    float reverbWetTemp = m_preset->reverbWet.load();
+    ImGui::SliderFloat("Reverb wet", &reverbWetTemp, 0.0f, 1.0f);
+    m_preset->reverbWet.store(reverbWetTemp);
+
+    
+    std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
+    if (column != nullptr) {
+        m_spectrogram.PushColumn(*column.get());
+        m_spectrogram.Show();
+    }
+
+    std::shared_ptr<AudioBufferFrame> levels = m_fftComputer->GetLastAudioLevels();
+    if (levels != nullptr) {
+        m_levelsDisplay.UpdateLevels(*levels.get());
+        m_levelsDisplay.Show();
+    }
+
+    float framerate = m_io->Framerate;
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
+    ImGui::End();
+}
+
+void GUIManager::DrawSynthUI() {
+    ImGui::Text("Global settings");
+
+    float volumeTemp = m_preset->masterVolume.load();
+    ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
+    m_preset->masterVolume.store(volumeTemp);
+
+    ImGui::Separator();
+    ImGui::Text("Oscillator A");
+    
+    bool oscAOnTemp = m_preset->oscAOn.load();
+    ImGui::Checkbox("On", &oscAOnTemp);
+    m_preset->oscAOn.store(oscAOnTemp);
+    
+    // --- Waveform dropdown ---
+    WaveformInfo::Type waveformTemp = m_preset->oscAWaveform.load();
+
+    // ImGui::Combo returns true if the selection changed
+    if (ImGui::BeginCombo("Waveform", WaveformInfo::Names[static_cast<int>(waveformTemp)])) {
+        for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
+            bool isSelected = (static_cast<int>(waveformTemp) == n);
+            if (ImGui::Selectable(WaveformInfo::Names[n], isSelected))
+                waveformTemp = static_cast<WaveformInfo::Type>(n);
+            if (isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+    m_preset->oscAWaveform.store(waveformTemp);
+    // ---
+
+    float oscAVolumeTemp = m_preset->oscAVolume.load();
+    ImGui::SliderFloat("Volume", &oscAVolumeTemp, 0.0f, 1.0f);
+    m_preset->oscAVolume.store(oscAVolumeTemp);
+
+    float oscAPanTemp = m_preset->oscAPan.load();
+    ImGui::SliderFloat("Pan", &oscAPanTemp, 0.0f, 1.0f);
+    m_preset->oscAPan.store(oscAPanTemp);
+
+    ImGui::Separator();
+    ImGui::Text("LP filter settings");
+
+    bool lpFilterOnTemp = m_preset->lpFilterOn.load();
+    ImGui::Checkbox("Low-pass filter", &lpFilterOnTemp);
+    m_preset->lpFilterOn.store(lpFilterOnTemp);
+
+    float lpFilterMixTemp = m_preset->lpFilterMix.load();
+    ImGui::SliderFloat("LP Filter mix", &lpFilterMixTemp, 0.0f, 1.0f);
+    m_preset->lpFilterMix.store(lpFilterMixTemp);
+
+    float lpFilterCutoffTemp = m_preset->lpFilterCutoff.load();
+    ImGui::SliderFloat("LP Cutoff frequency (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
+    m_preset->lpFilterCutoff.store(lpFilterCutoffTemp);
+
+    float lpFilterQTemp = m_preset->lpFilterQ.load();
+    ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.0f, 3.0f);
+    m_preset->lpFilterQ.store(lpFilterQTemp);
+
+    ImGui::Separator();
+    ImGui::Text("HP filter settings");
+
+    bool hpFilterOnTemp = m_preset->hpFilterOn.load();
+    ImGui::Checkbox("High-pass filter", &hpFilterOnTemp);
+    m_preset->hpFilterOn.store(hpFilterOnTemp);
+
+    float hpFilterMixTemp = m_preset->hpFilterMix.load();
+    ImGui::SliderFloat("HP Filter mix", &hpFilterMixTemp, 0.0f, 1.0f);
+    m_preset->hpFilterMix.store(hpFilterMixTemp);
+
+    float hpFilterCutoffTemp = m_preset->hpFilterCutoff.load();
+    ImGui::SliderFloat("HP Cutoff frequency (Hz)", &hpFilterCutoffTemp, 0.0f, 20000.0f);
+    m_preset->hpFilterCutoff.store(hpFilterCutoffTemp);
+
+    float hpFilterQTemp = m_preset->hpFilterQ.load();
+    ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.0f, 3.0f);
+    m_preset->hpFilterQ.store(hpFilterQTemp);
+
+    ImGui::Separator();
+    ImGui::Text("Reverb settings");
+
+    bool reverbOnTemp = m_preset->reverbOn.load();
+    ImGui::Checkbox("Reverb", &reverbOnTemp);
+    m_preset->reverbOn.store(reverbOnTemp);
+
+    float reverbFeedbackTemp = m_preset->reverbFeedback.load();
+    ImGui::SliderFloat("Reverb feedback", &reverbFeedbackTemp, 0.0f, 0.8f);
+    m_preset->reverbFeedback.store(reverbFeedbackTemp);
+
+    float reverbDampTemp = m_preset->reverbDamp.load();
+    ImGui::SliderFloat("Reverb damp", &reverbDampTemp, 0.0f, 1.0f);
+    m_preset->reverbDamp.store(reverbDampTemp);
+
+    float reverbWetTemp = m_preset->reverbWet.load();
+    ImGui::SliderFloat("Reverb wet", &reverbWetTemp, 0.0f, 1.0f);
+    m_preset->reverbWet.store(reverbWetTemp);
+
+    
+    std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
+    if (column != nullptr) {
+        m_spectrogram.PushColumn(*column.get());
+        m_spectrogram.Show();
+    }
+
+    std::shared_ptr<AudioBufferFrame> levels = m_fftComputer->GetLastAudioLevels();
+    if (levels != nullptr) {
+        m_levelsDisplay.UpdateLevels(*levels.get());
+        m_levelsDisplay.Show();
+    }
+
+    float framerate = m_io->Framerate;
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
+    ImGui::End();
 }
 
 void GUIManager::glfw_error_callback(int error, const char* description)

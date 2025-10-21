@@ -1,8 +1,12 @@
 #pragma once
 
 #include <atomic>
+#include "Waveform.hpp"
+#include "AppMode.hpp"
 
 struct AudioPreset {
+    std::atomic<AppMode> appMode { AppMode::Chirp };
+
     std::atomic<float> masterVolume { 0.05f };
 
     std::atomic<bool> chirpOn { true };
@@ -26,4 +30,9 @@ struct AudioPreset {
     std::atomic<float> reverbDamp { 0.2f };
     std::atomic<float> reverbWet { 0.5f };
     std::atomic<bool> reverbOn { true };
+
+    std::atomic<WaveformInfo::Type> oscAWaveform { WaveformInfo::Type::Sine };
+    std::atomic<bool> oscAOn { true };
+    std::atomic<float> oscAVolume { 0.7f };
+    std::atomic<float> oscAPan { 0.5f };
 };

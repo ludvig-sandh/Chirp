@@ -57,6 +57,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(GUI_DIR)/LevelsHistory.cpp \
 		$(FFT_DIR)/FFTComputer.cpp \
 		$(FFT_DIR)/FFTHelper.cpp \
+		src/MainApplication.cpp \
 		src/main.cpp
 
 # Object files in build/, preserving directory structure

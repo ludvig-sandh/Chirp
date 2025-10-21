@@ -11,6 +11,7 @@ class Voice {
 public:
     Voice(std::unique_ptr<Waveform> wf, Frequency freq);
     float GetNextSample();
+    void SetWaveformType(WaveformInfo::Type type);
 
 private:
     std::unique_ptr<Waveform> m_wf;
@@ -22,9 +23,7 @@ public:
 
 class Oscillator final : public Generator, public LFO {
 public:
-    using WaveformFactoryFn = std::function<std::unique_ptr<Waveform>()>;
-
-    explicit Oscillator(WaveformFactoryFn factory) : m_factory(std::move(factory)) {}
+    explicit Oscillator(WaveformInfo::Type type) : m_waveformType(type) {}
 
     // Start a new voice
     void NoteOn(Frequency freq);
@@ -33,7 +32,7 @@ public:
     void NoteOff(Frequency freq);
 
     // Update the waveform used by this oscillator
-    void SetWaveformFactory(WaveformFactoryFn factory);
+    void SetWaveformType(WaveformInfo::Type type);
 
     // Modulates the pitch of all voices
     void AddPitchModulation(float semitones);
@@ -45,6 +44,6 @@ public:
     float GetNextSample() override;
     
 private:
-    WaveformFactoryFn m_factory;
+    WaveformInfo::Type m_waveformType;
     std::unordered_map<float, Voice> m_voices;
 };

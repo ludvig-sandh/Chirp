@@ -17,8 +17,12 @@ float Voice::GetNextSample() {
     return m_wf->GetSampleAt(m_currentPhase);
 }
 
+void Voice::SetWaveformType(WaveformInfo::Type type) {
+    m_wf = Waveform::ConstructWaveform(type);
+}
+
 void Oscillator::NoteOn(Frequency freq) {
-    Voice v(m_factory(), freq);
+    Voice v(Waveform::ConstructWaveform(m_waveformType), freq);
     m_voices.emplace(freq.GetAbsolute(), std::move(v));
 }
 
@@ -26,8 +30,16 @@ void Oscillator::NoteOff(Frequency freq) {
     m_voices.erase(freq.GetAbsolute());
 }
 
-void Oscillator::SetWaveformFactory(WaveformFactoryFn factory) {
-    m_factory = std::move(factory);
+void Oscillator::SetWaveformType(WaveformInfo::Type type) {
+    if (type == m_waveformType) {
+        return;
+    }
+    m_waveformType = type;
+
+    // Update all playing notes to use new waveform instead
+    for (auto& [_, voice] : m_voices) {
+        voice.SetWaveformType(type);
+    }
 }
 
 void Oscillator::AddPitchModulation(float semitones) {

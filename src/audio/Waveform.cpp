@@ -4,16 +4,31 @@
 #include <random>
 #include <cmath>
 
+std::unique_ptr<Waveform> Waveform::ConstructWaveform(WaveformInfo::Type type) {
+    switch (type) {
+        case WaveformInfo::Type::Sine:
+            return std::make_unique<Sine>();
+        case WaveformInfo::Type::Square:
+            return std::make_unique<Square>();
+        case WaveformInfo::Type::Saw:
+            return std::make_unique<Saw>();
+        case WaveformInfo::Type::WhiteNoise:
+            return std::make_unique<WhiteNoise>();
+    }
+    throw std::invalid_argument("Cannot construct a waveform from unexpected WaveformType enum value");
+    return nullptr;
+}
+
+float Saw::GetSampleAt(float currentOffset) {
+    return -1.0f + 2.0f * currentOffset;
+}
+
 float Sine::GetSampleAt(float currentOffset) {
     return std::sin(currentOffset * 2.0 * M_PI);
 }
 
 float Square::GetSampleAt(float currentOffset) {
     return currentOffset >= 0.5f ? 1.0f : -1.0f;
-}
-
-float Saw::GetSampleAt(float currentOffset) {
-    return -1.0f + 2.0f * currentOffset;
 }
 
 float WhiteNoise::GetSampleAt(float currentOffset) {
