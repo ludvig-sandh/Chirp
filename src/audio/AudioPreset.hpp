@@ -7,6 +7,7 @@
 struct AudioPreset {
     std::atomic<AppMode> appMode { AppMode::Chirp };
 
+    // Settings for Chirp mode
     std::atomic<float> masterVolume { 0.05f };
 
     std::atomic<bool> chirpOn { true };
@@ -31,6 +32,7 @@ struct AudioPreset {
     std::atomic<float> reverbWet { 0.5f };
     std::atomic<bool> reverbOn { true };
 
+    // Settings for synth mode
     std::atomic<WaveformInfo::Type> oscAWaveform { WaveformInfo::Type::Saw };
     std::atomic<bool> oscAOn { true };
     std::atomic<float> oscAVolume { 0.7f };
@@ -40,4 +42,18 @@ struct AudioPreset {
     std::atomic<float> oscAHold { 0.0f };
     std::atomic<float> oscADec { 0.0f };
     std::atomic<float> oscASus { 1.0f };
+
+    // Non-settings. Used to communicate key-presses to audio engine
+    std::atomic<bool> noteA5 { false };
+    std::atomic<bool> noteAs5 { false };
+    std::atomic<bool> noteB5 { false };
+    std::atomic<bool> noteC5 { false };
+    std::atomic<bool> noteCs5 { false };
+    std::atomic<bool> noteD5 { false };
+    std::atomic<bool> noteDs5 { false };
+    std::atomic<bool> noteE5 { false };
+    std::atomic<bool> noteF5 { false };
+    std::atomic<bool> noteFs5 { false };
+    std::atomic<bool> noteG5 { false };
+    std::atomic<bool> noteGs5 { false };
 };

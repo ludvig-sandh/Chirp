@@ -42,6 +42,9 @@ void GUIManager::RunMainLoop() {
             continue;
         }
 
+        // Handle key input BEFORE starting new ImGui frame
+        HandleKeyboardInput();
+
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -431,4 +434,19 @@ void GUIManager::DeinitAux() {
 
     glfwDestroyWindow(m_window);
     glfwTerminate();
+}
+
+void GUIManager::HandleKeyboardInput() {
+    m_preset->noteA5.store(glfwGetKey(m_window, GLFW_KEY_Z) == GLFW_PRESS);
+    m_preset->noteAs5.store(glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS);
+    m_preset->noteB5.store(glfwGetKey(m_window, GLFW_KEY_X) == GLFW_PRESS);
+    m_preset->noteC5.store(glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS);
+    m_preset->noteCs5.store(glfwGetKey(m_window, GLFW_KEY_C) == GLFW_PRESS);
+    m_preset->noteD5.store(glfwGetKey(m_window, GLFW_KEY_V) == GLFW_PRESS);
+    m_preset->noteDs5.store(glfwGetKey(m_window, GLFW_KEY_G) == GLFW_PRESS);
+    m_preset->noteE5.store(glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS);
+    m_preset->noteF5.store(glfwGetKey(m_window, GLFW_KEY_H) == GLFW_PRESS);
+    m_preset->noteFs5.store(glfwGetKey(m_window, GLFW_KEY_N) == GLFW_PRESS);
+    m_preset->noteG5.store(glfwGetKey(m_window, GLFW_KEY_J) == GLFW_PRESS);
+    m_preset->noteGs5.store(glfwGetKey(m_window, GLFW_KEY_M) == GLFW_PRESS);
 }
