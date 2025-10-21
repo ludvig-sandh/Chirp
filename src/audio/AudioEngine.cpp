@@ -69,12 +69,11 @@ void AudioEngine::Start(std::atomic<bool>& running) {
 
 // TODO: Read configuration from file?
 void AudioEngine::InitAudioProcessorTree() {
-    std::shared_ptr<Waveform> sine = std::make_shared<Sine>();
-    std::shared_ptr<Waveform> saw = std::make_shared<Saw>();
-    std::shared_ptr<Waveform> noise = std::make_shared<WhiteNoise>();
-
     // Chirp
-    std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(sine, Frequency(2220));
+    std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>([]{
+        return std::make_unique<Sine>();
+    });
+    dynamic_cast<Oscillator*>(sineOsc.get())->NoteOn(Frequency(2220.0f));
     sineOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Oscillator *sine = dynamic_cast<Oscillator*>(self);
         sine->isOn = preset.chirpOn.load();
@@ -85,13 +84,16 @@ void AudioEngine::InitAudioProcessorTree() {
     std::shared_ptr<LFO> rnd = std::make_shared<RandomLFO>(Frequency(16));
     rnd->callback = [](LFO *lfo, AudioProcessor *ap) {
         Oscillator *osc = dynamic_cast<Oscillator *>(ap);
-        osc->frequency.AddPitchModulation(lfo->GetNextSample() * 64);
+        osc->AddPitchModulation(lfo->GetNextSample() * 64);
     };
 
-    std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(saw, Frequency(62));
+    std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>([]{
+       return std::make_unique<Saw>(); 
+    });
+    dynamic_cast<Oscillator*>(vibrato.get())->NoteOn(Frequency(62.0f));
     vibrato->callback = [](LFO *lfo, AudioProcessor *ap) {
         Oscillator *osc = dynamic_cast<Oscillator *>(ap);
-        osc->frequency.AddPitchModulation(lfo->GetNextSample() - 0.5);
+        osc->AddPitchModulation(lfo->GetNextSample() - 0.5);
     };
 
     sineOsc->AddLFO(rnd); // Connect the rnd LFO to the sine oscillator
@@ -99,7 +101,10 @@ void AudioEngine::InitAudioProcessorTree() {
 
     
     // Noise
-    std::shared_ptr<AudioProcessor> noiseOsc = std::make_shared<Oscillator>(noise, Frequency(555));
+    std::shared_ptr<AudioProcessor> noiseOsc = std::make_shared<Oscillator>([]{
+        return std::make_unique<WhiteNoise>();
+    });
+    dynamic_cast<Oscillator*>(noiseOsc.get())->NoteOn(Frequency(555.0f));
     noiseOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
         Oscillator *noise = dynamic_cast<Oscillator*>(self);
         noise->isOn = preset.noiseOn.load();
