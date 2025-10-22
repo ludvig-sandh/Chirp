@@ -21,7 +21,9 @@ public:
 
 private:
     DelayType m_delayType;
+    float m_feedback;
 
     DelayLine m_leftLine;
     DelayLine m_rightLine;
+    DelayLine m_monoLine;
 };
