@@ -1,7 +1,8 @@
 #pragma once
 
+#include <vector>
 #include "AudioProcessor.hpp"
-#include "HighPassFilter.hpp"
+#include "AudioFrame.hpp"
 
 class Reverb : public AudioProcessor {
 public:
@@ -15,15 +16,13 @@ private:
     std::vector<int> combDelays;
     std::vector<int> allpassDelays;
 
-    std::vector<std::vector<float>> combBuffers;
-    std::vector<std::vector<float>> allpassBuffers;
-    std::vector<float> combFilterState = {0,0,0,0};
+    std::vector<std::vector<AudioFrame>> combBuffers;
+    std::vector<std::vector<AudioFrame>> allpassBuffers;
+    std::vector<AudioFrame> combFilterState;
     std::vector<int> posComb = {0,0,0,0};
     std::vector<int> posAllpass = {0,0};
 
     float feedback = 0.8f;
     float damp = 0.2f;
     float wetMix = 0.3f;
-
-
 };

@@ -2,14 +2,14 @@
 
 #include <numbers>
 
-Reverb::Reverb() {
-    // Choose reasonable delay lengths (prime numbers help)
-    combDelays = {1116, 1188, 1277, 1356};
-    allpassDelays = {225, 556};
+Reverb::Reverb()
+    : combDelays{1116, 1188, 1277, 1356} // Choose reasonable delay lengths (prime numbers help)
+    , allpassDelays{225, 556}
+    , combFilterState(4) {
 
     // Initialize buffers
-    for (auto d : combDelays) combBuffers.emplace_back(d, 0.0f);
-    for (auto d : allpassDelays) allpassBuffers.emplace_back(d, 0.0f);
+    for (auto d : combDelays) combBuffers.emplace_back(d, AudioFrame());
+    for (auto d : allpassDelays) allpassBuffers.emplace_back(d, AudioFrame());
 }
 
 void Reverb::SetParams(float roomSize, float damping, float wet) {
@@ -19,17 +19,17 @@ void Reverb::SetParams(float roomSize, float damping, float wet) {
 }
 
 void Reverb::ProcessFrame(AudioFrame& output) {
-    float in = output.left;
+    AudioFrame in = output;
 
     // --- Parallel comb filters ---
-    float combOut = 0.0f;
+    AudioFrame combOut;
     for (size_t i = 0; i < combBuffers.size(); ++i)
     {
-        auto& buf = combBuffers[i];
+        std::vector<AudioFrame>& buf = combBuffers[i];
         int delay = combDelays[i];
-        float& filterState = combFilterState[i];
+        AudioFrame& filterState = combFilterState[i];
 
-        float y = buf[posComb[i]];                           // delayed sample
+        AudioFrame y = buf[posComb[i]];                           // delayed sample
         filterState = y * (1.0f - damp) + filterState * damp; // damping
         buf[posComb[i]] = in + filterState * feedback;        // feedback write
 
@@ -42,15 +42,15 @@ void Reverb::ProcessFrame(AudioFrame& output) {
     combOut *= 1.5f;  // restore energy after averaging
 
     // --- Series allpass filters for diffusion ---
-    float apOut = combOut;
+    AudioFrame apOut = combOut;
     for (size_t i = 0; i < allpassBuffers.size(); ++i)
     {
-        auto& buf = allpassBuffers[i];
+        std::vector<AudioFrame>& buf = allpassBuffers[i];
         int delay = allpassDelays[i];
-        float bufOut = buf[posAllpass[i]];
+        AudioFrame bufOut = buf[posAllpass[i]];
 
         // allpass filter structure
-        float x = apOut + (-0.5f) * bufOut;
+        AudioFrame x = apOut + (-0.5f) * bufOut;
         buf[posAllpass[i]] = x;
         apOut = bufOut + x * 0.5f;
 
@@ -61,12 +61,11 @@ void Reverb::ProcessFrame(AudioFrame& output) {
     wetMix = std::clamp(wetMix, 0.0f, 1.0f);
     float dryGain = std::cos(wetMix * static_cast<float>(std::numbers::pi / 2.0));
     float wetGain = std::sin(wetMix * static_cast<float>(std::numbers::pi / 2.0));
-    float out = in * dryGain + apOut * wetGain;
+    AudioFrame out = in * dryGain + apOut * wetGain;
 
     // --- Soft clip for safety (prevents runaway feedback) ---
-    out = std::tanh(out); // keeps output in [-1, 1] smoothly
+    out.left = std::tanh(out.left); // keeps output in [-1, 1] smoothly
+    out.right = std::tanh(out.right);
 
-
-    output.left  = out;
-    output.right = out;
+    output = out;
 }

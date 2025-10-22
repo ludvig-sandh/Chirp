@@ -17,19 +17,19 @@ struct AudioFrame {
     }
 
     constexpr AudioFrame& operator+=(const AudioFrame& other) noexcept {
-        left  += other.left;
+        left += other.left;
         right += other.right;
         return *this;
     }
 
     constexpr AudioFrame& operator+=(float term) noexcept {
-        left  += term;
+        left += term;
         right += term;
         return *this;
     }
 
     constexpr AudioFrame& operator-=(float term) noexcept {
-        left  -= term;
+        left -= term;
         right -= term;
         return *this;
     }
@@ -39,8 +39,18 @@ struct AudioFrame {
     }
 
     constexpr AudioFrame& operator*=(float scalar) noexcept {
-        left  *= scalar;
+        left *= scalar;
         right *= scalar;
+        return *this;
+    }
+
+    constexpr AudioFrame operator/(float scalar) const noexcept {
+        return { left / scalar, right / scalar };
+    }
+
+    constexpr AudioFrame& operator/=(float scalar) noexcept {
+        left /= scalar;
+        right /= scalar;
         return *this;
     }
 };
