@@ -1,29 +1,20 @@
 #pragma once
 
-#include "DelayLine.hpp"
-#include "AudioProcessor.hpp"
+#include <vector>
+#include <cmath>
 
-enum class DelayType {
-    Mono,
-    Stereo,
-    PingPong
-};
+class Delay {
+public:
+    Delay(float delaySeconds = 0.0f);
 
+    // Set delay in seconds
+    void SetDelay(float delaySeconds);
 
-class Delay : public AudioProcessor {
-public: 
-    Delay(DelayType delayType, float delayTime, float feedback);
-
-    void SetDelayTime(float delayTime) noexcept;
-    void SetFeedback(float feedback) noexcept;
-
-    void ProcessFrame(AudioFrame& output) override;
+    // Process one sample at a time
+    float Process(float input);
 
 private:
-    DelayType m_delayType;
-    float m_feedback;
-
-    DelayLine m_leftLine;
-    DelayLine m_rightLine;
-    DelayLine m_monoLine;
+    float m_delayInSeconds;
+    std::vector<float> m_buffer;
+    int m_writeIndex = 0;
 };

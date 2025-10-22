@@ -19,7 +19,7 @@
 #include "BaseFilter.hpp"
 #include "LowPassFilter.hpp"
 #include "HighPassFilter.hpp"
-#include "Delay.hpp"
+#include "FeedbackDelay.hpp"
 #include "Reverb.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
@@ -254,7 +254,7 @@ void AudioEngine::InitSynthAudioProcessorTree() {
 
 
     // Delay
-    std::shared_ptr<AudioProcessor> delay = std::make_shared<Delay>(DelayType::Stereo, 0.2f, 0.3f);
+    std::shared_ptr<AudioProcessor> delay = std::make_shared<FeedbackDelay>(FeedbackDelayType::PingPong, 0.2f, 0.3f);
     // delay->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
     //     Delay *d = dynamic_cast<Delay *>(self);
     //     d->SetParams(preset.synthReverbFeedback.load(), preset.synthReverbDamp.load(), preset.synthReverbWet.load());

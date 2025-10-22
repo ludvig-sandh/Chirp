@@ -4,14 +4,14 @@
 #include <algorithm>
 
 // A single-channel delay line building block for different types of delay effects
-class DelayLine {
+class FeedbackDelayLine {
 public:
     // Constants for safety
     static constexpr float MIN_DELAY_SEC = 0.0f;
     static constexpr float MAX_DELAY_SEC = 10.0f;
     static constexpr float MAX_FEEDBACK  = 0.99f;
 
-    DelayLine(float delayTime, float feedback);
+    FeedbackDelayLine(float delayTime, float feedback);
 
     // Adjust delay time (seconds), safely clamped to allowed range
     void SetDelayTime(float seconds) noexcept;
@@ -19,7 +19,7 @@ public:
     // Adjust feedback amount [0.0, 0.99]
     void SetFeedback(float fb) noexcept;
 
-    // Process one input sample and return the delayed output
+    // Process one input sample and return the delayed output (without the input signal)
     float Process(float input) noexcept;
 
     // Reset the delay line buffer to silence
