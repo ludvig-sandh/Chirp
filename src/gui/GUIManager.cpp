@@ -5,6 +5,8 @@
 #include "AudioBackend.hpp"
 #include "Waveform.hpp"
 #include "AppMode.hpp"
+#include "FeedbackDelayLine.hpp"
+#include "FeedbackDelayInfo.hpp"
 #include <utility>
 #include <iostream>
 
@@ -321,6 +323,44 @@ void GUIManager::DrawSynthUI() {
     float hpFilterQTemp = m_preset->synthHpFilterQ.load();
     ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.0f, 3.0f);
     m_preset->synthHpFilterQ.store(hpFilterQTemp);
+
+    
+    ImGui::Separator();
+    ImGui::Text("Delay settings");
+
+    bool delayOnTemp = m_preset->synthDelayOn.load();
+    ImGui::Checkbox("Delay", &delayOnTemp);
+    m_preset->synthDelayOn.store(delayOnTemp);
+
+    // --- Delay type dropdown --- 
+    FeedbackDelayInfo::Type delayTypeTemp = m_preset->synthDelayType.load();
+
+    if (ImGui::BeginCombo("Delay mode", FeedbackDelayInfo::Names[static_cast<int>(delayTypeTemp)])) {
+        for (int n = 0; n < IM_ARRAYSIZE(FeedbackDelayInfo::Names); n++) {
+            bool isSelected = (static_cast<int>(delayTypeTemp) == n);
+            if (ImGui::Selectable(FeedbackDelayInfo::Names[n], isSelected)) {
+                delayTypeTemp = static_cast<FeedbackDelayInfo::Type>(n);
+            }
+            if (isSelected) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    m_preset->synthDelayType.store(delayTypeTemp);
+
+    float delayMixTemp = m_preset->synthDelayMix.load();
+    ImGui::SliderFloat("Delay mix", &delayMixTemp, 0.0f, 1.0f);
+    m_preset->synthDelayMix.store(delayMixTemp);
+
+    float delayTimeTemp = m_preset->synthDelayTime.load();
+    ImGui::SliderFloat("Delay time", &delayTimeTemp, FeedbackDelayLine::MIN_DELAY_SEC, FeedbackDelayLine::MAX_DELAY_SEC);
+    m_preset->synthDelayTime.store(delayTimeTemp);
+
+    float delayFeedbackTemp = m_preset->synthDelayFeedback.load();
+    ImGui::SliderFloat("Delay feedback", &delayFeedbackTemp, 0.01f, FeedbackDelayLine::MAX_FEEDBACK);
+    m_preset->synthDelayFeedback.store(delayFeedbackTemp);
+
 
     ImGui::Separator();
     ImGui::Text("Reverb settings");

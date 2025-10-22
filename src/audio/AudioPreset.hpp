@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include "Waveform.hpp"
+#include "FeedbackDelayInfo.hpp"
 #include "AppMode.hpp"
 
 struct AudioPreset {
@@ -59,6 +60,12 @@ struct AudioPreset {
     std::atomic<float> synthHpFilterMix { 1.0f };
     std::atomic<float> synthHpFilterCutoff { 1000.0f };
     std::atomic<float> synthHpFilterQ { 0.707f };
+
+    std::atomic<bool> synthDelayOn { false };
+    std::atomic<FeedbackDelayInfo::Type> synthDelayType { FeedbackDelayInfo::Type::Mono };
+    std::atomic<float> synthDelayMix { 1.0f };
+    std::atomic<float> synthDelayTime { 0.2f };
+    std::atomic<float> synthDelayFeedback { 0.5f };
 
     std::atomic<float> synthReverbFeedback { 0.8f };
     std::atomic<float> synthReverbDamp { 0.2f };

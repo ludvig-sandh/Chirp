@@ -1,29 +1,26 @@
 #pragma once
 
+#include "FeedbackDelayInfo.hpp"
 #include "FeedbackDelayLine.hpp"
 #include "AudioProcessor.hpp"
 #include "Delay.hpp"
-
-enum class FeedbackDelayType {
-    Mono,
-    Stereo,
-    PingPong
-};
 
 // Adds a looping delay effect that repeats audio but with less volume (depending on feedback)
 // The processed audio contains both dry input signal and wet delay tail
 class FeedbackDelay : public AudioProcessor {
 public: 
-    FeedbackDelay(FeedbackDelayType delayType, float delayTime, float feedback);
+    FeedbackDelay(FeedbackDelayInfo::Type delayType, float delayTime, float feedback);
 
-    void SetDelayType(FeedbackDelayType delayType) noexcept;
+    void SetDelayType(FeedbackDelayInfo::Type delayType) noexcept;
     void SetDelayTime(float delayTime) noexcept;
     void SetFeedback(float feedback) noexcept;
 
     void ProcessFrame(AudioFrame& output) override;
 
 private:
-    FeedbackDelayType m_delayType;
+    void UpdateDelayLines() noexcept;
+
+    FeedbackDelayInfo::Type m_delayType;
     float m_delayTime;
     float m_feedback;
 

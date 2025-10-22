@@ -254,12 +254,19 @@ void AudioEngine::InitSynthAudioProcessorTree() {
 
 
     // Delay
-    std::shared_ptr<AudioProcessor> delay = std::make_shared<FeedbackDelay>(FeedbackDelayType::PingPong, 0.2f, 0.3f);
-    // delay->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-    //     Delay *d = dynamic_cast<Delay *>(self);
-    //     d->SetParams(preset.synthReverbFeedback.load(), preset.synthReverbDamp.load(), preset.synthReverbWet.load());
-    //     d->isOn = preset.synthReverbOn.load();
-    // });
+    std::shared_ptr<AudioProcessor> delay = std::make_shared<FeedbackDelay>(
+        m_preset->synthDelayType.load(),
+        m_preset->synthDelayTime.load(),
+        m_preset->synthDelayFeedback.load()
+    );
+    delay->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
+        FeedbackDelay *d = dynamic_cast<FeedbackDelay *>(self);
+        d->SetDelayType(preset.synthDelayType.load());
+        d->SetDelayTime(preset.synthDelayTime.load());
+        d->SetFeedback(preset.synthDelayFeedback.load());
+        d->isOn = preset.synthDelayOn.load();
+        d->mix = preset.synthDelayMix.load();
+    });
     delay->AddChild(hpFilter);
 
 

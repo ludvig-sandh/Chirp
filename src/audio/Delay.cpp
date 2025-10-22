@@ -9,9 +9,11 @@ Delay::Delay(float delaySeconds)
 // Set delay in seconds
 void Delay::SetDelay(float delaySeconds) {
     m_delayInSeconds = delaySeconds;
-    int newDelaySamples = static_cast<int>(std::round(m_delayInSeconds * SAMPLE_RATE));
-    m_buffer.resize(newDelaySamples + 1, 0.0f); // +1 for safety margin
-    m_writeIndex = 0;
+    size_t newDelaySamples = static_cast<size_t>(std::round(m_delayInSeconds * SAMPLE_RATE)) + 1; // +1 for safety margin
+    if (m_buffer.size() != newDelaySamples) {
+        m_buffer.resize(newDelaySamples, 0.0f);
+        m_writeIndex = 0;
+    }
 }
 
 // Process one sample at a time

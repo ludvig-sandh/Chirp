@@ -7,7 +7,7 @@
 class FeedbackDelayLine {
 public:
     // Constants for safety
-    static constexpr float MIN_DELAY_SEC = 0.0f;
+    static constexpr float MIN_DELAY_SEC = 0.05f;
     static constexpr float MAX_DELAY_SEC = 10.0f;
     static constexpr float MAX_FEEDBACK  = 0.99f;
 
