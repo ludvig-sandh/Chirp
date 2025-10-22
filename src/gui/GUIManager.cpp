@@ -135,7 +135,8 @@ void GUIManager::DrawChirpUI() {
     m_preset->chirpLpFilterMix.store(lpFilterMixTemp);
 
     float lpFilterCutoffTemp = m_preset->chirpLpFilterCutoff.load();
-    ImGui::SliderFloat("LP Cutoff frequency (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
+    ImGui::SliderFloat("LP Cutoff frequency (Hz)", &lpFilterCutoffTemp,
+                    20.0f, 20000.0f, "%.1f Hz", ImGuiSliderFlags_Logarithmic);
     m_preset->chirpLpFilterCutoff.store(lpFilterCutoffTemp);
 
     float lpFilterQTemp = m_preset->chirpLpFilterQ.load();
@@ -154,7 +155,8 @@ void GUIManager::DrawChirpUI() {
     m_preset->chirpHpFilterMix.store(hpFilterMixTemp);
 
     float hpFilterCutoffTemp = m_preset->chirpHpFilterCutoff.load();
-    ImGui::SliderFloat("HP Cutoff frequency (Hz)", &hpFilterCutoffTemp, 0.0f, 20000.0f);
+    ImGui::SliderFloat("HP Cutoff frequency (Hz)", &hpFilterCutoffTemp,
+                    20.0f, 20000.0f, "%.1f Hz", ImGuiSliderFlags_Logarithmic);
     m_preset->chirpHpFilterCutoff.store(hpFilterCutoffTemp);
 
     float hpFilterQTemp = m_preset->chirpHpFilterQ.load();
@@ -278,7 +280,8 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthLpFilterMix.store(lpFilterMixTemp);
 
     float lpFilterCutoffTemp = m_preset->synthLpFilterCutoff.load();
-    ImGui::SliderFloat("Cutoff frequency (Hz)", &lpFilterCutoffTemp, 0.0f, 20000.0f);
+    ImGui::SliderFloat("Cutoff frequency (Hz) ##LP", &lpFilterCutoffTemp,
+                    20.0f, 20000.0f, "%.1f Hz", ImGuiSliderFlags_Logarithmic);
     m_preset->synthLpFilterCutoff.store(lpFilterCutoffTemp);
 
     float lpFilterQTemp = m_preset->synthLpFilterQ.load();
@@ -311,7 +314,8 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthHpFilterMix.store(hpFilterMixTemp);
 
     float hpFilterCutoffTemp = m_preset->synthHpFilterCutoff.load();
-    ImGui::SliderFloat("HP Cutoff frequency (Hz)", &hpFilterCutoffTemp, 0.0f, 20000.0f);
+    ImGui::SliderFloat("Cutoff frequency (Hz) ##HP", &hpFilterCutoffTemp,
+                    20.0f, 20000.0f, "%.1f Hz", ImGuiSliderFlags_Logarithmic);
     m_preset->synthHpFilterCutoff.store(hpFilterCutoffTemp);
 
     float hpFilterQTemp = m_preset->synthHpFilterQ.load();

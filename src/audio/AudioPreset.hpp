@@ -24,7 +24,7 @@ struct AudioPreset {
     
     std::atomic<bool> chirpHpFilterOn { false };
     std::atomic<float> chirpHpFilterMix { 1.0f };
-    std::atomic<float> chirpHpFilterCutoff { 10000.0f };
+    std::atomic<float> chirpHpFilterCutoff { 1000.0f };
     std::atomic<float> chirpHpFilterQ { 0.707f };
 
     std::atomic<float> chirpReverbFeedback { 0.8f };
@@ -48,7 +48,7 @@ struct AudioPreset {
 
     std::atomic<bool> synthLpFilterOn { true };
     std::atomic<float> synthLpFilterMix { 1.0f };
-    std::atomic<float> synthLpFilterCutoff { 10000.0f };
+    std::atomic<float> synthLpFilterCutoff { 5000.0f };
     std::atomic<float> synthLpFilterQ { 0.707f };
 
     std::atomic<float> synthOscALpCutoffAttack { 0.0f };
@@ -57,13 +57,13 @@ struct AudioPreset {
     
     std::atomic<bool> synthHpFilterOn { false };
     std::atomic<float> synthHpFilterMix { 1.0f };
-    std::atomic<float> synthHpFilterCutoff { 10000.0f };
+    std::atomic<float> synthHpFilterCutoff { 1000.0f };
     std::atomic<float> synthHpFilterQ { 0.707f };
 
     std::atomic<float> synthReverbFeedback { 0.8f };
     std::atomic<float> synthReverbDamp { 0.2f };
     std::atomic<float> synthReverbWet { 0.5f };
-    std::atomic<bool> synthReverbOn { true };
+    std::atomic<bool> synthReverbOn { false };
 
     // Non-settings. Used to communicate key-presses to audio engine
     std::atomic<bool> noteA5 { false };
