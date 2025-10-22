@@ -10,7 +10,7 @@
 class FFTComputer {
 public:
     std::shared_ptr<std::vector<float>> GetLastFFTResult() const;
-    std::shared_ptr<AudioBufferFrame> GetLastAudioLevels() const;
+    std::shared_ptr<AudioFrame> GetLastAudioLevels() const;
 
     // Called by audio thread to produce audio data
     void ProvideAudioBuffer(const AudioBuffer& buffer);
@@ -23,7 +23,7 @@ public:
 
 private:
     void StoreNewFFTResult(std::shared_ptr<std::vector<float>> result);
-    void StoreNewAudioLevels(AudioBufferFrame levels);
+    void StoreNewAudioLevels(AudioFrame levels);
 
     ProducerConsumer<std::vector<float>> m_producerConsumer;
 
@@ -31,7 +31,7 @@ private:
 
     // Lock free way to regularly update a result while another thread is reading it
     std::atomic<std::shared_ptr<std::vector<float>>> m_lastResult;
-    std::atomic<std::shared_ptr<AudioBufferFrame>> m_lastAudioLevels;
+    std::atomic<std::shared_ptr<AudioFrame>> m_lastAudioLevels;
 
     std::mutex m_resultMtx;
 };

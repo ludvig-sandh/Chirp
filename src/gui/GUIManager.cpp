@@ -187,7 +187,7 @@ void GUIManager::DrawChirpUI() {
         m_spectrogram.Show();
     }
 
-    std::shared_ptr<AudioBufferFrame> levels = m_fftComputer->GetLastAudioLevels();
+    std::shared_ptr<AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
     if (levels != nullptr) {
         m_levelsDisplay.UpdateLevels(*levels.get());
         m_levelsDisplay.Show();
@@ -344,7 +344,7 @@ void GUIManager::DrawSynthUI() {
         m_spectrogram.Show();
     }
 
-    std::shared_ptr<AudioBufferFrame> levels = m_fftComputer->GetLastAudioLevels();
+    std::shared_ptr<AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
     if (levels != nullptr) {
         m_levelsDisplay.UpdateLevels(*levels.get());
         m_levelsDisplay.Show();

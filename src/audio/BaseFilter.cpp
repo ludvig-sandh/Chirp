@@ -7,7 +7,7 @@
 
 BaseFilter::BaseFilter(Frequency cutoff, float Q) : m_cutoff(cutoff), m_Q(Q) {}
 
-void BaseFilter::ProcessFrame(AudioBufferFrame& output) {
+void BaseFilter::ProcessFrame(AudioFrame& output) {
     output.left = m_leftFilter.Step(output.left);
     output.right = m_rightFilter.Step(output.right);
 }

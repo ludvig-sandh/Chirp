@@ -11,7 +11,7 @@
 
 class LevelsDisplay {
 public:
-    void UpdateLevels(const AudioBufferFrame& levels);
+    void UpdateLevels(const AudioFrame& levels);
 
     // Render in imgui
     void Show();

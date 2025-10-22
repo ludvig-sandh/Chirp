@@ -11,7 +11,7 @@ class BaseFilter : public AudioProcessor {
 public:
     BaseFilter(Frequency cutoff, float Q);
 
-    void ProcessFrame(AudioBufferFrame& output) override;
+    void ProcessFrame(AudioFrame& output) override;
 
     void SetCutoff(Frequency cutoff);
 

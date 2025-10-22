@@ -26,7 +26,7 @@ public:
     
     AudioBuffer Process(size_t numFrames, const AudioPreset& preset);
     
-    virtual void ProcessFrame(AudioBufferFrame& output) = 0;
+    virtual void ProcessFrame(AudioFrame& output) = 0;
     void ClearVisited();
 
     Gain gain;
@@ -35,7 +35,7 @@ public:
     float mix = 1.0f;
 
 private:
-    void ApplyGainAndPan(AudioBufferFrame& frame); 
+    void ApplyGainAndPan(AudioFrame& frame); 
 
     bool m_visited = false;
     std::unique_ptr<AudioBuffer> m_currentResult;

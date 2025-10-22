@@ -44,7 +44,7 @@ AudioBuffer AudioProcessor::Process(size_t numFrames, const AudioPreset& preset)
         m_presetCallback->operator()(this, preset);
     }
 
-    for (AudioBufferFrame& frame : m_currentResult->outputBuffer) {
+    for (AudioFrame& frame : m_currentResult->outputBuffer) {
         // Update and apply LFOs, but first clear all modulations since they accumulate and reset within a single frame
         ClearModulations();
         for (std::shared_ptr<LFO> lfo : m_lfos) {
@@ -53,13 +53,13 @@ AudioBuffer AudioProcessor::Process(size_t numFrames, const AudioPreset& preset)
             }
         }
 
-        AudioBufferFrame bypassedFrame(frame);
-        AudioBufferFrame processedFrame(frame);
+        AudioFrame bypassedFrame(frame);
+        AudioFrame processedFrame(frame);
 
         if (isOn) {
             ProcessFrame(processedFrame);
             ApplyGainAndPan(processedFrame);
-            frame = AudioBufferFrame::Blend(processedFrame, bypassedFrame, mix);
+            frame = AudioFrame::Blend(processedFrame, bypassedFrame, mix);
         }else {
             frame = bypassedFrame;
         }
@@ -77,7 +77,7 @@ void AudioProcessor::ClearVisited() {
     }
 }
 
-void AudioProcessor::ApplyGainAndPan(AudioBufferFrame& output) {
+void AudioProcessor::ApplyGainAndPan(AudioFrame& output) {
     output.left = gain.Apply(output.left);
     output.left = pan.ApplyLeftGain(output.left);
     output.right = gain.Apply(output.right);

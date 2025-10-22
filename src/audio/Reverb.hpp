@@ -9,7 +9,7 @@ public:
 
     void SetParams(float roomSize, float damping, float wet);
 
-    void ProcessFrame(AudioBufferFrame& output) override;
+    void ProcessFrame(AudioFrame& output) override;
 
 private:
     std::vector<int> combDelays;

@@ -9,7 +9,7 @@ public:
     Generator();
     virtual ~Generator() = default;
 
-    void ProcessFrame(AudioBufferFrame& output) override;
+    void ProcessFrame(AudioFrame& output) override;
 
     // Computes the next sample in the signal to generate
     virtual float GetNextSample() = 0;

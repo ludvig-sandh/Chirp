@@ -18,7 +18,7 @@ void Reverb::SetParams(float roomSize, float damping, float wet) {
     wetMix = wet;        // 0–1 dry/wet
 }
 
-void Reverb::ProcessFrame(AudioBufferFrame& output) {
+void Reverb::ProcessFrame(AudioFrame& output) {
     float in = output.left;
 
     // --- Parallel comb filters ---

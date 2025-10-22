@@ -7,5 +7,5 @@
 class Mixer : public AudioProcessor {
 public:
     // Empty implementation means audio passes through.
-    void ProcessFrame(AudioBufferFrame& frame) override {}
+    void ProcessFrame(AudioFrame& frame) override {}
 };
