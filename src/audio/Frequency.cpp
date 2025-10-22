@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <cmath>
 
 #include "Frequency.hpp"
 #include "AudioEngine.hpp"

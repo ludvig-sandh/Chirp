@@ -1,8 +1,8 @@
 #include "Waveform.hpp"
-#include "AudioEngine.hpp"
 
 #include <random>
 #include <cmath>
+#include <numbers>
 
 std::unique_ptr<Waveform> Waveform::ConstructWaveform(WaveformInfo::Type type) {
     switch (type) {
@@ -24,7 +24,7 @@ float Saw::GetSampleAt(float currentOffset) {
 }
 
 float Sine::GetSampleAt(float currentOffset) {
-    return std::sin(currentOffset * 2.0 * M_PI);
+    return std::sin(currentOffset * 2.0 * std::numbers::pi);
 }
 
 float Square::GetSampleAt(float currentOffset) {

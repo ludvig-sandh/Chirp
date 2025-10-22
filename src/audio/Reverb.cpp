@@ -1,7 +1,6 @@
 #include "Reverb.hpp"
 
-#include "AudioEngine.hpp"
-#include <iostream>
+#include <numbers>
 
 Reverb::Reverb() {
     // Choose reasonable delay lengths (prime numbers help)
@@ -60,11 +59,10 @@ void Reverb::ProcessFrame(AudioBufferFrame& output) {
 
     // --- Equal-power dry/wet mixing ---
     wetMix = std::clamp(wetMix, 0.0f, 1.0f);
-    float dryGain = std::cos(wetMix * static_cast<float>(M_PI / 2.0));
-    float wetGain = std::sin(wetMix * static_cast<float>(M_PI / 2.0));
+    float dryGain = std::cos(wetMix * static_cast<float>(std::numbers::pi / 2.0));
+    float wetGain = std::sin(wetMix * static_cast<float>(std::numbers::pi / 2.0));
     float out = in * dryGain + apOut * wetGain;
 
-    // std::cout << out << "\n";
     // --- Soft clip for safety (prevents runaway feedback) ---
     out = std::tanh(out); // keeps output in [-1, 1] smoothly
 

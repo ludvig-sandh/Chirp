@@ -8,13 +8,7 @@
 #include "AudioProcessor.hpp"
 #include "FFTComputer.hpp"
 
-#define SAMPLE_RATE   (44100)
-
-#ifndef M_PI
-#define M_PI  (3.14159265)
-#endif
-
-#define TABLE_SIZE   (200)
+#define SAMPLE_RATE (44100)
 
 class AudioEngine {
 public:

@@ -3,7 +3,7 @@
 
 #include <cassert>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 std::shared_ptr<std::vector<float>> FFTComputer::GetLastFFTResult() const {
     return m_lastResult.load(std::memory_order_acquire);

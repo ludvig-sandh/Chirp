@@ -6,6 +6,7 @@
 #include <vector>
 #include <unordered_set>
 #include <cassert>
+#include <numbers>
 
 #include "Frequency.hpp"
 #include "AudioPreset.hpp"
@@ -26,8 +27,12 @@ struct AudioBufferFrame {
 
     static AudioBufferFrame Blend(const AudioBufferFrame& processed, const AudioBufferFrame& unprocessed, float mix) {
         mix = std::clamp(mix, 0.0f, 1.0f);
-        float leftBlended = processed.left * mix + unprocessed.left * (1.0f - mix);
-        float rightBlended = processed.right * mix + unprocessed.right * (1.0f - mix);
+
+        // Equal-power dry/wet mixing
+        float dryGain = std::cos(mix * static_cast<float>(std::numbers::pi / 2.0));
+        float wetGain = std::sin(mix * static_cast<float>(std::numbers::pi / 2.0));
+        float leftBlended = processed.left * wetGain + unprocessed.left * dryGain;
+        float rightBlended = processed.right * wetGain + unprocessed.right * dryGain;
         return AudioBufferFrame{leftBlended, rightBlended};
     }
 };
