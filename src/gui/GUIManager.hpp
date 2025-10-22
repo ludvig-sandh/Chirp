@@ -1,5 +1,7 @@
-#pragma once
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Ludvig Sandh
 
+#pragma once
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
