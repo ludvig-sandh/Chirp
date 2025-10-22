@@ -19,6 +19,7 @@
 #include "BaseFilter.hpp"
 #include "LowPassFilter.hpp"
 #include "HighPassFilter.hpp"
+#include "Delay.hpp"
 #include "Reverb.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
@@ -252,6 +253,16 @@ void AudioEngine::InitSynthAudioProcessorTree() {
     hpFilter->AddChild(lpFilter);
 
 
+    // Delay
+    std::shared_ptr<AudioProcessor> delay = std::make_shared<Delay>(DelayType::Stereo, 0.2f, 0.3f);
+    // delay->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
+    //     Delay *d = dynamic_cast<Delay *>(self);
+    //     d->SetParams(preset.synthReverbFeedback.load(), preset.synthReverbDamp.load(), preset.synthReverbWet.load());
+    //     d->isOn = preset.synthReverbOn.load();
+    // });
+    delay->AddChild(hpFilter);
+
+
     // Reverb
     std::shared_ptr<AudioProcessor> reverb = std::make_shared<Reverb>();
     reverb->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
@@ -259,7 +270,7 @@ void AudioEngine::InitSynthAudioProcessorTree() {
         f->SetParams(preset.synthReverbFeedback.load(), preset.synthReverbDamp.load(), preset.synthReverbWet.load());
         f->isOn = preset.synthReverbOn.load();
     });
-    reverb->AddChild(hpFilter);
+    reverb->AddChild(delay);
 
 
     // Global mixer
