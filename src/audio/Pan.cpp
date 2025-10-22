@@ -10,10 +10,6 @@ void Pan::Set(float pan) {
     m_leftGain.SetLinear(leftGainVal);
 }
 
-float Pan::ApplyRightGain(float sample) {
-    return m_rightGain.Apply(sample);
-}
-
-float Pan::ApplyLeftGain(float sample) {
-    return m_leftGain.Apply(sample);
+AudioFrame Pan::Apply(const AudioFrame& frame) {
+    return { m_leftGain.Apply(frame.left), m_rightGain.Apply(frame.right) };
 }

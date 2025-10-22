@@ -6,6 +6,5 @@ Generator::Generator() {
 
 void Generator::ProcessFrame(AudioFrame& output) {
     float value = m_headroom.Apply(GetNextSample());
-    output.left += value;
-    output.right += value;
+    output += value;
 }

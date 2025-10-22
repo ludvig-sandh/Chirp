@@ -51,6 +51,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(AUDIO_DIR)/LowPassFilter.cpp \
 		$(AUDIO_DIR)/HighPassFilter.cpp \
 		$(AUDIO_DIR)/Reverb.cpp \
+		$(AUDIO_DIR)/AudioFrame.cpp \
 		$(GUI_DIR)/GUIManager.cpp \
 		$(GUI_DIR)/Spectrogram.cpp \
 		$(GUI_DIR)/LevelsDisplay.cpp \

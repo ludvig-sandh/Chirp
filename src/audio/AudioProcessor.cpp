@@ -78,8 +78,6 @@ void AudioProcessor::ClearVisited() {
 }
 
 void AudioProcessor::ApplyGainAndPan(AudioFrame& output) {
-    output.left = gain.Apply(output.left);
-    output.left = pan.ApplyLeftGain(output.left);
-    output.right = gain.Apply(output.right);
-    output.right = pan.ApplyRightGain(output.right);
+    output = gain.Apply(output);
+    output = pan.Apply(output);
 }

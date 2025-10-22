@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AudioFrame.hpp"
+
 // Keeps track of gain values. When updating gain, it needs to change smoothly rather than jump in value.
 // The Gain class takes care of this.
 class Gain {
@@ -14,6 +16,7 @@ public:
     // Applies the current gain and updates it towards the target gain.
     // Should be called once for each sample.
     float Apply(float sample);
+    AudioFrame Apply(const AudioFrame& frame);
 
 private:
     float m_currentLinear = 0.0;

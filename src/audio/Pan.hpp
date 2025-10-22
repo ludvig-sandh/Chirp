@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Gain.hpp"
+#include "AudioFrame.hpp"
 
 class Pan {
 public:
     void Set(float pan);
-    float ApplyRightGain(float sample);
-    float ApplyLeftGain(float sample);
+    AudioFrame Apply(const AudioFrame& frame);
 private:
     Gain m_rightGain;
     Gain m_leftGain;

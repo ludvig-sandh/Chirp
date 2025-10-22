@@ -25,3 +25,8 @@ float Gain::Apply(float sample) {
     m_currentLinear += (m_targetLinear - m_currentLinear) * s_alpha;
     return m_currentLinear * sample;
 }
+
+AudioFrame Gain::Apply(const AudioFrame& frame) {
+    m_currentLinear += (m_targetLinear - m_currentLinear) * s_alpha;
+    return m_currentLinear * frame;
+}
