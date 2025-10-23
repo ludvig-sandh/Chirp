@@ -13,6 +13,7 @@ public:
     static constexpr float MIN_DELAY_SEC = 0.05f;
     static constexpr float MAX_DELAY_SEC = 10.0f;
     static constexpr float MAX_FEEDBACK  = 0.99f;
+    static constexpr float MIN_FEEDBACK  = 0.01f;
 
     FeedbackDelayLine(float delayTime, float feedback);
 

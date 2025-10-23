@@ -45,19 +45,25 @@ struct AudioPreset {
     std::atomic<float> synthOscAPan { 0.5f };
     std::atomic<int> synthOscAOctave { 5 };
 
-    std::atomic<float> synthOscAAttack { 0.0f };
-    std::atomic<float> synthOscAHold { 0.0f };
-    std::atomic<float> synthOscADec { 0.0f };
-    std::atomic<float> synthOscASus { 1.0f };
+    std::atomic<WaveformInfo::Type> synthOscBWaveform { WaveformInfo::Type::Saw };
+    std::atomic<bool> synthOscBOn { false };
+    std::atomic<float> synthOscBVolume { 0.7f };
+    std::atomic<float> synthOscBPan { 0.5f };
+    std::atomic<int> synthOscBOctave { 5 };
+
+    std::atomic<float> synthOscAttack { 0.0f };
+    std::atomic<float> synthOscHold { 0.0f };
+    std::atomic<float> synthOscDec { 0.0f };
+    std::atomic<float> synthOscSus { 1.0f };
 
     std::atomic<bool> synthLpFilterOn { true };
     std::atomic<float> synthLpFilterMix { 1.0f };
     std::atomic<float> synthLpFilterCutoff { 5000.0f };
     std::atomic<float> synthLpFilterQ { 0.707f };
 
-    std::atomic<float> synthOscALpCutoffAttack { 0.0f };
-    std::atomic<float> synthOscALpCutoffDec { 0.0f };
-    std::atomic<float> synthOscALpCutoffAmount { 12.0f };
+    std::atomic<float> synthOscLpCutoffAttack { 0.0f };
+    std::atomic<float> synthOscLpCutoffDec { 0.0f };
+    std::atomic<float> synthOscLpCutoffAmount { 12.0f };
     
     std::atomic<bool> synthHpFilterOn { false };
     std::atomic<float> synthHpFilterMix { 1.0f };
@@ -70,10 +76,10 @@ struct AudioPreset {
     std::atomic<float> synthDelayTime { 0.2f };
     std::atomic<float> synthDelayFeedback { 0.5f };
 
+    std::atomic<bool> synthReverbOn { false };
     std::atomic<float> synthReverbFeedback { 0.8f };
     std::atomic<float> synthReverbDamp { 0.2f };
     std::atomic<float> synthReverbWet { 0.5f };
-    std::atomic<bool> synthReverbOn { false };
 
     // Non-settings. Used to communicate key-presses to audio engine
     std::atomic<bool> noteA5 { false };

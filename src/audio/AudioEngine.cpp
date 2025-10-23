@@ -173,31 +173,32 @@ void AudioEngine::InitChirpAudioProcessorTree() {
 void AudioEngine::InitSynthAudioProcessorTree() {
     std::shared_ptr<LFO> filterEnv = std::make_shared<Envelope>(0.0f, 0.0f, 0.4f, 0.0f);
 
-    // Osc1
-    std::shared_ptr<AudioProcessor> oscA = std::make_shared<Oscillator>(WaveformInfo::Type::Sine);
-    oscA->SetCallbackForReadingPreset([filterEnv](AudioProcessor *self, const AudioPreset& preset) {
-        Oscillator *oscA = dynamic_cast<Oscillator*>(self);
+    // Map all key inputs to notes and play the ones currently held down
+    std::vector<std::pair<const std::atomic<bool>*, Note>> keySettingPairs = {
+        { &m_preset->noteA5, Note(Key::A, 5) },
+        { &m_preset->noteAs5, Note(Key::As, 5) },
+        { &m_preset->noteB5, Note(Key::B, 5) },
+        { &m_preset->noteC5, Note(Key::C, 5) },
+        { &m_preset->noteCs5, Note(Key::Cs, 5) },
+        { &m_preset->noteD5, Note(Key::D, 5) },
+        { &m_preset->noteDs5, Note(Key::Ds, 5) },
+        { &m_preset->noteE5, Note(Key::E, 5) },
+        { &m_preset->noteF5, Note(Key::F, 5) },
+        { &m_preset->noteFs5, Note(Key::Fs, 5) },
+        { &m_preset->noteG5, Note(Key::G, 5) },
+        { &m_preset->noteGs5, Note(Key::Gs, 5) }
+    };
 
-        // Map all key inputs to notes and play the ones currently held down
-        std::vector<std::pair<const std::atomic<bool>*, Note>> keySettingPairs = {
-            { &preset.noteA5, Note(Key::A, 5) },
-            { &preset.noteAs5, Note(Key::As, 5) },
-            { &preset.noteB5, Note(Key::B, 5) },
-            { &preset.noteC5, Note(Key::C, 5) },
-            { &preset.noteCs5, Note(Key::Cs, 5) },
-            { &preset.noteD5, Note(Key::D, 5) },
-            { &preset.noteDs5, Note(Key::Ds, 5) },
-            { &preset.noteE5, Note(Key::E, 5) },
-            { &preset.noteF5, Note(Key::F, 5) },
-            { &preset.noteFs5, Note(Key::Fs, 5) },
-            { &preset.noteG5, Note(Key::G, 5) },
-            { &preset.noteGs5, Note(Key::Gs, 5) }
-        };
+    // Osc A
+    std::shared_ptr<AudioProcessor> oscA = std::make_shared<Oscillator>(m_preset->synthOscAWaveform.load());
+    oscA->SetCallbackForReadingPreset([filterEnv, keySettingPairs](AudioProcessor *self, const AudioPreset& preset) {
+        Oscillator *oscA = dynamic_cast<Oscillator*>(self);
 
         for (auto& [keySettingPtr, note] : keySettingPairs) {
             if (keySettingPtr->load()) {
                 if (oscA->NoteOn(Frequency(note)) && filterEnv != nullptr) {
                     // If we successfully started to play a new note, restart the cutoff envelope
+                    // (only has to be done from one of the oscillators)
                     dynamic_cast<Envelope*>(filterEnv.get())->Restart();
                 }
             }else {
@@ -207,16 +208,43 @@ void AudioEngine::InitSynthAudioProcessorTree() {
 
         oscA->SetWaveformType(preset.synthOscAWaveform.load());
         oscA->SetEnvelope(Envelope(
-            preset.synthOscAAttack.load(),
-            preset.synthOscAHold.load(),
-            preset.synthOscADec.load(),
-            preset.synthOscASus.load()
+            preset.synthOscAttack.load(),
+            preset.synthOscHold.load(),
+            preset.synthOscDec.load(),
+            preset.synthOscSus.load()
         ));
         oscA->SetOctave(preset.synthOscAOctave.load());
 
         oscA->isOn = preset.synthOscAOn.load();
         oscA->gain.SetLinear(preset.synthOscAVolume.load());
         oscA->pan.Set(preset.synthOscAPan.load());
+    }); 
+
+    // Osc B
+    std::shared_ptr<AudioProcessor> oscB = std::make_shared<Oscillator>(m_preset->synthOscBWaveform.load());
+    oscB->SetCallbackForReadingPreset([filterEnv, keySettingPairs](AudioProcessor *self, const AudioPreset& preset) {
+        Oscillator *oscB = dynamic_cast<Oscillator*>(self);
+
+        for (auto& [keySettingPtr, note] : keySettingPairs) {
+            if (keySettingPtr->load()) {
+                oscB->NoteOn(Frequency(note));
+            }else {
+                oscB->NoteOff(Frequency(note));
+            }
+        }
+
+        oscB->SetWaveformType(preset.synthOscBWaveform.load());
+        oscB->SetEnvelope(Envelope(
+            preset.synthOscAttack.load(),
+            preset.synthOscHold.load(),
+            preset.synthOscDec.load(),
+            preset.synthOscSus.load()
+        ));
+        oscB->SetOctave(preset.synthOscBOctave.load());
+
+        oscB->isOn = preset.synthOscBOn.load();
+        oscB->gain.SetLinear(preset.synthOscBVolume.load());
+        oscB->pan.Set(preset.synthOscBPan.load());
     });
 
     // Low pass
@@ -231,13 +259,14 @@ void AudioEngine::InitSynthAudioProcessorTree() {
         f->mix = preset.synthLpFilterMix.load();
     });
     lpFilter->AddChild(oscA);
+    lpFilter->AddChild(oscB);
 
     filterEnv->callback = [preset = m_preset](LFO *lfo, AudioProcessor *ap) {
         Envelope *env = dynamic_cast<Envelope*>(lfo);
-        env->attack = preset->synthOscALpCutoffAttack.load();
-        env->dec = preset->synthOscALpCutoffDec.load();
+        env->attack = preset->synthOscLpCutoffAttack.load();
+        env->dec = preset->synthOscLpCutoffDec.load();
         LowPassFilter *osc = dynamic_cast<LowPassFilter*>(ap);
-        osc->AddCutoffModulation(lfo->GetNextSample() * preset->synthOscALpCutoffAmount.load());
+        osc->AddCutoffModulation(lfo->GetNextSample() * preset->synthOscLpCutoffAmount.load());
     };
     lpFilter->AddLFO(filterEnv);
 
