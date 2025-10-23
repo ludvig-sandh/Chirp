@@ -64,9 +64,7 @@ inline json ToJson(const AudioPreset& p) {
     return j;
 }
 
-//--------------------------------
-// Helper: JSON -> preset
-//--------------------------------
+// Helper: converts JSON to preset
 inline void FromJson(const json& j, AudioPreset& p)
 {
     auto get = [&](auto& field, const char* key, auto def) {
@@ -118,9 +116,7 @@ inline void FromJson(const json& j, AudioPreset& p)
     get(p.synthReverbWet, "synthReverbWet", 0.5f);
 }
 
-//--------------------------------
 // File I/O helpers
-//--------------------------------
 inline bool SaveToFile(const AudioPreset& p, const std::string& filePath)
 {
     std::ofstream file(filePath);
