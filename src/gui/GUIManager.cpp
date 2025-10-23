@@ -442,28 +442,65 @@ void GUIManager::DrawSynthUI() {
     ImGui::End();
 }
 
-void GUIManager::DrawPresetControls()
-{
+void GUIManager::DrawPresetControls() {
     ImGui::SeparatorText("Preset Management");
 
-    ImGui::InputText("Preset file", PRESET_PATH, IM_ARRAYSIZE(PRESET_PATH));
+    // --- Export Preset ---
+    if (ImGui::Button("Export Preset")) {
+        IGFD::FileDialogConfig config;
+        config.path = "."; // starting directory
+        config.countSelectionMax = 1;
+        ImGuiFileDialog::Instance()->OpenDialog("SavePresetDlg", "Export Preset", ".json", config);
+    }
 
-    if (ImGui::Button("💾 Export Preset"))
-    {
-        if (AudioPresetIO::SaveToFile(*m_preset, PRESET_PATH))
-            ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset saved successfully!");
-        else
-            ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to save preset!");
+    if (ImGuiFileDialog::Instance()->Display("SavePresetDlg")) {
+        if (ImGuiFileDialog::Instance()->IsOk()) {
+            std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+            if (AudioPresetIO::SaveToFile(*m_preset, filePath))
+                ImGui::OpenPopup("SaveSuccess");
+            else
+                ImGui::OpenPopup("SaveFail");
+        }
+        ImGuiFileDialog::Instance()->Close();
+    }
+
+    if (ImGui::BeginPopup("SaveSuccess")) {
+        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset exported successfully!");
+        ImGui::EndPopup();
+    }
+    if (ImGui::BeginPopup("SaveFail")) {
+        ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to export preset!");
+        ImGui::EndPopup();
     }
 
     ImGui::SameLine();
 
-    if (ImGui::Button("📂 Load Preset"))
-    {
-        if (AudioPresetIO::LoadFromFile(*m_preset, PRESET_PATH))
-            ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset loaded successfully!");
-        else
-            ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to load preset!");
+    // --- Load Preset ---
+    if (ImGui::Button("Load Preset")) {
+        IGFD::FileDialogConfig config;
+        config.path = "."; // starting directory
+        config.countSelectionMax = 1;
+        ImGuiFileDialog::Instance()->OpenDialog("LoadPresetDlg", "Load Preset", ".json", config);
+    }
+
+    if (ImGuiFileDialog::Instance()->Display("LoadPresetDlg")) {
+        if (ImGuiFileDialog::Instance()->IsOk()) {
+            std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
+            if (AudioPresetIO::LoadFromFile(*m_preset, filePath))
+                ImGui::OpenPopup("LoadSuccess");
+            else
+                ImGui::OpenPopup("LoadFail");
+        }
+        ImGuiFileDialog::Instance()->Close();
+    }
+
+    if (ImGui::BeginPopup("LoadSuccess")) {
+        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset loaded successfully!");
+        ImGui::EndPopup();
+    }
+    if (ImGui::BeginPopup("LoadFail")) {
+        ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to load preset!");
+        ImGui::EndPopup();
     }
 }
 
