@@ -7,6 +7,7 @@
 #include "AppMode.hpp"
 #include "FeedbackDelayLine.hpp"
 #include "FeedbackDelayInfo.hpp"
+#include "AudioPresetSerialization.hpp"
 #include <utility>
 #include <iostream>
 
@@ -203,6 +204,8 @@ void GUIManager::DrawChirpUI() {
 }
 
 void GUIManager::DrawSynthUI() {
+    DrawPresetControls();
+
     ImGui::Text("Global settings");
 
     float volumeTemp = m_preset->synthMasterVolume.load();
@@ -437,6 +440,31 @@ void GUIManager::DrawSynthUI() {
     float framerate = m_io->Framerate;
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
     ImGui::End();
+}
+
+void GUIManager::DrawPresetControls()
+{
+    ImGui::SeparatorText("Preset Management");
+
+    ImGui::InputText("Preset file", PRESET_PATH, IM_ARRAYSIZE(PRESET_PATH));
+
+    if (ImGui::Button("💾 Export Preset"))
+    {
+        if (AudioPresetIO::SaveToFile(*m_preset, PRESET_PATH))
+            ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset saved successfully!");
+        else
+            ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to save preset!");
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("📂 Load Preset"))
+    {
+        if (AudioPresetIO::LoadFromFile(*m_preset, PRESET_PATH))
+            ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset loaded successfully!");
+        else
+            ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to load preset!");
+    }
 }
 
 void GUIManager::glfw_error_callback(int error, const char* description)

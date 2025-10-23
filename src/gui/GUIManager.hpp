@@ -36,6 +36,9 @@ private:
     void DrawChirpUI();
     void DrawSynthUI();
 
+    // Used in synth UI to display export/load preset buttons
+    void DrawPresetControls();
+
     GLFWwindow *InitAux();
     void DeinitAux();
 
@@ -51,4 +54,7 @@ private:
 
     // Background color
     static inline ImVec4 clear_color = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);
+
+    // persistent input buffer for filename
+    static inline char PRESET_PATH[256] = "preset1.json";
 };
