@@ -25,7 +25,7 @@ GUI_DIR = src/gui
 HELPER_DIR = src/helper
 FFT_DIR = src/fft
 IMGUI_DIR = src/external/imgui
-JSON_DIR = src/external/nlohmann
+EXT_DIR = src/external
 POCKETFFT_DIR = src/external/pocketfft
 
 # Source files
@@ -71,7 +71,7 @@ OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
-CXXFLAGS = -std=c++23 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(SRC_DIR) -I$(AUDIO_DIR) -I$(GUI_DIR) -I$(HELPER_DIR) -I$(FFT_DIR) -I$(POCKETFFT_DIR) -I$(JSON_DIR)
+CXXFLAGS = -std=c++23 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(SRC_DIR) -I$(AUDIO_DIR) -I$(GUI_DIR) -I$(HELPER_DIR) -I$(FFT_DIR) -I$(POCKETFFT_DIR) -I$(EXT_DIR)
 CXXFLAGS += -g -Wall -Wformat
 LIBS = -lportaudio
 
