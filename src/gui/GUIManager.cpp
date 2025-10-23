@@ -95,14 +95,14 @@ void GUIManager::RunMainLoop() {
 }
 
 void GUIManager::DrawChirpUI() {
-    ImGui::Text("Global settings");
+    ImGui::SeparatorText("Global settings");
 
     float volumeTemp = m_preset->chirpMasterVolume.load();
     ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
     m_preset->chirpMasterVolume.store(volumeTemp);
 
-    ImGui::Separator();
-    ImGui::Text("Chirp settings");
+
+    ImGui::SeparatorText("Chirp settings");
 
     bool chirpOnTemp = m_preset->chirpOn.load();
     ImGui::Checkbox("Chirp sounds", &chirpOnTemp);
@@ -116,8 +116,8 @@ void GUIManager::DrawChirpUI() {
     ImGui::SliderFloat("Chirp pan", &chirpPanTemp, 0.0f, 1.0f);
     m_preset->chirpPan.store(chirpPanTemp);
 
-    ImGui::Separator();
-    ImGui::Text("Noise settings");
+
+    ImGui::SeparatorText("Noise settings");
 
     bool noiseOnTemp = m_preset->chirpNoiseOn.load();
     ImGui::Checkbox("White noise", &noiseOnTemp);
@@ -127,8 +127,8 @@ void GUIManager::DrawChirpUI() {
     ImGui::SliderFloat("White noise level", &noiseVolumeTemp, 0.0f, 1.0f);
     m_preset->chirpNoiseVolume.store(noiseVolumeTemp);
 
-    ImGui::Separator();
-    ImGui::Text("LP filter settings");
+
+    ImGui::SeparatorText("LP filter settings");
 
     bool lpFilterOnTemp = m_preset->chirpLpFilterOn.load();
     ImGui::Checkbox("Low-pass filter", &lpFilterOnTemp);
@@ -147,8 +147,8 @@ void GUIManager::DrawChirpUI() {
     ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.1f, 3.0f);
     m_preset->chirpLpFilterQ.store(lpFilterQTemp);
 
-    ImGui::Separator();
-    ImGui::Text("HP filter settings");
+
+    ImGui::SeparatorText("HP filter settings");
 
     bool hpFilterOnTemp = m_preset->chirpHpFilterOn.load();
     ImGui::Checkbox("High-pass filter", &hpFilterOnTemp);
@@ -167,8 +167,8 @@ void GUIManager::DrawChirpUI() {
     ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.1f, 3.0f);
     m_preset->chirpHpFilterQ.store(hpFilterQTemp);
 
-    ImGui::Separator();
-    ImGui::Text("Reverb settings");
+    
+    ImGui::SeparatorText("Reverb settings");
 
     bool reverbOnTemp = m_preset->chirpReverbOn.load();
     ImGui::Checkbox("Reverb", &reverbOnTemp);
@@ -205,17 +205,17 @@ void GUIManager::DrawChirpUI() {
 }
 
 void GUIManager::DrawSynthUI() {
-    DrawPresetControls();
-
-    ImGui::Text("Global settings");
+    ImGui::SeparatorText("Global settings");
 
     float volumeTemp = m_preset->synthMasterVolume.load();
     ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
     m_preset->synthMasterVolume.store(volumeTemp);
 
 
-    ImGui::Separator();
-    ImGui::Text("Oscillator A");
+    DrawPresetControls();
+
+
+    ImGui::SeparatorText("Oscillator A");
     
     bool oscAOnTemp = m_preset->synthOscAOn.load();
     ImGui::Checkbox("On##A", &oscAOnTemp);
@@ -250,8 +250,8 @@ void GUIManager::DrawSynthUI() {
     ImGui::SliderInt("Octave##A", &oscAOctaveTemp, 1, 7);
     m_preset->synthOscAOctave.store(oscAOctaveTemp);
 
-    ImGui::Separator();
-    ImGui::Text("Oscillator B");
+
+    ImGui::SeparatorText("Oscillator B");
     
     bool oscBOnTemp = m_preset->synthOscBOn.load();
     ImGui::Checkbox("On##B", &oscBOnTemp);
@@ -286,9 +286,8 @@ void GUIManager::DrawSynthUI() {
     ImGui::SliderInt("Octave##B", &oscBOctaveTemp, 1, 7);
     m_preset->synthOscBOctave.store(oscBOctaveTemp);
 
-
-    ImGui::Separator();
-    ImGui::Text("Volume envelope");
+    
+    ImGui::SeparatorText("Volume envelope");
 
     // --- Attack ---
     float oscAttackTemp = m_preset->synthOscAttack.load();
@@ -311,8 +310,7 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthOscSus.store(oscSusTemp);
 
 
-    ImGui::Separator();
-    ImGui::Text("Low-pass filter");
+    ImGui::SeparatorText("Low-pass filter");
 
     bool lpFilterOnTemp = m_preset->synthLpFilterOn.load();
     ImGui::Checkbox("On##LP", &lpFilterOnTemp);
@@ -332,8 +330,7 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthLpFilterQ.store(lpFilterQTemp);
 
 
-    ImGui::Separator();
-    ImGui::Text("Low-pass filter cutoff envelope");
+    ImGui::SeparatorText("Low-pass filter cutoff envelope");
     
     float oscLpCutoffAttackTemp = m_preset->synthOscLpCutoffAttack.load();
     ImGui::SliderFloat("Attack (s)##cut", &oscLpCutoffAttackTemp, 0.0f, 2.0f);
@@ -348,8 +345,7 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthOscLpCutoffAmount.store(oscLpCutoffAmountTemp);
 
 
-    ImGui::Separator();
-    ImGui::Text("High-pass filter");
+    ImGui::SeparatorText("High-pass filter");
 
     bool hpFilterOnTemp = m_preset->synthHpFilterOn.load();
     ImGui::Checkbox("On##HP", &hpFilterOnTemp);
@@ -369,8 +365,7 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthHpFilterQ.store(hpFilterQTemp);
 
     
-    ImGui::Separator();
-    ImGui::Text("Feedback delay");
+    ImGui::SeparatorText("Feedback delay");
 
     bool delayOnTemp = m_preset->synthDelayOn.load();
     ImGui::Checkbox("On##Delay", &delayOnTemp);
@@ -406,8 +401,7 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthDelayFeedback.store(delayFeedbackTemp);
 
 
-    ImGui::Separator();
-    ImGui::Text("Reverb settings");
+    ImGui::SeparatorText("Reverb settings");
 
     bool reverbOnTemp = m_preset->synthReverbOn.load();
     ImGui::Checkbox("On##Reverb", &reverbOnTemp);
@@ -504,7 +498,7 @@ void GUIManager::DrawPresetControls() {
         ImGui::EndPopup();
     }
 
-    
+
     // --- Select and load built-in preset ---
     auto& loader = BuiltInPresetsLoader::GetShared();
     auto& presetNames = loader.GetPresetNames();
