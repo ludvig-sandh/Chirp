@@ -57,6 +57,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(AUDIO_DIR)/Delay.cpp \
 		$(AUDIO_DIR)/FeedbackDelayLine.cpp \
 		$(AUDIO_DIR)/FeedbackDelay.cpp \
+		$(AUDIO_DIR)/BuiltInPresetsLoader.cpp \
 		$(GUI_DIR)/GUIManager.cpp \
 		$(GUI_DIR)/Spectrogram.cpp \
 		$(GUI_DIR)/LevelsDisplay.cpp \

@@ -8,6 +8,7 @@
 #include "FeedbackDelayLine.hpp"
 #include "FeedbackDelayInfo.hpp"
 #include "AudioPresetSerialization.hpp"
+#include "BuiltInPresetsLoader.hpp"
 #include <utility>
 #include <iostream>
 
@@ -445,7 +446,7 @@ void GUIManager::DrawSynthUI() {
 void GUIManager::DrawPresetControls() {
     ImGui::SeparatorText("Preset Management");
 
-    // --- Export Preset ---
+    // --- Browse and export preset file ---
     if (ImGui::Button("Export Preset")) {
         IGFD::FileDialogConfig config;
         config.path = "."; // starting directory
@@ -475,7 +476,7 @@ void GUIManager::DrawPresetControls() {
 
     ImGui::SameLine();
 
-    // --- Load Preset ---
+    // --- Browse and load preset file  ---
     if (ImGui::Button("Load Preset")) {
         IGFD::FileDialogConfig config;
         config.path = "."; // starting directory
@@ -500,6 +501,49 @@ void GUIManager::DrawPresetControls() {
     }
     if (ImGui::BeginPopup("LoadFail")) {
         ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to load preset!");
+        ImGui::EndPopup();
+    }
+
+    
+    // --- Select and load built-in preset ---
+    auto& loader = BuiltInPresetsLoader::GetShared();
+    auto& presetNames = loader.GetPresetNames();
+
+    static int currentPresetIndex = -1; // index of the selected preset
+
+    if (presetNames.empty()) {
+        ImGui::TextDisabled("No built-in presets found.");
+        return;
+    }
+
+    // Current label: show the selected preset name, or placeholder
+    const char* currentLabel =
+        (currentPresetIndex >= 0 && currentPresetIndex < (int)presetNames.size())
+        ? presetNames[currentPresetIndex].c_str()
+        : "Select preset...";
+
+    if (ImGui::BeginCombo("Built-in Presets", currentLabel)) {
+        for (int i = 0; i < (int)presetNames.size(); i++) {
+            bool isSelected = (currentPresetIndex == i);
+            if (ImGui::Selectable(presetNames[i].c_str(), isSelected)) {
+                currentPresetIndex = i;
+
+                // Load the selected preset
+                loader.LoadBuiltInPreset(*m_preset, presetNames[i]);
+
+                ImGui::OpenPopup("PresetLoadedPopup");
+            }
+            if (isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    // Optional: feedback popup
+    if (ImGui::BeginPopup("PresetLoadedPopup")) {
+        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f),
+                           "Preset '%s' loaded successfully!",
+                           presetNames[currentPresetIndex].c_str());
         ImGui::EndPopup();
     }
 }
