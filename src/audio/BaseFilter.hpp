@@ -39,4 +39,5 @@ protected:
 
     static inline const float s_minCutoff = 5.0f;
     static inline const float s_maxCutoff = 20000.0f;
+    static inline const float MIN_Q = 0.1f; // To avoid division-by-zero
 };

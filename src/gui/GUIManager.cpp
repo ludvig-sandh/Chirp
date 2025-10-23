@@ -143,7 +143,7 @@ void GUIManager::DrawChirpUI() {
     m_preset->chirpLpFilterCutoff.store(lpFilterCutoffTemp);
 
     float lpFilterQTemp = m_preset->chirpLpFilterQ.load();
-    ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.0f, 3.0f);
+    ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.1f, 3.0f);
     m_preset->chirpLpFilterQ.store(lpFilterQTemp);
 
     ImGui::Separator();
@@ -163,7 +163,7 @@ void GUIManager::DrawChirpUI() {
     m_preset->chirpHpFilterCutoff.store(hpFilterCutoffTemp);
 
     float hpFilterQTemp = m_preset->chirpHpFilterQ.load();
-    ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.0f, 3.0f);
+    ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.1f, 3.0f);
     m_preset->chirpHpFilterQ.store(hpFilterQTemp);
 
     ImGui::Separator();
@@ -327,7 +327,7 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthLpFilterCutoff.store(lpFilterCutoffTemp);
 
     float lpFilterQTemp = m_preset->synthLpFilterQ.load();
-    ImGui::SliderFloat("Peaking/Q##LP", &lpFilterQTemp, 0.0f, 3.0f);
+    ImGui::SliderFloat("Peaking/Q##LP", &lpFilterQTemp, 0.1f, 3.0f);
     m_preset->synthLpFilterQ.store(lpFilterQTemp);
 
 
@@ -364,7 +364,7 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthHpFilterCutoff.store(hpFilterCutoffTemp);
 
     float hpFilterQTemp = m_preset->synthHpFilterQ.load();
-    ImGui::SliderFloat("HP Peaking/Q##HP", &hpFilterQTemp, 0.0f, 3.0f);
+    ImGui::SliderFloat("HP Peaking/Q##HP", &hpFilterQTemp, 0.1f, 3.0f);
     m_preset->synthHpFilterQ.store(hpFilterQTemp);
 
     

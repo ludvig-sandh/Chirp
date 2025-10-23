@@ -21,13 +21,13 @@ void BaseFilter::SetCutoff(Frequency cutoff) {
 }
 
 void BaseFilter::SetPeaking(float Q) {
-    m_Q = Q;
+    m_Q = std::max(Q, MIN_Q);
     ComputeAndApplyCoefficients();
 }
 
 void BaseFilter::SetCutoffAndPeaking(Frequency cutoff, float Q) {
     m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), s_minCutoff, s_maxCutoff));
-    m_Q = Q;
+    m_Q = std::max(Q, MIN_Q);
     ComputeAndApplyCoefficients();
 }
 
