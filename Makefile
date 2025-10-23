@@ -25,6 +25,7 @@ GUI_DIR = src/gui
 HELPER_DIR = src/helper
 FFT_DIR = src/fft
 IMGUI_DIR = src/external/imgui
+IMGUI_FILE_DIALOG_DIR = src/external/ImGuiFileDialog
 EXT_DIR = src/external
 POCKETFFT_DIR = src/external/pocketfft
 
@@ -62,6 +63,7 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(GUI_DIR)/LevelsHistory.cpp \
 		$(FFT_DIR)/FFTComputer.cpp \
 		$(FFT_DIR)/FFTHelper.cpp \
+		$(EXT_DIR)/ImGuiFileDialog/ImGuiFileDialog.cpp \
 		src/MainApplication.cpp \
 		src/main.cpp
 
@@ -71,7 +73,7 @@ OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
-CXXFLAGS = -std=c++23 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(SRC_DIR) -I$(AUDIO_DIR) -I$(GUI_DIR) -I$(HELPER_DIR) -I$(FFT_DIR) -I$(POCKETFFT_DIR) -I$(EXT_DIR)
+CXXFLAGS = -std=c++23 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(SRC_DIR) -I$(AUDIO_DIR) -I$(GUI_DIR) -I$(HELPER_DIR) -I$(FFT_DIR) -I$(POCKETFFT_DIR) -I$(EXT_DIR) -I$(IMGUI_FILE_DIALOG_DIR)
 CXXFLAGS += -g -Wall -Wformat
 LIBS = -lportaudio
 

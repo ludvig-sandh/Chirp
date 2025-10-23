@@ -17,8 +17,6 @@ inline json ToJson(const AudioPreset& p) {
     json j;
 
     // Synth preset
-    j["synthMasterVolume"] = p.synthMasterVolume.load();
-
     j["synthOscAWaveform"] = static_cast<int>(p.synthOscAWaveform.load());
     j["synthOscAOn"] = p.synthOscAOn.load();
     j["synthOscAVolume"] = p.synthOscAVolume.load();
@@ -71,8 +69,6 @@ inline void FromJson(const json& j, AudioPreset& p)
         field.store(j.value(key, def));
     };
 
-    get(p.synthMasterVolume, "synthMasterVolume", 0.05f);
-
     p.synthOscAWaveform.store(static_cast<WaveformInfo::Type>(j.value("synthOscAWaveform", static_cast<int>(WaveformInfo::Type::Saw))));
     get(p.synthOscAOn, "synthOscAOn", true);
     get(p.synthOscAVolume, "synthOscAVolume", 0.7f);
@@ -120,8 +116,9 @@ inline void FromJson(const json& j, AudioPreset& p)
 inline bool SaveToFile(const AudioPreset& p, const std::string& filePath)
 {
     std::ofstream file(filePath);
-    if (!file.is_open())
+    if (!file.is_open()) {
         return false;
+    }
 
     json j = ToJson(p);
     file << j.dump(4); // Pretty print with 4 spaces
@@ -131,8 +128,9 @@ inline bool SaveToFile(const AudioPreset& p, const std::string& filePath)
 inline bool LoadFromFile(AudioPreset& p, const std::string& filePath)
 {
     std::ifstream file(filePath);
-    if (!file.is_open())
+    if (!file.is_open()) {
         return false;
+    }
 
     json j;
     try {
