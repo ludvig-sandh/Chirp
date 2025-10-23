@@ -6,9 +6,13 @@ TODO:
 [X] Custom logarithmic sliders for Hz in the range [20, 20000]
 [X] Add delay effect
 [X] Allow for saving and loading presets to files
-[ ] Add built-in synth presets that user can select from
+[X] Add built-in synth presets that user can select from
+[ ] Let user choose if the filter envelope applies to LP or HP cutoff
+[ ] Add LFOs that can be linked to oscillator pitch etc
 [ ] Add visual keyboard UI element in synth mode
-[ ] Add visual UI element that shows current waveform
+[ ] Add visual UI element that shows current waveform (?)
+[ ] Add visual UI element that shows spectrum
+[ ] Organize (and stick) windows to look amazing
 [ ] Test on mac and linux as well
 [ ] Record a demo of the application and upload to youtube
 [ ] Write extensive readme with explanations and figures
