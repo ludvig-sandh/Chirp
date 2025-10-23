@@ -209,110 +209,150 @@ void GUIManager::DrawSynthUI() {
     ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
     m_preset->synthMasterVolume.store(volumeTemp);
 
+
     ImGui::Separator();
     ImGui::Text("Oscillator A");
     
     bool oscAOnTemp = m_preset->synthOscAOn.load();
-    ImGui::Checkbox("On", &oscAOnTemp);
+    ImGui::Checkbox("On##A", &oscAOnTemp);
     m_preset->synthOscAOn.store(oscAOnTemp);
     
     // --- Waveform dropdown ---
-    WaveformInfo::Type waveformTemp = m_preset->synthOscAWaveform.load();
+    WaveformInfo::Type waveformATemp = m_preset->synthOscAWaveform.load();
 
     // ImGui::Combo returns true if the selection changed
-    if (ImGui::BeginCombo("Waveform", WaveformInfo::Names[static_cast<int>(waveformTemp)])) {
+    if (ImGui::BeginCombo("Waveform##A", WaveformInfo::Names[static_cast<int>(waveformATemp)])) {
         for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
-            bool isSelected = (static_cast<int>(waveformTemp) == n);
+            bool isSelected = (static_cast<int>(waveformATemp) == n);
             if (ImGui::Selectable(WaveformInfo::Names[n], isSelected))
-                waveformTemp = static_cast<WaveformInfo::Type>(n);
+                waveformATemp = static_cast<WaveformInfo::Type>(n);
             if (isSelected)
                 ImGui::SetItemDefaultFocus();
         }
         ImGui::EndCombo();
     }
-    m_preset->synthOscAWaveform.store(waveformTemp);
+    m_preset->synthOscAWaveform.store(waveformATemp);
     // ---
 
     float oscAVolumeTemp = m_preset->synthOscAVolume.load();
-    ImGui::SliderFloat("Volume", &oscAVolumeTemp, 0.0f, 1.0f);
+    ImGui::SliderFloat("Volume##A", &oscAVolumeTemp, 0.0f, 1.0f);
     m_preset->synthOscAVolume.store(oscAVolumeTemp);
 
     float oscAPanTemp = m_preset->synthOscAPan.load();
-    ImGui::SliderFloat("Pan", &oscAPanTemp, 0.0f, 1.0f);
+    ImGui::SliderFloat("Pan##A", &oscAPanTemp, 0.0f, 1.0f);
     m_preset->synthOscAPan.store(oscAPanTemp);
 
     int oscAOctaveTemp = m_preset->synthOscAOctave.load();
-    ImGui::SliderInt("Octave", &oscAOctaveTemp, 1, 7);
+    ImGui::SliderInt("Octave##A", &oscAOctaveTemp, 1, 7);
     m_preset->synthOscAOctave.store(oscAOctaveTemp);
 
+    ImGui::Separator();
+    ImGui::Text("Oscillator B");
+    
+    bool oscBOnTemp = m_preset->synthOscBOn.load();
+    ImGui::Checkbox("On##B", &oscBOnTemp);
+    m_preset->synthOscBOn.store(oscBOnTemp);
+    
+    // --- Waveform dropdown ---
+    WaveformInfo::Type waveformBTemp = m_preset->synthOscBWaveform.load();
+
+    // ImGui::Combo returns true if the selection changed
+    if (ImGui::BeginCombo("Waveform##B", WaveformInfo::Names[static_cast<int>(waveformBTemp)])) {
+        for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
+            bool isSelected = (static_cast<int>(waveformBTemp) == n);
+            if (ImGui::Selectable(WaveformInfo::Names[n], isSelected))
+                waveformBTemp = static_cast<WaveformInfo::Type>(n);
+            if (isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+    m_preset->synthOscBWaveform.store(waveformBTemp);
+    // ---
+
+    float oscBVolumeTemp = m_preset->synthOscBVolume.load();
+    ImGui::SliderFloat("Volume##B", &oscBVolumeTemp, 0.0f, 1.0f);
+    m_preset->synthOscBVolume.store(oscBVolumeTemp);
+
+    float oscBPanTemp = m_preset->synthOscBPan.load();
+    ImGui::SliderFloat("Pan##B", &oscBPanTemp, 0.0f, 1.0f);
+    m_preset->synthOscBPan.store(oscBPanTemp);
+
+    int oscBOctaveTemp = m_preset->synthOscBOctave.load();
+    ImGui::SliderInt("Octave##B", &oscBOctaveTemp, 1, 7);
+    m_preset->synthOscBOctave.store(oscBOctaveTemp);
+
 
     ImGui::Separator();
-    ImGui::Text("Oscillator A envelope");
+    ImGui::Text("Volume envelope");
 
     // --- Attack ---
-    float oscAAttackTemp = m_preset->synthOscAAttack.load();
-    ImGui::SliderFloat("Attack (s)", &oscAAttackTemp, 0.0f, 2.0f);
-    m_preset->synthOscAAttack.store(oscAAttackTemp);
+    float oscAttackTemp = m_preset->synthOscAttack.load();
+    ImGui::SliderFloat("Attack (s)##vol", &oscAttackTemp, 0.0f, 2.0f);
+    m_preset->synthOscAttack.store(oscAttackTemp);
 
     // --- Hold ---
-    float oscAHoldTemp = m_preset->synthOscAHold.load();
-    ImGui::SliderFloat("Hold (s)", &oscAHoldTemp, 0.0f, 2.0f);
-    m_preset->synthOscAHold.store(oscAHoldTemp);
+    float oscHoldTemp = m_preset->synthOscHold.load();
+    ImGui::SliderFloat("Hold (s)##vol", &oscHoldTemp, 0.0f, 2.0f);
+    m_preset->synthOscHold.store(oscHoldTemp);
 
     // --- Decay ---
-    float oscADecTemp = m_preset->synthOscADec.load();
-    ImGui::SliderFloat("Decay (s)", &oscADecTemp, 0.0f, 2.0f);
-    m_preset->synthOscADec.store(oscADecTemp);
+    float oscDecTemp = m_preset->synthOscDec.load();
+    ImGui::SliderFloat("Decay (s)##vol", &oscDecTemp, 0.0f, 2.0f);
+    m_preset->synthOscDec.store(oscDecTemp);
 
     // --- Sustain ---
-    float oscASusTemp = m_preset->synthOscASus.load();
-    ImGui::SliderFloat("Sustain (level)", &oscASusTemp, 0.0f, 1.0f);
-    m_preset->synthOscASus.store(oscASusTemp);
+    float oscSusTemp = m_preset->synthOscSus.load();
+    ImGui::SliderFloat("Sustain (level)##vol", &oscSusTemp, 0.0f, 1.0f);
+    m_preset->synthOscSus.store(oscSusTemp);
 
 
     ImGui::Separator();
-    ImGui::Text("Oscillator A LP filter settings");
+    ImGui::Text("Low-pass filter");
 
     bool lpFilterOnTemp = m_preset->synthLpFilterOn.load();
-    ImGui::Checkbox("Low-pass filter", &lpFilterOnTemp);
+    ImGui::Checkbox("On##LP", &lpFilterOnTemp);
     m_preset->synthLpFilterOn.store(lpFilterOnTemp);
 
     float lpFilterMixTemp = m_preset->synthLpFilterMix.load();
-    ImGui::SliderFloat("Mix", &lpFilterMixTemp, 0.0f, 1.0f);
+    ImGui::SliderFloat("Mix##LP", &lpFilterMixTemp, 0.0f, 1.0f);
     m_preset->synthLpFilterMix.store(lpFilterMixTemp);
 
     float lpFilterCutoffTemp = m_preset->synthLpFilterCutoff.load();
-    ImGui::SliderFloat("Cutoff frequency (Hz) ##LP", &lpFilterCutoffTemp,
+    ImGui::SliderFloat("Cutoff frequency (Hz)##LP", &lpFilterCutoffTemp,
                     20.0f, 20000.0f, "%.1f Hz", ImGuiSliderFlags_Logarithmic);
     m_preset->synthLpFilterCutoff.store(lpFilterCutoffTemp);
 
     float lpFilterQTemp = m_preset->synthLpFilterQ.load();
-    ImGui::SliderFloat("Peaking/Q", &lpFilterQTemp, 0.0f, 3.0f);
+    ImGui::SliderFloat("Peaking/Q##LP", &lpFilterQTemp, 0.0f, 3.0f);
     m_preset->synthLpFilterQ.store(lpFilterQTemp);
-
-    
-    float oscALpCutoffAttackTemp = m_preset->synthOscALpCutoffAttack.load();
-    ImGui::SliderFloat("Cutoff envelope attack (s)", &oscALpCutoffAttackTemp, 0.0f, 2.0f);
-    m_preset->synthOscALpCutoffAttack.store(oscALpCutoffAttackTemp);
-
-    float oscALpCutoffDecTemp = m_preset->synthOscALpCutoffDec.load();
-    ImGui::SliderFloat("Cutoff envelope decay (s)", &oscALpCutoffDecTemp, 0.0f, 2.0f);
-    m_preset->synthOscALpCutoffDec.store(oscALpCutoffDecTemp);
-
-    float oscALpCutoffAmountTemp = m_preset->synthOscALpCutoffAmount.load();
-    ImGui::SliderFloat("Cutoff envelope amount (semitones)", &oscALpCutoffAmountTemp, -60.0f, 60.0f);
-    m_preset->synthOscALpCutoffAmount.store(oscALpCutoffAmountTemp);
 
 
     ImGui::Separator();
-    ImGui::Text("HP filter settings");
+    ImGui::Text("Low-pass filter cutoff envelope");
+    
+    float oscLpCutoffAttackTemp = m_preset->synthOscLpCutoffAttack.load();
+    ImGui::SliderFloat("Attack (s)##cut", &oscLpCutoffAttackTemp, 0.0f, 2.0f);
+    m_preset->synthOscLpCutoffAttack.store(oscLpCutoffAttackTemp);
+
+    float oscLpCutoffDecTemp = m_preset->synthOscLpCutoffDec.load();
+    ImGui::SliderFloat("Decay (s)##cut", &oscLpCutoffDecTemp, 0.0f, 2.0f);
+    m_preset->synthOscLpCutoffDec.store(oscLpCutoffDecTemp);
+
+    float oscLpCutoffAmountTemp = m_preset->synthOscLpCutoffAmount.load();
+    ImGui::SliderFloat("Amount (semitones)##cut", &oscLpCutoffAmountTemp, -60.0f, 60.0f);
+    m_preset->synthOscLpCutoffAmount.store(oscLpCutoffAmountTemp);
+
+
+    ImGui::Separator();
+    ImGui::Text("High-pass filter");
 
     bool hpFilterOnTemp = m_preset->synthHpFilterOn.load();
-    ImGui::Checkbox("High-pass filter", &hpFilterOnTemp);
+    ImGui::Checkbox("On##HP", &hpFilterOnTemp);
     m_preset->synthHpFilterOn.store(hpFilterOnTemp);
 
     float hpFilterMixTemp = m_preset->synthHpFilterMix.load();
-    ImGui::SliderFloat("HP Filter mix", &hpFilterMixTemp, 0.0f, 1.0f);
+    ImGui::SliderFloat("Mix##HP", &hpFilterMixTemp, 0.0f, 1.0f);
     m_preset->synthHpFilterMix.store(hpFilterMixTemp);
 
     float hpFilterCutoffTemp = m_preset->synthHpFilterCutoff.load();
@@ -321,15 +361,15 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthHpFilterCutoff.store(hpFilterCutoffTemp);
 
     float hpFilterQTemp = m_preset->synthHpFilterQ.load();
-    ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.0f, 3.0f);
+    ImGui::SliderFloat("HP Peaking/Q##HP", &hpFilterQTemp, 0.0f, 3.0f);
     m_preset->synthHpFilterQ.store(hpFilterQTemp);
 
     
     ImGui::Separator();
-    ImGui::Text("Delay settings");
+    ImGui::Text("Feedback delay");
 
     bool delayOnTemp = m_preset->synthDelayOn.load();
-    ImGui::Checkbox("Delay", &delayOnTemp);
+    ImGui::Checkbox("On##Delay", &delayOnTemp);
     m_preset->synthDelayOn.store(delayOnTemp);
 
     // --- Delay type dropdown --- 
@@ -350,15 +390,15 @@ void GUIManager::DrawSynthUI() {
     m_preset->synthDelayType.store(delayTypeTemp);
 
     float delayMixTemp = m_preset->synthDelayMix.load();
-    ImGui::SliderFloat("Delay mix", &delayMixTemp, 0.0f, 1.0f);
+    ImGui::SliderFloat("Mix##Delay", &delayMixTemp, 0.0f, 1.0f);
     m_preset->synthDelayMix.store(delayMixTemp);
 
     float delayTimeTemp = m_preset->synthDelayTime.load();
-    ImGui::SliderFloat("Delay time", &delayTimeTemp, FeedbackDelayLine::MIN_DELAY_SEC, FeedbackDelayLine::MAX_DELAY_SEC);
+    ImGui::SliderFloat("Delay time (s)##Delay", &delayTimeTemp, FeedbackDelayLine::MIN_DELAY_SEC, FeedbackDelayLine::MAX_DELAY_SEC);
     m_preset->synthDelayTime.store(delayTimeTemp);
 
     float delayFeedbackTemp = m_preset->synthDelayFeedback.load();
-    ImGui::SliderFloat("Delay feedback", &delayFeedbackTemp, 0.01f, FeedbackDelayLine::MAX_FEEDBACK);
+    ImGui::SliderFloat("Feedback level##Delay", &delayFeedbackTemp, FeedbackDelayLine::MIN_FEEDBACK, FeedbackDelayLine::MAX_FEEDBACK);
     m_preset->synthDelayFeedback.store(delayFeedbackTemp);
 
 
@@ -366,19 +406,19 @@ void GUIManager::DrawSynthUI() {
     ImGui::Text("Reverb settings");
 
     bool reverbOnTemp = m_preset->synthReverbOn.load();
-    ImGui::Checkbox("Reverb", &reverbOnTemp);
+    ImGui::Checkbox("On##Reverb", &reverbOnTemp);
     m_preset->synthReverbOn.store(reverbOnTemp);
 
     float reverbFeedbackTemp = m_preset->synthReverbFeedback.load();
-    ImGui::SliderFloat("Reverb feedback", &reverbFeedbackTemp, 0.0f, 0.8f);
+    ImGui::SliderFloat("Feedback level##Reverb", &reverbFeedbackTemp, 0.0f, 0.8f);
     m_preset->synthReverbFeedback.store(reverbFeedbackTemp);
 
     float reverbDampTemp = m_preset->synthReverbDamp.load();
-    ImGui::SliderFloat("Reverb damp", &reverbDampTemp, 0.0f, 1.0f);
+    ImGui::SliderFloat("Damp level##Reverb", &reverbDampTemp, 0.0f, 1.0f);
     m_preset->synthReverbDamp.store(reverbDampTemp);
 
     float reverbWetTemp = m_preset->synthReverbWet.load();
-    ImGui::SliderFloat("Reverb wet", &reverbWetTemp, 0.0f, 1.0f);
+    ImGui::SliderFloat("Wet level / Mix##Reverb", &reverbWetTemp, 0.0f, 1.0f);
     m_preset->synthReverbWet.store(reverbWetTemp);
 
     
