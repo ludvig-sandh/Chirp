@@ -4,8 +4,8 @@ Chirp is a cross-platform C++ application for real-time bird sound synthesis and
 TODO:
 [X] Fix reverb to apply on separate channels rather than one of them
 [X] Custom logarithmic sliders for Hz in the range [20, 20000]
-[ ] Add delay effect
-[ ] Allow for saving and loading presets to files
+[X] Add delay effect
+[X] Allow for saving and loading presets to files
 [ ] Add built-in synth presets that user can select from
 [ ] Add visual keyboard UI element in synth mode
 [ ] Add visual UI element that shows current waveform
