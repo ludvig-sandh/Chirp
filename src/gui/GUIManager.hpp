@@ -40,6 +40,9 @@ private:
     // Used in synth UI to display export/load preset buttons
     void DrawPresetControls();
 
+    // Used in synth UI display controls related to LFOs
+    void DrawLFOControls();
+
     GLFWwindow *InitAux();
     void DeinitAux();
 

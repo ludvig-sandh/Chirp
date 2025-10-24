@@ -9,6 +9,7 @@
 #include "FeedbackDelayInfo.hpp"
 #include "AudioPresetSerialization.hpp"
 #include "BuiltInPresetsLoader.hpp"
+#include "LFO.hpp"
 #include <utility>
 #include <iostream>
 
@@ -79,6 +80,18 @@ void GUIManager::RunMainLoop() {
                 case AppMode::Synth:
                     DrawSynthUI();
                     break;
+            }
+
+            std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
+            if (column != nullptr) {
+                m_spectrogram.PushColumn(*column.get());
+                m_spectrogram.Show();
+            }
+
+            std::shared_ptr<AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
+            if (levels != nullptr) {
+                m_levelsDisplay.UpdateLevels(*levels.get());
+                m_levelsDisplay.Show();
             }
         }
 
@@ -185,19 +198,6 @@ void GUIManager::DrawChirpUI() {
     float reverbWetTemp = m_preset->chirpReverbWet.load();
     ImGui::SliderFloat("Reverb wet", &reverbWetTemp, 0.0f, 1.0f);
     m_preset->chirpReverbWet.store(reverbWetTemp);
-
-    
-    std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
-    if (column != nullptr) {
-        m_spectrogram.PushColumn(*column.get());
-        m_spectrogram.Show();
-    }
-
-    std::shared_ptr<AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
-    if (levels != nullptr) {
-        m_levelsDisplay.UpdateLevels(*levels.get());
-        m_levelsDisplay.Show();
-    }
 
     float framerate = m_io->Framerate;
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
@@ -419,18 +419,7 @@ void GUIManager::DrawSynthUI() {
     ImGui::SliderFloat("Wet level / Mix##Reverb", &reverbWetTemp, 0.0f, 1.0f);
     m_preset->synthReverbWet.store(reverbWetTemp);
 
-    
-    std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
-    if (column != nullptr) {
-        m_spectrogram.PushColumn(*column.get());
-        m_spectrogram.Show();
-    }
-
-    std::shared_ptr<AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
-    if (levels != nullptr) {
-        m_levelsDisplay.UpdateLevels(*levels.get());
-        m_levelsDisplay.Show();
-    }
+    DrawLFOControls();
 
     float framerate = m_io->Framerate;
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
@@ -542,8 +531,126 @@ void GUIManager::DrawPresetControls() {
     }
 }
 
-void GUIManager::glfw_error_callback(int error, const char* description)
-{
+void GUIManager::DrawLFOControls() {
+    ImGui::SeparatorText("LFO 1");
+
+    bool LFO1OnTemp = m_preset->synthLFO1On.load();
+    ImGui::Checkbox("On##LFO1", &LFO1OnTemp);
+    m_preset->synthLFO1On.store(LFO1OnTemp);
+
+    // --- LFO 1 mode drop down --- 
+    LFOConfig::Mode lfo1ModeTemp = m_preset->synthLFO1Mode.load();
+
+    if (ImGui::BeginCombo("Mode", LFOConfig::ModeNames[static_cast<int>(lfo1ModeTemp)])) {
+        for (size_t n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
+            bool isSelected = (static_cast<size_t>(lfo1ModeTemp) == n);
+            if (ImGui::Selectable(LFOConfig::ModeNames[n], isSelected)) {
+                lfo1ModeTemp = static_cast<LFOConfig::Mode>(n);
+            }
+            if (isSelected) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    m_preset->synthLFO1Mode.store(lfo1ModeTemp);
+
+    // --- LFO 1 destination drop down --- 
+    LFOConfig::Destination lfo1DestinationTemp = m_preset->synthLFO1Destination.load();
+    std::vector<std::string> destinationNames = LFOConfig::GetDestinationNames();
+
+    if (ImGui::BeginCombo("Destination", destinationNames[static_cast<int>(lfo1DestinationTemp)].c_str())) {
+        for (size_t n = 0; n < LFOConfig::DESTINATION_INFOS.size(); n++) {
+            bool isSelected = (static_cast<size_t>(lfo1DestinationTemp) == n);
+            if (ImGui::Selectable(destinationNames[n].c_str(), isSelected)) {
+                lfo1DestinationTemp = static_cast<LFOConfig::Destination>(n);
+            }
+            if (isSelected) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    m_preset->synthLFO1Destination.store(lfo1DestinationTemp);
+
+    LFOConfig::DestinationInfo destInfo = LFOConfig::GetDestinationInfo(lfo1DestinationTemp);
+    
+    // Amount slider
+    float lfo1AmountTemp = m_preset->synthLFO1Amount.load();
+    lfo1AmountTemp = std::clamp(lfo1AmountTemp, destInfo.minValue, destInfo.maxValue);
+    ImGuiSliderFlags_ sliderFlags = destInfo.isLogarithmic ? ImGuiSliderFlags_Logarithmic : ImGuiSliderFlags_None;
+    const char *format = destInfo.format.has_value() ? destInfo.format->c_str() : nullptr;
+
+    ImGui::SliderFloat("Amount", &lfo1AmountTemp, destInfo.minValue, destInfo.maxValue, format, sliderFlags);
+    m_preset->synthLFO1Amount.store(lfo1AmountTemp);
+
+    // --- LFO 1 shape drop down --- 
+    LFOConfig::Shape lfo1ShapeTemp = m_preset->synthLFO1Shape.load();
+
+    if (ImGui::BeginCombo("Shape", LFOConfig::ShapeNames[static_cast<int>(lfo1ShapeTemp)])) {
+        for (size_t n = 0; n < IM_ARRAYSIZE(LFOConfig::ShapeNames); n++) {
+            bool isSelected = (static_cast<size_t>(lfo1ShapeTemp) == n);
+            if (ImGui::Selectable(LFOConfig::ShapeNames[n], isSelected)) {
+                lfo1ShapeTemp = static_cast<LFOConfig::Shape>(n);
+            }
+            if (isSelected) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    m_preset->synthLFO1Shape.store(lfo1ShapeTemp);
+
+    switch (lfo1ShapeTemp) {
+        case LFOConfig::Shape::Envelope: {
+            // --- Attack ---
+            float attack = m_preset->synthLFO1EnvAttack.load();
+            ImGui::SliderFloat("Attack (s)##LFO1", &attack, 0.0f, 2.0f);
+            m_preset->synthLFO1EnvAttack.store(attack);
+
+            // --- Hold ---
+            float hold = m_preset->synthLFO1EnvHold.load();
+            ImGui::SliderFloat("Hold (s)##LFO1", &hold, 0.0f, 2.0f);
+            m_preset->synthLFO1EnvHold.store(hold);
+
+            // --- Decay ---
+            float dec = m_preset->synthLFO1EnvDec.load();
+            ImGui::SliderFloat("Decay (s)##LFO1", &dec, 0.0f, 2.0f);
+            m_preset->synthLFO1EnvDec.store(dec);
+
+            // --- Sustain ---
+            float sus = m_preset->synthLFO1EnvSus.load();
+            ImGui::SliderFloat("Sustain (level)##LFO1", &sus, 0.0f, 1.0f);
+            m_preset->synthLFO1EnvSus.store(sus);
+            break;
+        }
+        case LFOConfig::Shape::Waveform: {
+            // --- Waveform dropdown ---
+            WaveformInfo::Type waveformLFO1Temp = m_preset->synthLFO1Waveform.load();
+            if (ImGui::BeginCombo("Waveform##LFO1", WaveformInfo::Names[static_cast<int>(waveformLFO1Temp)])) {
+                for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
+                    bool isSelected = (static_cast<int>(waveformLFO1Temp) == n);
+                    if (ImGui::Selectable(WaveformInfo::Names[n], isSelected)) {
+                        waveformLFO1Temp = static_cast<WaveformInfo::Type>(n);
+                    }
+                    if (isSelected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            m_preset->synthLFO1Waveform.store(waveformLFO1Temp);
+            // ---
+
+            float freq = m_preset->synthLFO1Frequency.load();
+            ImGui::SliderFloat("Frequency (Hz)##LFO1", &freq, 0.1f, 100.0f);
+            m_preset->synthLFO1Frequency.store(freq);
+            break;
+        }
+    }
+}
+
+void GUIManager::glfw_error_callback(int error, const char* description) {
     std::cerr << std::format("GLFW Error {}: {}\n", error, description);
 }
 

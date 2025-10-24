@@ -7,6 +7,7 @@
 #include "Waveform.hpp"
 #include "FeedbackDelayInfo.hpp"
 #include "AppMode.hpp"
+#include "LFO.hpp"
 
 struct AudioPreset {
     std::atomic<AppMode> appMode { AppMode::Chirp };
@@ -80,6 +81,18 @@ struct AudioPreset {
     std::atomic<float> synthReverbFeedback { 0.8f };
     std::atomic<float> synthReverbDamp { 0.2f };
     std::atomic<float> synthReverbWet { 0.5f };
+
+    std::atomic<bool> synthLFO1On { false };
+    std::atomic<LFOConfig::Mode> synthLFO1Mode { LFOConfig::Mode::PlayOnNote };
+    std::atomic<LFOConfig::Shape> synthLFO1Shape { LFOConfig::Shape::Envelope };
+    std::atomic<LFOConfig::Destination> synthLFO1Destination { LFOConfig::Destination::LPCutoff };
+    std::atomic<float> synthLFO1Amount { 0.0f };
+    std::atomic<float> synthLFO1EnvAttack { 0.0f };
+    std::atomic<float> synthLFO1EnvHold { 0.0f };
+    std::atomic<float> synthLFO1EnvDec { 0.0f };
+    std::atomic<float> synthLFO1EnvSus { 1.0f };
+    std::atomic<WaveformInfo::Type> synthLFO1Waveform { WaveformInfo::Type::Saw };
+    std::atomic<float> synthLFO1Frequency { 1.0f };
 
     // Non-settings. Used to communicate key-presses to audio engine
     std::atomic<bool> noteA5 { false };
