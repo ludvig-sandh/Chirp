@@ -5,8 +5,8 @@
 
 #include "imgui.h"
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
-#include "LevelsHistory.hpp"
-#include "AudioBackend.hpp"
+#include "gui/LevelsHistory.hpp"
+#include "engine/AudioBackend.hpp"
 #include <vector>
 #include <array>
 #include <utility>

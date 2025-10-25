@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "FFTHelper.hpp"
-#include "AudioEngine.hpp"
+#include "engine/AudioEngine.hpp"
 
 #include "pocketfft_hdronly.h"
 

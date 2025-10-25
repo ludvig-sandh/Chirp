@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "ProducerConsumer.hpp"
-#include "AudioBackend.hpp"
+#include "synchronization/ProducerConsumer.hpp"
+#include "engine/AudioBackend.hpp"
 #include <vector>
 #include <memory>
 #include <mutex>

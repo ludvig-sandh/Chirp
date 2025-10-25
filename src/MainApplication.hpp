@@ -5,10 +5,10 @@
 
 // Important to include GUIManager first since it includes all imgui-related headers.
 // They need to be included first in order not to cause any conflicts with preferred integral types.
-#include "GUIManager.hpp"
-#include "AudioEngine.hpp"
-#include "AudioPreset.hpp"
-#include "FFTComputer.hpp"
+#include "gui/GUIManager.hpp"
+#include "engine/AudioEngine.hpp"
+#include "preset/AudioPreset.hpp"
+#include "fft/FFTComputer.hpp"
 
 #include <memory>
 #include <iostream>

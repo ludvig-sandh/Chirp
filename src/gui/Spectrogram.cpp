@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "Spectrogram.hpp"
+#include "gui/Spectrogram.hpp"
 
 #include <cmath>
 #include <algorithm>

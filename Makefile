@@ -19,58 +19,50 @@ BUILD_DIR := build
 BIN_DIR := bin
 TARGET = $(BIN_DIR)/chirp
 
-SRC_DIR = src
-AUDIO_DIR = src/audio
-GUI_DIR = src/gui
-HELPER_DIR = src/helper
-FFT_DIR = src/fft
-IMGUI_DIR = src/external/imgui
-IMGUI_FILE_DIALOG_DIR = src/external/ImGuiFileDialog
-EXT_DIR = src/external
-POCKETFFT_DIR = src/external/pocketfft
+##---------------------------------------------------------------------
+## Directories
+##---------------------------------------------------------------------
+SRC_DIR    := src
+AUDIO_DIR  := $(SRC_DIR)/audio
+EXT_DIR    := $(SRC_DIR)/external
+FFT_DIR    := $(SRC_DIR)/fft
+GUI_DIR    := $(SRC_DIR)/gui
+SYNC_DIR   := $(SRC_DIR)/synchronization
+IMGUI_DIR  := $(EXT_DIR)/imgui
+IMGUI_FILE_DIALOGS_DIR  := $(EXT_DIR)/ImGuiFileDialog
+POCKETFFT_DIR := $(EXT_DIR)/pocketfft
 
-# Source files
-SRCS := $(IMGUI_DIR)/imgui.cpp \
-		$(IMGUI_DIR)/imgui_demo.cpp \
-		$(IMGUI_DIR)/imgui_draw.cpp \
-		$(IMGUI_DIR)/imgui_tables.cpp \
-		$(IMGUI_DIR)/imgui_widgets.cpp \
-		$(IMGUI_DIR)/backends/imgui_impl_glfw.cpp \
-		$(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp \
-		$(AUDIO_DIR)/AudioBackend.cpp \
-		$(AUDIO_DIR)/AudioEngine.cpp \
-		$(AUDIO_DIR)/AudioProcessor.cpp \
-		$(AUDIO_DIR)/Envelope.cpp \
-		$(AUDIO_DIR)/Frequency.cpp \
-		$(AUDIO_DIR)/Generator.cpp \
-		$(AUDIO_DIR)/Oscillator.cpp \
-		$(AUDIO_DIR)/RandomLFO.cpp \
-		$(AUDIO_DIR)/Waveform.cpp \
-		$(AUDIO_DIR)/Gain.cpp \
-		$(AUDIO_DIR)/Pan.cpp \
-		$(AUDIO_DIR)/BiquadFilter.cpp \
-		$(AUDIO_DIR)/BaseFilter.cpp \
-		$(AUDIO_DIR)/LowPassFilter.cpp \
-		$(AUDIO_DIR)/HighPassFilter.cpp \
-		$(AUDIO_DIR)/Reverb.cpp \
-		$(AUDIO_DIR)/AudioFrame.cpp \
-		$(AUDIO_DIR)/Delay.cpp \
-		$(AUDIO_DIR)/FeedbackDelayLine.cpp \
-		$(AUDIO_DIR)/FeedbackDelay.cpp \
-		$(AUDIO_DIR)/BuiltInPresetsLoader.cpp \
-		$(AUDIO_DIR)/ChirpLayout.cpp \
-		$(AUDIO_DIR)/SynthLayout.cpp \
-		$(AUDIO_DIR)/ModulationMatrix.cpp \
-		$(AUDIO_DIR)/PeriodicLFO.cpp \
-		$(GUI_DIR)/GUIManager.cpp \
-		$(GUI_DIR)/Spectrogram.cpp \
-		$(GUI_DIR)/LevelsDisplay.cpp \
-		$(GUI_DIR)/LevelsHistory.cpp \
-		$(FFT_DIR)/FFTComputer.cpp \
-		$(FFT_DIR)/FFTHelper.cpp \
-		$(EXT_DIR)/ImGuiFileDialog/ImGuiFileDialog.cpp \
-		src/MainApplication.cpp \
-		src/main.cpp
+INCLUDE_DIRS := \
+	$(SRC_DIR) \
+	$(AUDIO_DIR) \
+	$(EXT_DIR) \
+	$(IMGUI_DIR) \
+	$(IMGUI_FILE_DIALOGS_DIR) \
+	$(IMGUI_DIR)/backends \
+	$(POCKETFFT_DIR) \
+
+##---------------------------------------------------------------------
+## SOURCES
+##---------------------------------------------------------------------
+IMGUI_SRCS := \
+	$(IMGUI_DIR)/imgui.cpp \
+	$(IMGUI_DIR)/imgui_demo.cpp \
+	$(IMGUI_DIR)/imgui_draw.cpp \
+	$(IMGUI_DIR)/imgui_tables.cpp \
+	$(IMGUI_DIR)/imgui_widgets.cpp \
+	$(IMGUI_DIR)/backends/imgui_impl_glfw.cpp \
+	$(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
+
+# Collect all .cpp files (recursively up to 3 levels deep) ---
+SRC_DIRS := $(SRC_DIR) $(AUDIO_DIR) $(FFT_DIR) $(GUI_DIR) $(SYNC_DIR)
+
+SRCS := $(foreach dir,$(SRC_DIRS), \
+        $(wildcard $(dir)/*.cpp) \
+        $(wildcard $(dir)/*/*.cpp) \
+        $(wildcard $(dir)/*/*/*.cpp))
+
+# Add ImGui source files explicitly
+SRCS += $(IMGUI_SRCS)
 
 # Object files in build/, preserving directory structure
 OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
@@ -78,8 +70,7 @@ OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
-CXXFLAGS = -std=c++23 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(SRC_DIR) -I$(AUDIO_DIR) -I$(GUI_DIR) -I$(HELPER_DIR) -I$(FFT_DIR) -I$(POCKETFFT_DIR) -I$(EXT_DIR) -I$(IMGUI_FILE_DIALOG_DIR)
-CXXFLAGS += -g -Wall -Wformat
+CXXFLAGS := -std=c++23 -O2 -Wall -Wextra $(addprefix -I, $(INCLUDE_DIRS))
 LIBS = -lportaudio
 
 ##---------------------------------------------------------------------

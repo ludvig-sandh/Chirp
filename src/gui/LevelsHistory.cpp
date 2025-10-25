@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "LevelsHistory.hpp"
+#include "gui/LevelsHistory.hpp"
 
 #include <algorithm>
 

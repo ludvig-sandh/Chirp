@@ -2,14 +2,14 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "GUIManager.hpp"
-#include "AudioBackend.hpp"
-#include "Waveform.hpp"
+#include "engine/AudioBackend.hpp"
+#include "core/Waveform.hpp"
 #include "AppMode.hpp"
-#include "FeedbackDelayLine.hpp"
-#include "FeedbackDelayInfo.hpp"
-#include "AudioPresetSerialization.hpp"
-#include "BuiltInPresetsLoader.hpp"
-#include "LFO.hpp"
+#include "effects/util/FeedbackDelayLine.hpp"
+#include "effects/util/FeedbackDelayInfo.hpp"
+#include "preset/AudioPresetSerialization.hpp"
+#include "preset/BuiltInPresetsLoader.hpp"
+#include "modulation/LFO.hpp"
 #include <utility>
 #include <iostream>
 

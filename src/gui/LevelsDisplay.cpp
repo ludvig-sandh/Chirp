@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "LevelsDisplay.hpp"
+#include "gui/LevelsDisplay.hpp"
 
 #include "imgui.h"
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers

@@ -13,10 +13,10 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
-#include "AudioPreset.hpp"
-#include "Spectrogram.hpp"
-#include "FFTComputer.hpp"
-#include "LevelsDisplay.hpp"
+#include "preset/AudioPreset.hpp"
+#include "gui/Spectrogram.hpp"
+#include "fft/FFTComputer.hpp"
+#include "gui/LevelsDisplay.hpp"
 
 #include <memory>
 #include <iostream>
