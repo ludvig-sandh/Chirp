@@ -70,6 +70,16 @@ inline json ToJson(const AudioPreset& p) {
     j["synthLFO1Waveform"] = static_cast<int>(p.synthLFO1Waveform.load());
     j["synthLFO1Frequency"] = p.synthLFO1Frequency.load();
 
+    j["synthLFO2On"] = p.synthLFO2On.load();
+    j["synthLFO2Mode"] = static_cast<int>(p.synthLFO2Mode.load());
+    j["synthLFO2Destination"] = static_cast<int>(p.synthLFO2Destination.load());
+    j["synthLFO2Amount"] = p.synthLFO2Amount.load();
+    j["synthLFO2EnvAttack"] = p.synthLFO2EnvAttack.load();
+    j["synthLFO2EnvHold"] = p.synthLFO2EnvHold.load();
+    j["synthLFO2EnvDec"] = p.synthLFO2EnvDec.load();
+    j["synthLFO2EnvSus"] = p.synthLFO2EnvSus.load();
+    j["synthLFO2Waveform"] = static_cast<int>(p.synthLFO2Waveform.load());
+    j["synthLFO2Frequency"] = p.synthLFO2Frequency.load();
 
     return j;
 }
@@ -146,6 +156,24 @@ inline void FromJson(const json& j, AudioPreset& p)
         j.value("synthLFO1Waveform", static_cast<int>(WaveformInfo::Type::Saw))
     ));
     get(p.synthLFO1Frequency, "synthLFO1Frequency", 1.0f);
+    
+    
+    get(p.synthLFO2On, "synthLFO2On", false);
+    p.synthLFO2Mode.store(static_cast<LFOConfig::Mode>(
+        j.value("synthLFO2Mode", static_cast<int>(LFOConfig::Mode::Periodic))
+    ));
+    p.synthLFO2Destination.store(static_cast<LFOConfig::Destination>(
+        j.value("synthLFO2Destination", static_cast<int>(LFOConfig::Destination::OscAVolume))
+    ));
+    get(p.synthLFO2Amount, "synthLFO2Amount", 0.0f);
+    get(p.synthLFO2EnvAttack, "synthLFO2EnvAttack", 0.0f);
+    get(p.synthLFO2EnvHold, "synthLFO2EnvHold", 0.0f);
+    get(p.synthLFO2EnvDec, "synthLFO2EnvDec", 0.0f);
+    get(p.synthLFO2EnvSus, "synthLFO2EnvSus", 1.0f);
+    p.synthLFO2Waveform.store(static_cast<WaveformInfo::Type>(
+        j.value("synthLFO2Waveform", static_cast<int>(WaveformInfo::Type::Saw))
+    ));
+    get(p.synthLFO2Frequency, "synthLFO2Frequency", 1.0f);
 }
 
 // File I/O helpers
