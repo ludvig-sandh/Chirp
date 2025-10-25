@@ -4,7 +4,6 @@
 #include "GUIManager.hpp"
 #include "engine/AudioBackend.hpp"
 #include "core/Waveform.hpp"
-#include "AppMode.hpp"
 #include "effects/util/FeedbackDelayLine.hpp"
 #include "effects/util/FeedbackDelayInfo.hpp"
 #include "preset/AudioPresetSerialization.hpp"
@@ -57,30 +56,7 @@ void GUIManager::RunMainLoop() {
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            ImGui::Begin("Preset control"); // Create a window
-
-            AppMode currentModeTemp = m_preset->appMode.load();
-            if (ImGui::BeginTabBar("ModeTabs")) {
-                if (ImGui::BeginTabItem("Chirp mode")) {
-                    currentModeTemp = AppMode::Chirp;
-                    ImGui::EndTabItem();
-                }
-                if (ImGui::BeginTabItem("Synth mode")) {
-                    currentModeTemp = AppMode::Synth;
-                    ImGui::EndTabItem();
-                }
-                ImGui::EndTabBar();
-            }
-            m_preset->appMode.store(currentModeTemp);
-
-            switch (currentModeTemp) {
-                case AppMode::Chirp:
-                    DrawChirpUI();
-                    break;
-                case AppMode::Synth:
-                    DrawSynthUI();
-                    break;
-            }
+            DrawPresetControlWindow();
 
             std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
             if (column != nullptr) {
@@ -107,104 +83,9 @@ void GUIManager::RunMainLoop() {
     }
 }
 
-void GUIManager::DrawChirpUI() {
-    ImGui::SeparatorText("Global settings");
+void GUIManager::DrawPresetControlWindow() {
+    ImGui::Begin("Preset control"); // Create a window
 
-    float volumeTemp = m_preset->chirpMasterVolume.load();
-    ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
-    m_preset->chirpMasterVolume.store(volumeTemp);
-
-
-    ImGui::SeparatorText("Chirp settings");
-
-    bool chirpOnTemp = m_preset->chirpOn.load();
-    ImGui::Checkbox("Chirp sounds", &chirpOnTemp);
-    m_preset->chirpOn.store(chirpOnTemp);
-
-    float chirpVolumeTemp = m_preset->chirpVolume.load();
-    ImGui::SliderFloat("Chirp volume", &chirpVolumeTemp, 0.0f, 1.0f);
-    m_preset->chirpVolume.store(chirpVolumeTemp);
-
-    float chirpPanTemp = m_preset->chirpPan.load();
-    ImGui::SliderFloat("Chirp pan", &chirpPanTemp, 0.0f, 1.0f);
-    m_preset->chirpPan.store(chirpPanTemp);
-
-
-    ImGui::SeparatorText("Noise settings");
-
-    bool noiseOnTemp = m_preset->chirpNoiseOn.load();
-    ImGui::Checkbox("White noise", &noiseOnTemp);
-    m_preset->chirpNoiseOn.store(noiseOnTemp);
-
-    float noiseVolumeTemp = m_preset->chirpNoiseVolume.load();
-    ImGui::SliderFloat("White noise level", &noiseVolumeTemp, 0.0f, 1.0f);
-    m_preset->chirpNoiseVolume.store(noiseVolumeTemp);
-
-
-    ImGui::SeparatorText("LP filter settings");
-
-    bool lpFilterOnTemp = m_preset->chirpLpFilterOn.load();
-    ImGui::Checkbox("Low-pass filter", &lpFilterOnTemp);
-    m_preset->chirpLpFilterOn.store(lpFilterOnTemp);
-
-    float lpFilterMixTemp = m_preset->chirpLpFilterMix.load();
-    ImGui::SliderFloat("LP Filter mix", &lpFilterMixTemp, 0.0f, 1.0f);
-    m_preset->chirpLpFilterMix.store(lpFilterMixTemp);
-
-    float lpFilterCutoffTemp = m_preset->chirpLpFilterCutoff.load();
-    ImGui::SliderFloat("LP Cutoff frequency (Hz)", &lpFilterCutoffTemp,
-                    20.0f, 20000.0f, "%.1f Hz", ImGuiSliderFlags_Logarithmic);
-    m_preset->chirpLpFilterCutoff.store(lpFilterCutoffTemp);
-
-    float lpFilterQTemp = m_preset->chirpLpFilterQ.load();
-    ImGui::SliderFloat("LP Peaking/Q", &lpFilterQTemp, 0.1f, 3.0f);
-    m_preset->chirpLpFilterQ.store(lpFilterQTemp);
-
-
-    ImGui::SeparatorText("HP filter settings");
-
-    bool hpFilterOnTemp = m_preset->chirpHpFilterOn.load();
-    ImGui::Checkbox("High-pass filter", &hpFilterOnTemp);
-    m_preset->chirpHpFilterOn.store(hpFilterOnTemp);
-
-    float hpFilterMixTemp = m_preset->chirpHpFilterMix.load();
-    ImGui::SliderFloat("HP Filter mix", &hpFilterMixTemp, 0.0f, 1.0f);
-    m_preset->chirpHpFilterMix.store(hpFilterMixTemp);
-
-    float hpFilterCutoffTemp = m_preset->chirpHpFilterCutoff.load();
-    ImGui::SliderFloat("HP Cutoff frequency (Hz)", &hpFilterCutoffTemp,
-                    20.0f, 20000.0f, "%.1f Hz", ImGuiSliderFlags_Logarithmic);
-    m_preset->chirpHpFilterCutoff.store(hpFilterCutoffTemp);
-
-    float hpFilterQTemp = m_preset->chirpHpFilterQ.load();
-    ImGui::SliderFloat("HP Peaking/Q", &hpFilterQTemp, 0.1f, 3.0f);
-    m_preset->chirpHpFilterQ.store(hpFilterQTemp);
-
-    
-    ImGui::SeparatorText("Reverb settings");
-
-    bool reverbOnTemp = m_preset->chirpReverbOn.load();
-    ImGui::Checkbox("Reverb", &reverbOnTemp);
-    m_preset->chirpReverbOn.store(reverbOnTemp);
-
-    float reverbFeedbackTemp = m_preset->chirpReverbFeedback.load();
-    ImGui::SliderFloat("Reverb feedback", &reverbFeedbackTemp, 0.0f, 0.8f);
-    m_preset->chirpReverbFeedback.store(reverbFeedbackTemp);
-
-    float reverbDampTemp = m_preset->chirpReverbDamp.load();
-    ImGui::SliderFloat("Reverb damp", &reverbDampTemp, 0.0f, 1.0f);
-    m_preset->chirpReverbDamp.store(reverbDampTemp);
-
-    float reverbWetTemp = m_preset->chirpReverbWet.load();
-    ImGui::SliderFloat("Reverb wet", &reverbWetTemp, 0.0f, 1.0f);
-    m_preset->chirpReverbWet.store(reverbWetTemp);
-
-    float framerate = m_io->Framerate;
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framerate, framerate);
-    ImGui::End();
-}
-
-void GUIManager::DrawSynthUI() {
     ImGui::SeparatorText("Global settings");
 
     float volumeTemp = m_preset->synthMasterVolume.load();

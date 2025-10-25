@@ -11,7 +11,6 @@
 #include "engine/AudioProcessor.hpp"
 #include "fft/FFTComputer.hpp"
 #include "layout/AudioLayout.hpp"
-#include "layout/ChirpLayout.hpp"
 #include "layout/SynthLayout.hpp"
 
 #define SAMPLE_RATE (44100)
@@ -28,6 +27,5 @@ private:
     std::shared_ptr<AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
     AudioBackend m_backend;
-    ChirpLayout m_chirpLayout;
     SynthLayout m_synthLayout;
 };

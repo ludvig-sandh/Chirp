@@ -34,8 +34,7 @@ public:
     static void glfw_error_callback(int error, const char* description);
     
 private:
-    void DrawChirpUI();
-    void DrawSynthUI();
+    void DrawPresetControlWindow();
 
     // Used in synth UI to display export/load preset buttons
     void DrawPresetControls();

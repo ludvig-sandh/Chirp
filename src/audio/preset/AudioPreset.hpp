@@ -6,38 +6,10 @@
 #include <atomic>
 #include "core/Waveform.hpp"
 #include "effects/util/FeedbackDelayInfo.hpp"
-#include "AppMode.hpp"
 #include "modulation/LFO.hpp"
 
 struct AudioPreset {
-    std::atomic<AppMode> appMode { AppMode::Chirp };
-
-    // Settings for Chirp mode
-    std::atomic<float> chirpMasterVolume { 0.05f };
-
-    std::atomic<bool> chirpOn { true };
-    std::atomic<float> chirpVolume { 1.0f };
-    std::atomic<float> chirpPan { 0.5f };
-
-    std::atomic<bool> chirpNoiseOn { true };
-    std::atomic<float> chirpNoiseVolume { 0.4f };
-
-    std::atomic<bool> chirpLpFilterOn { true };
-    std::atomic<float> chirpLpFilterMix { 1.0f };
-    std::atomic<float> chirpLpFilterCutoff { 10000.0f };
-    std::atomic<float> chirpLpFilterQ { 0.707f };
-    
-    std::atomic<bool> chirpHpFilterOn { false };
-    std::atomic<float> chirpHpFilterMix { 1.0f };
-    std::atomic<float> chirpHpFilterCutoff { 1000.0f };
-    std::atomic<float> chirpHpFilterQ { 0.707f };
-
-    std::atomic<float> chirpReverbFeedback { 0.8f };
-    std::atomic<float> chirpReverbDamp { 0.2f };
-    std::atomic<float> chirpReverbWet { 0.5f };
-    std::atomic<bool> chirpReverbOn { true };
-
-    // Settings for synth mode
+    // Synth settings
     std::atomic<float> synthMasterVolume { 0.05f };
 
     std::atomic<WaveformInfo::Type> synthOscAWaveform { WaveformInfo::Type::Saw };

@@ -33,28 +33,19 @@ AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FF
 
 // Recurse from the root of the graph
 AudioBuffer AudioEngine::ProcessBuffer(size_t numFrames) {
-    AudioLayout *selectedLayout = nullptr;
-    AppMode selectedMode = m_preset->appMode.load();
-    if (selectedMode == AppMode::Chirp) {
-        selectedLayout = &m_chirpLayout;
-    }else if (selectedMode == AppMode::Synth) {
-        selectedLayout = &m_synthLayout;
-    }
-    assert(selectedLayout != nullptr && "A new app mode was introduced but it doesn't configure any layout.");
-
-    std::shared_ptr<AudioProcessor> rootNode = selectedLayout->GetRootNode();
+    std::shared_ptr<AudioProcessor> rootNode = m_synthLayout.GetRootNode();
     if (!rootNode) {
         // Empty processing graph, so provide empty audio
         return AudioBuffer(numFrames);
     }
 
-    selectedLayout->LoadPreset(*m_preset);
+    m_synthLayout.LoadPreset(*m_preset);
 
     AudioBuffer result(numFrames);
     for (size_t i = 0; i < numFrames; i++) {
         rootNode->ClearVisited();
         rootNode->ClearModulations();
-        selectedLayout->ApplyAllModulations();
+        m_synthLayout.ApplyAllModulations();
         result.outputBuffer[i] = rootNode->GenerateFrame(*m_preset);
     }
 

@@ -15,7 +15,10 @@ public:
     virtual std::shared_ptr<AudioProcessor> GetRootNode() = 0;
     virtual void LoadPreset(AudioPreset& preset) = 0;
     void ClearAllModulations() {
-        GetRootNode()->ClearModulations();
+        auto root = GetRootNode();
+        if (root) {
+            root->ClearModulations();
+        }
     }
     virtual void ApplyAllModulations() {}
 };
