@@ -93,6 +93,17 @@ struct AudioPreset {
     std::atomic<WaveformInfo::Type> synthLFO1Waveform { WaveformInfo::Type::Saw };
     std::atomic<float> synthLFO1Frequency { 1.0f };
 
+    std::atomic<bool> synthLFO2On { false };
+    std::atomic<LFOConfig::Mode> synthLFO2Mode { LFOConfig::Mode::Periodic };
+    std::atomic<LFOConfig::Destination> synthLFO2Destination { LFOConfig::Destination::OscAVolume };
+    std::atomic<float> synthLFO2Amount { 0.0f };
+    std::atomic<float> synthLFO2EnvAttack { 0.0f };
+    std::atomic<float> synthLFO2EnvHold { 0.0f };
+    std::atomic<float> synthLFO2EnvDec { 0.0f };
+    std::atomic<float> synthLFO2EnvSus { 1.0f };
+    std::atomic<WaveformInfo::Type> synthLFO2Waveform { WaveformInfo::Type::Saw };
+    std::atomic<float> synthLFO2Frequency { 1.0f };
+
     // Non-settings. Used to communicate key-presses to audio engine
     std::atomic<bool> noteA5 { false };
     std::atomic<bool> noteAs5 { false };

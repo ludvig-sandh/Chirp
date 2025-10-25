@@ -97,6 +97,7 @@ struct LFOConfig {
     float envSus { 1.0f };
     WaveformInfo::Type waveform { WaveformInfo::Type::Saw };
     float frequency { 1.0f };
+    int lfoNum = 0; // Identifies the LFO
 };
 
 class LFO {

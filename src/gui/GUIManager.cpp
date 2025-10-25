@@ -541,7 +541,7 @@ void GUIManager::DrawLFOControls() {
     // --- LFO 1 mode drop down --- 
     LFOConfig::Mode lfo1ModeTemp = m_preset->synthLFO1Mode.load();
 
-    if (ImGui::BeginCombo("Mode", LFOConfig::ModeNames[static_cast<int>(lfo1ModeTemp)])) {
+    if (ImGui::BeginCombo("Mode##LFO1", LFOConfig::ModeNames[static_cast<int>(lfo1ModeTemp)])) {
         for (size_t n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
             bool isSelected = (static_cast<size_t>(lfo1ModeTemp) == n);
             if (ImGui::Selectable(LFOConfig::ModeNames[n], isSelected)) {
@@ -559,7 +559,7 @@ void GUIManager::DrawLFOControls() {
     LFOConfig::Destination lfo1DestinationTemp = m_preset->synthLFO1Destination.load();
     std::vector<std::string> destinationNames = LFOConfig::GetDestinationNames();
 
-    if (ImGui::BeginCombo("Destination", destinationNames[static_cast<int>(lfo1DestinationTemp)].c_str())) {
+    if (ImGui::BeginCombo("Destination##LFO1", destinationNames[static_cast<int>(lfo1DestinationTemp)].c_str())) {
         for (size_t n = 0; n < LFOConfig::DESTINATION_INFOS.size(); n++) {
             bool isSelected = (static_cast<size_t>(lfo1DestinationTemp) == n);
             if (ImGui::Selectable(destinationNames[n].c_str(), isSelected)) {
@@ -581,7 +581,7 @@ void GUIManager::DrawLFOControls() {
     ImGuiSliderFlags_ sliderFlags = destInfo.isLogarithmic ? ImGuiSliderFlags_Logarithmic : ImGuiSliderFlags_None;
     const char *format = destInfo.format.has_value() ? destInfo.format->c_str() : nullptr;
 
-    ImGui::SliderFloat("Amount", &lfo1AmountTemp, destInfo.minValue, destInfo.maxValue, format, sliderFlags);
+    ImGui::SliderFloat("Amount##LFO1", &lfo1AmountTemp, destInfo.minValue, destInfo.maxValue, format, sliderFlags);
     m_preset->synthLFO1Amount.store(lfo1AmountTemp);
 
 
@@ -635,6 +635,113 @@ void GUIManager::DrawLFOControls() {
             float freq = m_preset->synthLFO1Frequency.load();
             ImGui::SliderFloat("Frequency (Hz)##LFO1", &freq, 0.1f, 100.0f);
             m_preset->synthLFO1Frequency.store(freq);
+            break;
+        }
+    }
+
+
+    ImGui::SeparatorText("LFO 2");
+
+    bool LFO2OnTemp = m_preset->synthLFO2On.load();
+    ImGui::Checkbox("On##LFO2", &LFO2OnTemp);
+    m_preset->synthLFO2On.store(LFO2OnTemp);
+
+    // --- LFO 2 mode drop down --- 
+    LFOConfig::Mode lfo2ModeTemp = m_preset->synthLFO2Mode.load();
+
+    if (ImGui::BeginCombo("Mode##LFO2", LFOConfig::ModeNames[static_cast<int>(lfo2ModeTemp)])) {
+        for (size_t n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
+            bool isSelected = (static_cast<size_t>(lfo2ModeTemp) == n);
+            if (ImGui::Selectable(LFOConfig::ModeNames[n], isSelected)) {
+                lfo2ModeTemp = static_cast<LFOConfig::Mode>(n);
+            }
+            if (isSelected) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    m_preset->synthLFO2Mode.store(lfo2ModeTemp);
+
+    // --- LFO 2 destination drop down --- 
+    LFOConfig::Destination lfo2DestinationTemp = m_preset->synthLFO2Destination.load();
+    destinationNames = LFOConfig::GetDestinationNames();
+
+    if (ImGui::BeginCombo("Destination##LFO2", destinationNames[static_cast<int>(lfo2DestinationTemp)].c_str())) {
+        for (size_t n = 0; n < LFOConfig::DESTINATION_INFOS.size(); n++) {
+            bool isSelected = (static_cast<size_t>(lfo2DestinationTemp) == n);
+            if (ImGui::Selectable(destinationNames[n].c_str(), isSelected)) {
+                lfo2DestinationTemp = static_cast<LFOConfig::Destination>(n);
+            }
+            if (isSelected) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    m_preset->synthLFO2Destination.store(lfo2DestinationTemp);
+
+    destInfo = LFOConfig::GetDestinationInfo(lfo2DestinationTemp);
+    
+    // Amount slider
+    float lfo2AmountTemp = m_preset->synthLFO2Amount.load();
+    lfo2AmountTemp = std::clamp(lfo2AmountTemp, destInfo.minValue, destInfo.maxValue);
+    sliderFlags = destInfo.isLogarithmic ? ImGuiSliderFlags_Logarithmic : ImGuiSliderFlags_None;
+    format = destInfo.format.has_value() ? destInfo.format->c_str() : nullptr;
+
+    ImGui::SliderFloat("Amount##LFO2", &lfo2AmountTemp, destInfo.minValue, destInfo.maxValue, format, sliderFlags);
+    m_preset->synthLFO2Amount.store(lfo2AmountTemp);
+
+    switch (lfo2ModeTemp) {
+        case LFOConfig::Mode::Envelope: {
+            // --- Attack ---
+            float attack = m_preset->synthLFO2EnvAttack.load();
+            ImGui::SliderFloat("Attack (s)##LFO2", &attack, 0.0f, 2.0f);
+            m_preset->synthLFO2EnvAttack.store(attack);
+
+            // --- Hold ---
+            float hold = m_preset->synthLFO2EnvHold.load();
+            ImGui::SliderFloat("Hold (s)##LFO2", &hold, 0.0f, 2.0f);
+            m_preset->synthLFO2EnvHold.store(hold);
+
+            // --- Decay ---
+            float dec = m_preset->synthLFO2EnvDec.load();
+            ImGui::SliderFloat("Decay (s)##LFO2", &dec, 0.0f, 2.0f);
+            m_preset->synthLFO2EnvDec.store(dec);
+
+            // --- Sustain ---
+            float sus = m_preset->synthLFO2EnvSus.load();
+            ImGui::SliderFloat("Sustain (level)##LFO2", &sus, 0.0f, 1.0f);
+            m_preset->synthLFO2EnvSus.store(sus);
+            break;
+        }
+        case LFOConfig::Mode::Periodic: {
+            // --- Waveform dropdown ---
+            WaveformInfo::Type waveformLFO2Temp = m_preset->synthLFO2Waveform.load();
+            if (ImGui::BeginCombo("Waveform##LFO2", WaveformInfo::Names[static_cast<int>(waveformLFO2Temp)])) {
+                for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
+                    bool isSelected = (static_cast<int>(waveformLFO2Temp) == n);
+                    if (ImGui::Selectable(WaveformInfo::Names[n], isSelected)) {
+                        waveformLFO2Temp = static_cast<WaveformInfo::Type>(n);
+                    }
+                    if (isSelected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            m_preset->synthLFO2Waveform.store(waveformLFO2Temp);
+            // ---
+
+            float freq = m_preset->synthLFO2Frequency.load();
+            ImGui::SliderFloat("Frequency (Hz)##LFO2", &freq, 0.1f, 100.0f);
+            m_preset->synthLFO2Frequency.store(freq);
+            break;
+        }
+        case LFOConfig::Mode::Random: {
+            float freq = m_preset->synthLFO2Frequency.load();
+            ImGui::SliderFloat("Frequency (Hz)##LFO2", &freq, 0.1f, 100.0f);
+            m_preset->synthLFO2Frequency.store(freq);
             break;
         }
     }

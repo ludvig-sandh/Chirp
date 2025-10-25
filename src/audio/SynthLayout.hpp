@@ -25,6 +25,8 @@ public:
 
 private:
     LFOConfig ReadLFO1Config(AudioPreset& preset) const;
+    LFOConfig ReadLFO2Config(AudioPreset& preset) const;
+    std::shared_ptr<LFO> GetLFOSourceHelper(LFOConfig::Mode, int lfoNum);
     void AddModulationRoutesForLfoConfig(const LFOConfig& config, AudioPreset& preset);
 
     // Audio nodes
@@ -40,6 +42,11 @@ private:
     std::shared_ptr<PeriodicLFO> m_lfo1Periodic;
     std::shared_ptr<Envelope> m_lfo1Env;
     std::shared_ptr<RandomLFO> m_lfo1Rnd;
+
+    std::shared_ptr<PeriodicLFO> m_lfo2Periodic;
+    std::shared_ptr<Envelope> m_lfo2Env;
+    std::shared_ptr<RandomLFO> m_lfo2Rnd;
+
     std::shared_ptr<Envelope> m_filterEnv;
 
     ModulationMatrix m_modMatrix;

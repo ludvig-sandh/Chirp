@@ -13,6 +13,9 @@ SynthLayout::SynthLayout()
     , m_lfo1Periodic(std::make_shared<PeriodicLFO>())
     , m_lfo1Env(std::make_shared<Envelope>())
     , m_lfo1Rnd(std::make_shared<RandomLFO>())
+    , m_lfo2Periodic(std::make_shared<PeriodicLFO>())
+    , m_lfo2Env(std::make_shared<Envelope>())
+    , m_lfo2Rnd(std::make_shared<RandomLFO>())
     , m_filterEnv(std::make_shared<Envelope>(0.0f, 0.0f, 0.0f, 0.0f))
 {
     // Now connect all nodes into a graph
@@ -54,6 +57,9 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
             }
             if (startedNewNote && preset.synthLFO1Mode == LFOConfig::Mode::Envelope) {
                 m_lfo1Env->Restart();
+            }
+            if (startedNewNote && preset.synthLFO2Mode == LFOConfig::Mode::Envelope) {
+                m_lfo2Env->Restart();
             }
         }else {
             m_oscA->NoteOff(Frequency(note));
@@ -111,6 +117,7 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     m_filterEnv->dec = preset.synthOscLpCutoffDec.load();
     m_modMatrix.AddRoute(ModulationRoute(m_filterEnv, m_lpFilter, ModulationType::Cutoff, preset.synthOscLpCutoffAmount.load()));
 
+    // Lfo1
     Frequency lfo1Freq = Frequency(preset.synthLFO1Frequency.load());
 
     m_lfo1Periodic->SetWaveformType(preset.synthLFO1Waveform.load());
@@ -123,9 +130,24 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
 
     m_lfo1Rnd->SetFrequency(lfo1Freq);
 
+    // Lfo2
+    Frequency lfo2Freq = Frequency(preset.synthLFO2Frequency.load());
+
+    m_lfo2Periodic->SetWaveformType(preset.synthLFO2Waveform.load());
+    m_lfo2Periodic->SetFrequency(lfo2Freq);
+    
+    m_lfo2Env->attack = preset.synthLFO2EnvAttack.load();
+    m_lfo2Env->hold = preset.synthLFO2EnvHold.load();
+    m_lfo2Env->dec = preset.synthLFO2EnvDec.load();
+    m_lfo2Env->sus = preset.synthLFO2EnvSus.load();
+
+    m_lfo2Rnd->SetFrequency(lfo2Freq);
+
     // Read modulation matrix from preset
     LFOConfig lfo1Config = ReadLFO1Config(preset);
+    LFOConfig lfo2Config = ReadLFO2Config(preset);
     AddModulationRoutesForLfoConfig(lfo1Config, preset);
+    AddModulationRoutesForLfoConfig(lfo2Config, preset);
 }
 
 void SynthLayout::ApplyAllModulations() {
@@ -144,7 +166,44 @@ LFOConfig SynthLayout::ReadLFO1Config(AudioPreset& preset) const {
     lfo1Config.envSus = preset.synthLFO1EnvSus.load();
     lfo1Config.waveform = preset.synthLFO1Waveform.load();
     lfo1Config.frequency = preset.synthLFO1Frequency.load();
+    lfo1Config.lfoNum = 1;
     return lfo1Config;
+}
+
+LFOConfig SynthLayout::ReadLFO2Config(AudioPreset& preset) const {
+    LFOConfig lfo2Config;
+    lfo2Config.on = preset.synthLFO2On.load();
+    lfo2Config.mode = preset.synthLFO2Mode.load();
+    lfo2Config.destination = preset.synthLFO2Destination.load();
+    lfo2Config.amount = preset.synthLFO2Amount.load();
+    lfo2Config.envAttack = preset.synthLFO2EnvAttack.load();
+    lfo2Config.envHold = preset.synthLFO2EnvHold.load();
+    lfo2Config.envDec = preset.synthLFO2EnvDec.load();
+    lfo2Config.envSus = preset.synthLFO2EnvSus.load();
+    lfo2Config.waveform = preset.synthLFO2Waveform.load();
+    lfo2Config.frequency = preset.synthLFO2Frequency.load();
+    lfo2Config.lfoNum = 2;
+    return lfo2Config;
+}
+
+std::shared_ptr<LFO> SynthLayout::GetLFOSourceHelper(LFOConfig::Mode mode, int lfoNum) {
+    assert((lfoNum == 1 || lfoNum == 2) && "Only two LFOs have been added. If adding another LFO, update this function.");
+    std::shared_ptr<LFO> source;
+    switch (mode) {
+        case LFOConfig::Mode::Periodic:
+            source = lfoNum == 1 ? m_lfo1Periodic : m_lfo2Periodic;
+            break;
+        case LFOConfig::Mode::Envelope:
+            source = lfoNum == 1 ? m_lfo1Env : m_lfo2Env;
+            break;
+        case LFOConfig::Mode::Random:
+            source = lfoNum == 1 ? m_lfo1Rnd : m_lfo2Rnd;
+            break;
+        default:
+            assert(false && "Unknown LFO config mode");
+            break;
+    }
+    return source;
 }
 
 void SynthLayout::AddModulationRoutesForLfoConfig(const LFOConfig& config, AudioPreset& preset) {
@@ -152,24 +211,10 @@ void SynthLayout::AddModulationRoutesForLfoConfig(const LFOConfig& config, Audio
         return; // Don't add a disabled modulation
     }
 
-    std::shared_ptr<LFO> source;
-    switch (config.mode) {
-        case LFOConfig::Mode::Periodic:
-            source = m_lfo1Periodic;
-            break;
-        case LFOConfig::Mode::Envelope:
-            source = m_lfo1Env;
-            break;
-        case LFOConfig::Mode::Random:
-            source = m_lfo1Rnd;
-            break;
-        default:
-            assert(false && "Unknown LFO config mode");
-            break;
-    }
+    std::shared_ptr<LFO> source = GetLFOSourceHelper(config.mode, config.lfoNum);
     
     // All selectable routes in GUI and add the corresponding route
-    switch (preset.synthLFO1Destination.load()) {
+    switch (config.destination) {
         case LFOConfig::Destination::OscAVolume:
             m_modMatrix.AddRoute(ModulationRoute(source, m_oscA, ModulationType::Volume, config.amount));
             break;
