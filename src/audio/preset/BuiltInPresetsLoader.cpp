@@ -3,6 +3,7 @@
 
 #include "BuiltInPresetsLoader.hpp"
 #include "AudioPresetSerialization.hpp"
+#include <ranges>
 #include <iostream>
 
 #if defined(_WIN32)
@@ -45,6 +46,15 @@ std::vector<std::string>& BuiltInPresetsLoader::GetPresetNames() {
     return m_presetNames;
 }
 
+int BuiltInPresetsLoader::GetIndexOfDefaultPreset() {
+    for (auto [idx, name] : std::views::enumerate(GetPresetNames())) {
+        if (name == DEFAULT_PRESET_NAME) {
+            return idx;
+        }
+    }
+    return -1;
+}
+
 bool BuiltInPresetsLoader::LoadBuiltInPreset(AudioPreset& preset, const std::string& name) const {
     namespace fs = std::filesystem;
 
@@ -56,6 +66,10 @@ bool BuiltInPresetsLoader::LoadBuiltInPreset(AudioPreset& preset, const std::str
     }
 
     return AudioPresetIO::LoadFromFile(preset, presetPath.string());
+}
+
+bool BuiltInPresetsLoader::LoadDefaultPreset(AudioPreset& preset) const {
+    return LoadBuiltInPreset(preset, DEFAULT_PRESET_NAME);
 }
 
 BuiltInPresetsLoader::BuiltInPresetsLoader()

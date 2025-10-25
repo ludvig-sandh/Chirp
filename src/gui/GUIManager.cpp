@@ -372,8 +372,7 @@ void GUIManager::DrawPresetControls() {
     // --- Select and load built-in preset ---
     auto& loader = BuiltInPresetsLoader::GetShared();
     auto& presetNames = loader.GetPresetNames();
-
-    static int currentPresetIndex = -1; // index of the selected preset
+    static int currentPresetIndex = loader.GetIndexOfDefaultPreset(); // index of the selected preset
 
     if (presetNames.empty()) {
         ImGui::TextDisabled("No built-in presets found.");

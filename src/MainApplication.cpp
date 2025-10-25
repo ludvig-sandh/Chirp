@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "MainApplication.hpp"
+#include "preset/BuiltInPresetsLoader.hpp"
 
 MainApplication::MainApplication()
     : m_preset(std::make_shared<AudioPreset>())
@@ -11,6 +12,8 @@ MainApplication::MainApplication()
 {}
 
 void MainApplication::Start() {
+    BuiltInPresetsLoader::GetShared().LoadDefaultPreset(*m_preset);
+
     // Start the mixer in its own thread
     std::thread audioThread([&]() {
         m_audioEngine.Start(m_isRunning);
