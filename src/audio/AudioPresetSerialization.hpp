@@ -59,6 +59,18 @@ inline json ToJson(const AudioPreset& p) {
     j["synthReverbDamp"] = p.synthReverbDamp.load();
     j["synthReverbWet"] = p.synthReverbWet.load();
 
+    j["synthLFO1On"] = p.synthLFO1On.load();
+    j["synthLFO1Mode"] = static_cast<int>(p.synthLFO1Mode.load());
+    j["synthLFO1Destination"] = static_cast<int>(p.synthLFO1Destination.load());
+    j["synthLFO1Amount"] = p.synthLFO1Amount.load();
+    j["synthLFO1EnvAttack"] = p.synthLFO1EnvAttack.load();
+    j["synthLFO1EnvHold"] = p.synthLFO1EnvHold.load();
+    j["synthLFO1EnvDec"] = p.synthLFO1EnvDec.load();
+    j["synthLFO1EnvSus"] = p.synthLFO1EnvSus.load();
+    j["synthLFO1Waveform"] = static_cast<int>(p.synthLFO1Waveform.load());
+    j["synthLFO1Frequency"] = p.synthLFO1Frequency.load();
+
+
     return j;
 }
 
@@ -69,13 +81,17 @@ inline void FromJson(const json& j, AudioPreset& p)
         field.store(j.value(key, def));
     };
 
-    p.synthOscAWaveform.store(static_cast<WaveformInfo::Type>(j.value("synthOscAWaveform", static_cast<int>(WaveformInfo::Type::Saw))));
+    p.synthOscAWaveform.store(static_cast<WaveformInfo::Type>(
+        j.value("synthOscAWaveform", static_cast<int>(WaveformInfo::Type::Saw))
+    ));
     get(p.synthOscAOn, "synthOscAOn", true);
     get(p.synthOscAVolume, "synthOscAVolume", 0.7f);
     get(p.synthOscAPan, "synthOscAPan", 0.5f);
     get(p.synthOscAOctave, "synthOscAOctave", 5);
 
-    p.synthOscBWaveform.store(static_cast<WaveformInfo::Type>(j.value("synthOscBWaveform", static_cast<int>(WaveformInfo::Type::Saw))));
+    p.synthOscBWaveform.store(static_cast<WaveformInfo::Type>(
+        j.value("synthOscBWaveform", static_cast<int>(WaveformInfo::Type::Saw))
+    ));
     get(p.synthOscBOn, "synthOscBOn", false);
     get(p.synthOscBVolume, "synthOscBVolume", 0.7f);
     get(p.synthOscBPan, "synthOscBPan", 0.5f);
@@ -101,7 +117,9 @@ inline void FromJson(const json& j, AudioPreset& p)
     get(p.synthHpFilterQ, "synthHpFilterQ", 0.707f);
 
     get(p.synthDelayOn, "synthDelayOn", false);
-    p.synthDelayType.store(static_cast<FeedbackDelayInfo::Type>(j.value("synthDelayType", static_cast<int>(FeedbackDelayInfo::Type::Mono))));
+    p.synthDelayType.store(static_cast<FeedbackDelayInfo::Type>(
+        j.value("synthDelayType", static_cast<int>(FeedbackDelayInfo::Type::Mono))
+    ));
     get(p.synthDelayMix, "synthDelayMix", 1.0f);
     get(p.synthDelayTime, "synthDelayTime", 0.2f);
     get(p.synthDelayFeedback, "synthDelayFeedback", 0.5f);
@@ -110,6 +128,24 @@ inline void FromJson(const json& j, AudioPreset& p)
     get(p.synthReverbFeedback, "synthReverbFeedback", 0.8f);
     get(p.synthReverbDamp, "synthReverbDamp", 0.2f);
     get(p.synthReverbWet, "synthReverbWet", 0.5f);
+
+    
+    get(p.synthLFO1On, "synthLFO1On", false);
+    p.synthLFO1Mode.store(static_cast<LFOConfig::Mode>(
+        j.value("synthLFO1Mode", static_cast<int>(LFOConfig::Mode::Periodic))
+    ));
+    p.synthLFO1Destination.store(static_cast<LFOConfig::Destination>(
+        j.value("synthLFO1Destination", static_cast<int>(LFOConfig::Destination::OscAVolume))
+    ));
+    get(p.synthLFO1Amount, "synthLFO1Amount", 0.0f);
+    get(p.synthLFO1EnvAttack, "synthLFO1EnvAttack", 0.0f);
+    get(p.synthLFO1EnvHold, "synthLFO1EnvHold", 0.0f);
+    get(p.synthLFO1EnvDec, "synthLFO1EnvDec", 0.0f);
+    get(p.synthLFO1EnvSus, "synthLFO1EnvSus", 1.0f);
+    p.synthLFO1Waveform.store(static_cast<WaveformInfo::Type>(
+        j.value("synthLFO1Waveform", static_cast<int>(WaveformInfo::Type::Saw))
+    ));
+    get(p.synthLFO1Frequency, "synthLFO1Frequency", 1.0f);
 }
 
 // File I/O helpers
