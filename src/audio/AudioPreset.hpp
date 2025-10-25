@@ -83,9 +83,8 @@ struct AudioPreset {
     std::atomic<float> synthReverbWet { 0.5f };
 
     std::atomic<bool> synthLFO1On { false };
-    std::atomic<LFOConfig::Mode> synthLFO1Mode { LFOConfig::Mode::PlayOnNote };
-    std::atomic<LFOConfig::Shape> synthLFO1Shape { LFOConfig::Shape::Envelope };
-    std::atomic<LFOConfig::Destination> synthLFO1Destination { LFOConfig::Destination::LPCutoff };
+    std::atomic<LFOConfig::Mode> synthLFO1Mode { LFOConfig::Mode::Periodic };
+    std::atomic<LFOConfig::Destination> synthLFO1Destination { LFOConfig::Destination::OscAVolume };
     std::atomic<float> synthLFO1Amount { 0.0f };
     std::atomic<float> synthLFO1EnvAttack { 0.0f };
     std::atomic<float> synthLFO1EnvHold { 0.0f };

@@ -3,6 +3,14 @@
 
 #include "FeedbackDelay.hpp"
 
+FeedbackDelay::FeedbackDelay() 
+    : m_leftLine(m_delayTime, m_feedback)
+    , m_rightLine(m_delayTime, m_feedback)
+    , m_monoLine(m_delayTime, m_feedback)
+{
+    UpdateDelayLines();
+}
+
 FeedbackDelay::FeedbackDelay(FeedbackDelayInfo::Type delayType, float delayTime, float feedback)
     : m_leftLine(delayTime, feedback)
     , m_rightLine(delayTime, feedback)

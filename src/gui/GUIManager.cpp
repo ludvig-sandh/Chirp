@@ -584,25 +584,9 @@ void GUIManager::DrawLFOControls() {
     ImGui::SliderFloat("Amount", &lfo1AmountTemp, destInfo.minValue, destInfo.maxValue, format, sliderFlags);
     m_preset->synthLFO1Amount.store(lfo1AmountTemp);
 
-    // --- LFO 1 shape drop down --- 
-    LFOConfig::Shape lfo1ShapeTemp = m_preset->synthLFO1Shape.load();
 
-    if (ImGui::BeginCombo("Shape", LFOConfig::ShapeNames[static_cast<int>(lfo1ShapeTemp)])) {
-        for (size_t n = 0; n < IM_ARRAYSIZE(LFOConfig::ShapeNames); n++) {
-            bool isSelected = (static_cast<size_t>(lfo1ShapeTemp) == n);
-            if (ImGui::Selectable(LFOConfig::ShapeNames[n], isSelected)) {
-                lfo1ShapeTemp = static_cast<LFOConfig::Shape>(n);
-            }
-            if (isSelected) {
-                ImGui::SetItemDefaultFocus();
-            }
-        }
-        ImGui::EndCombo();
-    }
-    m_preset->synthLFO1Shape.store(lfo1ShapeTemp);
-
-    switch (lfo1ShapeTemp) {
-        case LFOConfig::Shape::Envelope: {
+    switch (lfo1ModeTemp) {
+        case LFOConfig::Mode::Envelope: {
             // --- Attack ---
             float attack = m_preset->synthLFO1EnvAttack.load();
             ImGui::SliderFloat("Attack (s)##LFO1", &attack, 0.0f, 2.0f);
@@ -624,7 +608,7 @@ void GUIManager::DrawLFOControls() {
             m_preset->synthLFO1EnvSus.store(sus);
             break;
         }
-        case LFOConfig::Shape::Waveform: {
+        case LFOConfig::Mode::Periodic: {
             // --- Waveform dropdown ---
             WaveformInfo::Type waveformLFO1Temp = m_preset->synthLFO1Waveform.load();
             if (ImGui::BeginCombo("Waveform##LFO1", WaveformInfo::Names[static_cast<int>(waveformLFO1Temp)])) {
@@ -642,6 +626,12 @@ void GUIManager::DrawLFOControls() {
             m_preset->synthLFO1Waveform.store(waveformLFO1Temp);
             // ---
 
+            float freq = m_preset->synthLFO1Frequency.load();
+            ImGui::SliderFloat("Frequency (Hz)##LFO1", &freq, 0.1f, 100.0f);
+            m_preset->synthLFO1Frequency.store(freq);
+            break;
+        }
+        case LFOConfig::Mode::Random: {
             float freq = m_preset->synthLFO1Frequency.load();
             ImGui::SliderFloat("Frequency (Hz)##LFO1", &freq, 0.1f, 100.0f);
             m_preset->synthLFO1Frequency.store(freq);

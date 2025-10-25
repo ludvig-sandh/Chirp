@@ -31,11 +31,16 @@ void BaseFilter::SetCutoffAndPeaking(Frequency cutoff, float Q) {
     ComputeAndApplyCoefficients();
 }
 
-void BaseFilter::ClearModulations() {
+void BaseFilter::ClearModulationsImpl() {
     m_cutoff.ClearModulations();
+    m_modulationQ = 0.0f;
 }
 
-void BaseFilter::AddCutoffModulation(float semitones) {
-    m_cutoff.AddPitchModulation(semitones);
+void BaseFilter::ApplyModulation(float amount, ModulationType modType) {
+    if (modType == ModulationType::Cutoff) {
+        m_cutoff.AddPitchModulation(amount);
+    }else if (modType == ModulationType::Peaking) {
+        m_modulationQ += amount;
+    }
     ComputeAndApplyCoefficients();
 }

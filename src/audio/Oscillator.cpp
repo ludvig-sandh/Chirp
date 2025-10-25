@@ -67,16 +67,25 @@ void Oscillator::SetOctave(int octave) {
     }
 }
 
-void Oscillator::AddPitchModulation(float semitones) {
-    for (auto& [_, voice] : m_voices) {
-        voice.freq.AddPitchModulation(semitones);
+void Oscillator::ApplyModulation(float amount, ModulationType modType) {
+    if (modType == ModulationType::Pitch) {
+        // Modulates the pitch of all voices
+        for (auto& [_, voice] : m_voices) {
+            voice.freq.AddPitchModulation(amount);
+        }
+    }else if (modType == ModulationType::Volume) {
+        gain.AddModulationLinear(amount);
+    }else if (modType == ModulationType::Pan) {
+        pan.AddModulation(amount);
     }
 }
 
-void Oscillator::ClearModulations() {
+void Oscillator::ClearModulationsImpl() {
     for (auto& [_, voice] : m_voices) {
         voice.freq.ClearModulations();
     }
+    gain.ClearModulations();
+    pan.ClearModulations();
 }
 
 float Oscillator::GetNextSample() {

@@ -15,8 +15,8 @@ Reverb::Reverb()
     for (auto d : allpassDelays) allpassBuffers.emplace_back(d, AudioFrame());
 }
 
-void Reverb::SetParams(float roomSize, float damping, float wet) {
-    feedback = roomSize; // 0.5–0.9 typical
+void Reverb::SetParams(float feedback, float damping, float wet) {
+    feedback = feedback; // 0.5–0.9 typical
     damp = damping;      // 0–1 lowpass factor inside combs
     wetMix = wet;        // 0–1 dry/wet
 }

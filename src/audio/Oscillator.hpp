@@ -27,9 +27,9 @@ private:
     float m_currentPhase = 0.0f;
 };
 
-class Oscillator final : public Generator, public LFO {
+class Oscillator final : public Generator {
 public:
-    explicit Oscillator(WaveformInfo::Type type) : m_waveformType(type) {}
+    explicit Oscillator(WaveformInfo::Type type = WaveformInfo::Type::Saw) : m_waveformType(type) {}
 
     // Start a new voice. Returns true if started new note, and false if a note was already playing.
     bool NoteOn(Frequency freq);
@@ -46,11 +46,10 @@ public:
     // Updates the octave used for the root note A5 at 440Hz (5 is default, per definition)
     void SetOctave(int octave);
 
-    // Modulates the pitch of all voices
-    void AddPitchModulation(float semitones);
+    void ApplyModulation(float amount, ModulationType modType) override;
 
     // Clears all modulations accumulated from LFOs in the last frame so they can modulate the next one
-    virtual void ClearModulations() override;
+    virtual void ClearModulationsImpl() override;
 
     // Returns the next sample for this oscillator. Must be called once every frame or it will become desynched.
     float GetNextSample() override;

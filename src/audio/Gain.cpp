@@ -24,12 +24,22 @@ float Gain::GetDecibels() const {
     return 20.0f * std::log10(std::max(m_currentLinear, 1e-5f)); // Avoid log(0)
 }
 
+void Gain::AddModulationLinear(float linearMod) {
+    m_modulation += linearMod;
+}
+
+void Gain::ClearModulations() {
+    m_modulation = 0.0f;
+}
+
 float Gain::Apply(float sample) {
-    m_currentLinear += (m_targetLinear - m_currentLinear) * s_alpha;
+    float target = std::clamp(m_targetLinear + m_modulation, s_minLinear, s_maxLinear);
+    m_currentLinear += (target - m_currentLinear) * s_alpha;
     return m_currentLinear * sample;
 }
 
 AudioFrame Gain::Apply(const AudioFrame& frame) {
-    m_currentLinear += (m_targetLinear - m_currentLinear) * s_alpha;
+    float target = std::clamp(m_targetLinear + m_modulation, s_minLinear, s_maxLinear);
+    m_currentLinear += (target - m_currentLinear) * s_alpha;
     return m_currentLinear * frame;
 }

@@ -58,6 +58,10 @@ SRCS := $(IMGUI_DIR)/imgui.cpp \
 		$(AUDIO_DIR)/FeedbackDelayLine.cpp \
 		$(AUDIO_DIR)/FeedbackDelay.cpp \
 		$(AUDIO_DIR)/BuiltInPresetsLoader.cpp \
+		$(AUDIO_DIR)/ChirpLayout.cpp \
+		$(AUDIO_DIR)/SynthLayout.cpp \
+		$(AUDIO_DIR)/ModulationMatrix.cpp \
+		$(AUDIO_DIR)/PeriodicLFO.cpp \
 		$(GUI_DIR)/GUIManager.cpp \
 		$(GUI_DIR)/Spectrogram.cpp \
 		$(GUI_DIR)/LevelsDisplay.cpp \

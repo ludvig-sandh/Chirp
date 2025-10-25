@@ -14,6 +14,7 @@
 #include "LFO.hpp"
 #include "Gain.hpp"
 #include "Pan.hpp"
+#include "ModulationMatrix.hpp"
 
 // Represents a node in a tree showing how audio is routed throughout the engine.
 class AudioProcessor {
@@ -23,11 +24,11 @@ public:
 
     void AddChild(std::shared_ptr<AudioProcessor> child);
     
-    void SetCallbackForReadingPreset(std::function<void(AudioProcessor *, const AudioPreset&)> callback);
-    void AddLFO(std::shared_ptr<LFO> lfo);
-    virtual void ClearModulations() {};
-    
-    AudioBuffer Process(size_t numFrames, const AudioPreset& preset);
+    void ClearModulations();
+    virtual void ClearModulationsImpl() {};
+    virtual void ApplyModulation(float amount, ModulationType modType);
+
+    AudioFrame GenerateFrame(const AudioPreset& preset);
     
     virtual void ProcessFrame(AudioFrame& output) = 0;
     void ClearVisited();
@@ -41,11 +42,9 @@ private:
     void ApplyGainAndPan(AudioFrame& frame); 
 
     bool m_visited = false;
-    std::unique_ptr<AudioBuffer> m_currentResult;
+    AudioFrame m_cachedResult;
 
     std::unordered_set<std::shared_ptr<AudioProcessor>> m_children;
-    std::unordered_set<std::shared_ptr<LFO>> m_lfos;
-    std::optional<std::function<void(AudioProcessor *, const AudioPreset&)>> m_presetCallback;
 };
 
 /*

@@ -16,6 +16,9 @@ public:
     float GetLinear() const;
     float GetDecibels() const;
 
+    void AddModulationLinear(float linearMod);
+    void ClearModulations();
+
     // Applies the current gain and updates it towards the target gain.
     // Should be called once for each sample.
     float Apply(float sample);
@@ -24,6 +27,7 @@ public:
 private:
     float m_currentLinear = 0.0;
     float m_targetLinear = 1.0;
+    float m_modulation = 0.0f; // Adds to m_targetLinear
 
     const float s_maxLinear = 1.0f;
     const float s_minLinear = 0.0f;

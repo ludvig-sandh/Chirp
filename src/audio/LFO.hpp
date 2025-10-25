@@ -8,25 +8,19 @@
 #include <optional>
 #include <cassert>
 
+#include "Waveform.hpp"
+
 // Fwd dec.
 class AudioProcessor;
 
-namespace LFOConfig {
+struct LFOConfig {
     enum class Mode {
-        PlayOnNote,
-        Repeat
-    };
-
-    inline constexpr const char *ModeNames[] = { "Restart on every note", "Repeat continuously" };
-
-    
-    enum class Shape {
         Envelope,
-        Waveform
+        Periodic,
+        Random
     };
 
-    inline constexpr const char *ShapeNames[] = { "Envelope", "Waveform" };
-
+    static inline const char *ModeNames[] = { "Envelope (restart on every note)", "Periodic (repeat continuously)", "Random" };
 
     enum class Destination {
         OscAVolume,
@@ -52,7 +46,7 @@ namespace LFOConfig {
         bool isLogarithmic;
     };
 
-    inline const std::array<std::pair<Destination, DestinationInfo>, 13> DESTINATION_INFOS {{
+    static inline const std::array<std::pair<Destination, DestinationInfo>, 13> DESTINATION_INFOS {{
         { Destination::OscAVolume, { "Osc A Volume", std::nullopt, -1.0f, 1.0f, false } },
         { Destination::OscAPan,    { "Osc A Pan", std::nullopt, -1.0f, 1.0f, false } },
         { Destination::OscAPitch,  { "Osc A Pitch", "%.1f semitones", -60.0f, 60.0f, false } },
@@ -62,13 +56,13 @@ namespace LFOConfig {
         { Destination::OscABVolume,{ "Osc AB Volume", std::nullopt, -1.0f, 1.0f, false } },
         { Destination::OscABPan,   { "Osc AB Pan", std::nullopt, -1.0f, 1.0f, false } },
         { Destination::OscABPitch, { "Osc AB Pitch", "%.1f semitones", -60.0f, 60.0f, false } },
-        { Destination::LPCutoff,   { "LP Cutoff", "%.1f Hz", 20.0f, 20000.0f, true } },
-        { Destination::LPPeaking,  { "LP Peaking", std::nullopt, 0.1f, 3.0f, false } },
-        { Destination::HPCutoff,   { "HP Cutoff", "%.1f Hz", 20.0f, 20000.0f, true } },
-        { Destination::HPPeaking,  { "HP Peaking", std::nullopt, 0.1f, 3.0f, false } },
+        { Destination::LPCutoff,   { "LP Cutoff", "%.1f Hz", -60.0f, 60.0f, true } },
+        { Destination::LPPeaking,  { "LP Peaking", std::nullopt, -3.0f, 3.0f, false } },
+        { Destination::HPCutoff,   { "HP Cutoff", "%.1f Hz", -60.0f, 60.0f, true } },
+        { Destination::HPPeaking,  { "HP Peaking", std::nullopt, -3.0f, 3.0f, false } },
     }};
 
-    inline const DestinationInfo& GetDestinationInfo(Destination dest) {
+    static const DestinationInfo& GetDestinationInfo(Destination dest) {
         for (const auto& entry : DESTINATION_INFOS) {
             if (entry.first == dest) {
                 return entry.second;
@@ -82,7 +76,7 @@ namespace LFOConfig {
         std::terminate(); // never recover, guaranteed crash
     }
 
-    inline std::vector<std::string> GetDestinationNames() {
+    static std::vector<std::string> GetDestinationNames() {
         std::vector<std::string> names;
         names.reserve(DESTINATION_INFOS.size());
 
@@ -92,13 +86,21 @@ namespace LFOConfig {
 
         return names;
     }
-}
+
+    bool on { false };
+    Mode mode { LFOConfig::Mode::Periodic };
+    Destination destination { LFOConfig::Destination::OscAVolume };
+    float amount { 0.0f };
+    float envAttack { 0.0f };
+    float envHold { 0.0f };
+    float envDec { 0.0f };
+    float envSus { 1.0f };
+    WaveformInfo::Type waveform { WaveformInfo::Type::Saw };
+    float frequency { 1.0f };
+};
 
 class LFO {
 public:
     virtual ~LFO() = default;
     virtual float GetNextSample() = 0;
-
-    // Callback for applying the lfo
-    std::optional<std::function<void(LFO *, AudioProcessor *)>> callback;
 };

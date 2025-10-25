@@ -11,7 +11,8 @@
 // Adds a looping delay effect that repeats audio but with less volume (depending on feedback)
 // The processed audio contains both dry input signal and wet delay tail
 class FeedbackDelay : public AudioProcessor {
-public: 
+public:
+    FeedbackDelay();
     FeedbackDelay(FeedbackDelayInfo::Type delayType, float delayTime, float feedback);
 
     void SetDelayType(FeedbackDelayInfo::Type delayType) noexcept;
@@ -23,9 +24,9 @@ public:
 private:
     void UpdateDelayLines() noexcept;
 
-    FeedbackDelayInfo::Type m_delayType;
-    float m_delayTime;
-    float m_feedback;
+    FeedbackDelayInfo::Type m_delayType = FeedbackDelayInfo::Type::Mono;
+    float m_delayTime = 0.2f;
+    float m_feedback = 0.5;
 
     FeedbackDelayLine m_leftLine;
     FeedbackDelayLine m_rightLine;

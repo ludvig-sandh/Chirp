@@ -5,21 +5,24 @@
 #include "AudioEngine.hpp"
 
 RandomLFO::RandomLFO(Frequency freq) {
-    numSamplesPerPeriod = SAMPLE_RATE / freq.GetAbsolute();
-    GenerateRandValueHelper();
-    lastRandValue = GenerateRandValueHelper();
-    nextRandValue = GenerateRandValueHelper();
+    m_numSamplesPerPeriod = SAMPLE_RATE / freq.GetAbsolute();
+    m_lastRandValue = GenerateRandValueHelper();
+    m_nextRandValue = GenerateRandValueHelper();
+}
+
+void RandomLFO::SetFrequency(Frequency freq) {
+    m_numSamplesPerPeriod = SAMPLE_RATE / freq.GetAbsolute();
 }
 
 float RandomLFO::GetNextSample() {
-    float t = static_cast<float>(sampleCount) / numSamplesPerPeriod;
-    float toReturn = CubicInterpolate(lastRandValue, nextRandValue, t);
+    float t = static_cast<float>(m_sampleCount) / m_numSamplesPerPeriod;
+    float toReturn = CubicInterpolate(m_lastRandValue, m_nextRandValue, t);
 
-    sampleCount++;
-    if (sampleCount == numSamplesPerPeriod) {
-        sampleCount = 0;
-        lastRandValue = nextRandValue;
-        nextRandValue = GenerateRandValueHelper();
+    m_sampleCount++;
+    if (m_sampleCount >= m_numSamplesPerPeriod) {
+        m_sampleCount = 0;
+        m_lastRandValue = m_nextRandValue;
+        m_nextRandValue = GenerateRandValueHelper();
     }
 
     return toReturn;

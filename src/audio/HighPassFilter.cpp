@@ -12,7 +12,8 @@ HighPassFilter::HighPassFilter(Frequency cutoff, float Q) : BaseFilter(cutoff, Q
 void HighPassFilter::ComputeAndApplyCoefficients() {
     float cutoffHz = std::clamp(m_cutoff.GetAbsolute(), s_minCutoff, s_maxCutoff);
     float omega0 = 2.0f * std::numbers::pi * cutoffHz / SAMPLE_RATE;
-    float alpha = std::sin(omega0) / (2.0f * m_Q);
+    float Q = std::clamp(m_Q + m_modulationQ, MIN_Q, MAX_Q);
+    float alpha = std::sin(omega0) / (2.0f * Q);
     float cosOmega0 = std::cos(omega0);
 
     // Low pass coeffs

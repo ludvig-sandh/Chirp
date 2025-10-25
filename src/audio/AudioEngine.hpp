@@ -10,6 +10,9 @@
 #include "AudioPreset.hpp"
 #include "AudioProcessor.hpp"
 #include "FFTComputer.hpp"
+#include "AudioLayout.hpp"
+#include "ChirpLayout.hpp"
+#include "SynthLayout.hpp"
 
 #define SAMPLE_RATE (44100)
 
@@ -22,12 +25,9 @@ public:
 
     void Start(std::atomic<bool>& running);
 private:
-    void InitChirpAudioProcessorTree();
-    void InitSynthAudioProcessorTree();
-
     std::shared_ptr<AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
     AudioBackend m_backend;
-    std::shared_ptr<AudioProcessor> m_chirpRoot;
-    std::shared_ptr<AudioProcessor> m_synthRoot;
+    ChirpLayout m_chirpLayout;
+    SynthLayout m_synthLayout;
 };

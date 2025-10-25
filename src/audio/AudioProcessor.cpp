@@ -5,72 +5,51 @@
 #include "AudioEngine.hpp"
 #include "AudioBackend.hpp"
 #include "LFO.hpp"
+#include <iostream>
 
 void AudioProcessor::AddChild(std::shared_ptr<AudioProcessor> child) {
     m_children.insert(child);
 }
 
-void AudioProcessor::SetCallbackForReadingPreset(std::function<void(AudioProcessor *, const AudioPreset&)> callback) {
-    m_presetCallback = callback;
+void AudioProcessor::ClearModulations() {
+    ClearModulationsImpl(); // Clears for this node
+    for (const auto& child : m_children) { // Clears all children nodes
+        child->ClearModulations();
+    }
 }
 
-void AudioProcessor::AddLFO(std::shared_ptr<LFO> lfo) {
-    m_lfos.insert(lfo);
+void AudioProcessor::ApplyModulation(float amount, ModulationType modType) {
+    std::cerr << "WARNING: Tried to apply modulation on a node that doesn't support it.\n";
 }
 
-AudioBuffer AudioProcessor::Process(size_t numFrames, const AudioPreset& preset) {
+AudioFrame AudioProcessor::GenerateFrame(const AudioPreset& preset) {
     if (m_visited) {
-        assert(m_currentResult != nullptr);
         // Don't compute the result of this node twice
-        return *m_currentResult;
+        return m_cachedResult;
     }
-    m_visited = true;
-
-    if (m_currentResult == nullptr || m_currentResult->outputBuffer.size() != numFrames) {
-        m_currentResult = std::make_unique<AudioBuffer>(numFrames);
-    }else {
-        // Zero the buffer from last time
-        for (size_t i = 0; i < numFrames; i++) {
-            m_currentResult->outputBuffer[i].left = 0.0f;
-            m_currentResult->outputBuffer[i].right = 0.0f;
-        }
-    }
+    AudioFrame frame;
 
     // Process all children first
-    for (const std::shared_ptr<AudioProcessor>& child : m_children) {
-        AudioBuffer childBuf = child->Process(numFrames, preset);
-        m_currentResult->Add(childBuf);
+    for (const auto& child : m_children) {
+        frame += child->GenerateFrame(preset);
     }
 
-    // Process the output from the children via self, but first update any properties in response to GUI state
-    if (m_presetCallback.has_value()) {
-        m_presetCallback->operator()(this, preset);
+    AudioFrame bypassedFrame(frame);
+    AudioFrame processedFrame(frame);
+
+    if (isOn) {
+        ProcessFrame(processedFrame);
+        ApplyGainAndPan(processedFrame);
+        frame = AudioFrame::Blend(processedFrame, bypassedFrame, mix);
+    }else {
+        frame = bypassedFrame;
     }
 
-    for (AudioFrame& frame : m_currentResult->outputBuffer) {
-        // Update and apply LFOs, but first clear all modulations since they accumulate and reset within a single frame
-        ClearModulations();
-        for (std::shared_ptr<LFO> lfo : m_lfos) {
-            if (lfo->callback.has_value()) {
-                lfo->callback->operator()(lfo.get(), this);
-            }
-        }
+    frame.ClipToValidRange();
 
-        AudioFrame bypassedFrame(frame);
-        AudioFrame processedFrame(frame);
-
-        if (isOn) {
-            ProcessFrame(processedFrame);
-            ApplyGainAndPan(processedFrame);
-            frame = AudioFrame::Blend(processedFrame, bypassedFrame, mix);
-        }else {
-            frame = bypassedFrame;
-        }
-
-        frame.ClipToValidRange();
-    }
-
-    return *m_currentResult;
+    m_visited = true;
+    m_cachedResult = frame;
+    return m_cachedResult;
 }
 
 void AudioProcessor::ClearVisited() {

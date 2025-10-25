@@ -29,32 +29,39 @@ AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FF
     : m_preset(preset)
     , m_fftComputer(fftComputer)
     , m_backend(this)
-{
-    InitChirpAudioProcessorTree();
-    InitSynthAudioProcessorTree();
-}
+{}
 
-// Recurse from the root of the tree
+// Recurse from the root of the graph
 AudioBuffer AudioEngine::ProcessBuffer(size_t numFrames) {
-    std::shared_ptr<AudioProcessor> rootProcessor;
-    if (m_preset->appMode.load() == AppMode::Chirp) {
-        rootProcessor = m_chirpRoot;
-    }else {
-        rootProcessor = m_synthRoot;
+    AudioLayout *selectedLayout = nullptr;
+    AppMode selectedMode = m_preset->appMode.load();
+    if (selectedMode == AppMode::Chirp) {
+        selectedLayout = &m_chirpLayout;
+    }else if (selectedMode == AppMode::Synth) {
+        selectedLayout = &m_synthLayout;
+    }
+    assert(selectedLayout != nullptr && "A new app mode was introduced but it doesn't configure any layout.");
+
+    std::shared_ptr<AudioProcessor> rootNode = selectedLayout->GetRootNode();
+    if (!rootNode) {
+        // Empty processing graph, so provide empty audio
+        return AudioBuffer(numFrames);
     }
 
-    if (rootProcessor) {
-        rootProcessor->ClearVisited();
+    selectedLayout->LoadPreset(*m_preset);
 
-        AudioBuffer result = rootProcessor->Process(numFrames, *m_preset.get());
-
-        // Send buffer to FFT thread
-        m_fftComputer->ProvideAudioBuffer(result);
-        
-        return result;
+    AudioBuffer result(numFrames);
+    for (size_t i = 0; i < numFrames; i++) {
+        rootNode->ClearVisited();
+        rootNode->ClearModulations();
+        selectedLayout->ApplyAllModulations();
+        result.outputBuffer[i] = rootNode->GenerateFrame(*m_preset);
     }
 
-    return AudioBuffer(numFrames);
+    // Send buffer to FFT thread
+    m_fftComputer->ProvideAudioBuffer(result);
+    
+    return result;
 }
 
 void AudioEngine::Start(std::atomic<bool>& running) {
@@ -77,251 +84,4 @@ void AudioEngine::Start(std::atomic<bool>& running) {
         printf("Audio stopped.\n");
     }
     m_fftComputer->FinishedProducing();
-}
-
-void AudioEngine::InitChirpAudioProcessorTree() {
-    // Chirp
-    std::shared_ptr<AudioProcessor> sineOsc = std::make_shared<Oscillator>(WaveformInfo::Type::Sine);
-    dynamic_cast<Oscillator*>(sineOsc.get())->NoteOn(Frequency(2220.0f));
-    sineOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        Oscillator *sine = dynamic_cast<Oscillator*>(self);
-        sine->isOn = preset.chirpOn.load();
-        sine->gain.SetLinear(preset.chirpVolume.load());
-        sine->pan.Set(preset.chirpPan.load());
-    });
-
-    std::shared_ptr<LFO> rnd = std::make_shared<RandomLFO>(Frequency(16));
-    rnd->callback = [](LFO *lfo, AudioProcessor *ap) {
-        Oscillator *osc = dynamic_cast<Oscillator *>(ap);
-        osc->AddPitchModulation(lfo->GetNextSample() * 64);
-    };
-
-    std::shared_ptr<LFO> vibrato = std::make_shared<Oscillator>(WaveformInfo::Type::Saw);
-    dynamic_cast<Oscillator*>(vibrato.get())->NoteOn(Frequency(62.0f));
-    vibrato->callback = [](LFO *lfo, AudioProcessor *ap) {
-        Oscillator *osc = dynamic_cast<Oscillator *>(ap);
-        osc->AddPitchModulation(lfo->GetNextSample() - 0.5);
-    };
-
-    sineOsc->AddLFO(rnd); // Connect the rnd LFO to the sine oscillator
-    sineOsc->AddLFO(vibrato);
-
-    
-    // Noise
-    std::shared_ptr<AudioProcessor> noiseOsc = std::make_shared<Oscillator>(WaveformInfo::Type::WhiteNoise);
-    dynamic_cast<Oscillator*>(noiseOsc.get())->NoteOn(Frequency(555.0f));
-    noiseOsc->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        Oscillator *noise = dynamic_cast<Oscillator*>(self);
-        noise->isOn = preset.chirpNoiseOn.load();
-        noise->gain.SetLinear(preset.chirpNoiseVolume.load());
-    });
-
-
-    // Low pass
-    std::shared_ptr<AudioProcessor> lpFilter = std::make_shared<LowPassFilter>(
-        Frequency(m_preset->chirpLpFilterCutoff.load()),
-        m_preset->chirpLpFilterQ.load()
-    );
-    lpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        BaseFilter *f = dynamic_cast<BaseFilter*>(self);
-        f->SetCutoffAndPeaking(Frequency(preset.chirpLpFilterCutoff.load()), preset.chirpLpFilterQ.load());
-        f->isOn = preset.chirpLpFilterOn.load();
-        f->mix = preset.chirpLpFilterMix.load();
-    });
-    lpFilter->AddChild(sineOsc);
-    lpFilter->AddChild(noiseOsc);
-
-
-    // High pass
-    std::shared_ptr<AudioProcessor> hpFilter = std::make_shared<HighPassFilter>(
-        Frequency(m_preset->chirpHpFilterCutoff.load()),
-        m_preset->chirpHpFilterQ.load()
-    );
-    hpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        BaseFilter *f = dynamic_cast<BaseFilter*>(self);
-        f->SetCutoffAndPeaking(Frequency(preset.chirpHpFilterCutoff.load()), preset.chirpHpFilterQ.load());
-        f->isOn = preset.chirpHpFilterOn.load();
-        f->mix = preset.chirpHpFilterMix.load();
-    });
-    hpFilter->AddChild(lpFilter);
-
-
-    // Reverb
-    std::shared_ptr<AudioProcessor> reverb = std::make_shared<Reverb>();
-    reverb->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        Reverb *f = dynamic_cast<Reverb *>(self);
-        f->SetParams(preset.chirpReverbFeedback.load(), preset.chirpReverbDamp.load(), preset.chirpReverbWet.load());
-        f->isOn = preset.chirpReverbOn.load();
-    });
-    reverb->AddChild(hpFilter);
-
-
-    // Global mixer
-    std::shared_ptr<AudioProcessor> mixer = std::make_shared<Mixer>();
-    mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        Mixer *m = dynamic_cast<Mixer*>(self);
-        m->gain.SetLinear(preset.chirpMasterVolume.load());
-    });
-
-    mixer->AddChild(reverb);
-
-
-    // Set root
-    m_chirpRoot = mixer;
-}
-
-void AudioEngine::InitSynthAudioProcessorTree() {
-    std::shared_ptr<LFO> filterEnv = std::make_shared<Envelope>(0.0f, 0.0f, 0.4f, 0.0f);
-
-    // Map all key inputs to notes and play the ones currently held down
-    std::vector<std::pair<const std::atomic<bool>*, Note>> keySettingPairs = {
-        { &m_preset->noteA5, Note(Key::A, 5) },
-        { &m_preset->noteAs5, Note(Key::As, 5) },
-        { &m_preset->noteB5, Note(Key::B, 5) },
-        { &m_preset->noteC5, Note(Key::C, 5) },
-        { &m_preset->noteCs5, Note(Key::Cs, 5) },
-        { &m_preset->noteD5, Note(Key::D, 5) },
-        { &m_preset->noteDs5, Note(Key::Ds, 5) },
-        { &m_preset->noteE5, Note(Key::E, 5) },
-        { &m_preset->noteF5, Note(Key::F, 5) },
-        { &m_preset->noteFs5, Note(Key::Fs, 5) },
-        { &m_preset->noteG5, Note(Key::G, 5) },
-        { &m_preset->noteGs5, Note(Key::Gs, 5) }
-    };
-
-    // Osc A
-    std::shared_ptr<AudioProcessor> oscA = std::make_shared<Oscillator>(m_preset->synthOscAWaveform.load());
-    oscA->SetCallbackForReadingPreset([filterEnv, keySettingPairs](AudioProcessor *self, const AudioPreset& preset) {
-        Oscillator *oscA = dynamic_cast<Oscillator*>(self);
-
-        for (auto& [keySettingPtr, note] : keySettingPairs) {
-            if (keySettingPtr->load()) {
-                if (oscA->NoteOn(Frequency(note)) && filterEnv != nullptr) {
-                    // If we successfully started to play a new note, restart the cutoff envelope
-                    // (only has to be done from one of the oscillators)
-                    dynamic_cast<Envelope*>(filterEnv.get())->Restart();
-                }
-            }else {
-                oscA->NoteOff(Frequency(note));
-            }
-        }
-
-        oscA->SetWaveformType(preset.synthOscAWaveform.load());
-        oscA->SetEnvelope(Envelope(
-            preset.synthOscAttack.load(),
-            preset.synthOscHold.load(),
-            preset.synthOscDec.load(),
-            preset.synthOscSus.load()
-        ));
-        oscA->SetOctave(preset.synthOscAOctave.load());
-
-        oscA->isOn = preset.synthOscAOn.load();
-        oscA->gain.SetLinear(preset.synthOscAVolume.load());
-        oscA->pan.Set(preset.synthOscAPan.load());
-    }); 
-
-    // Osc B
-    std::shared_ptr<AudioProcessor> oscB = std::make_shared<Oscillator>(m_preset->synthOscBWaveform.load());
-    oscB->SetCallbackForReadingPreset([filterEnv, keySettingPairs](AudioProcessor *self, const AudioPreset& preset) {
-        Oscillator *oscB = dynamic_cast<Oscillator*>(self);
-
-        for (auto& [keySettingPtr, note] : keySettingPairs) {
-            if (keySettingPtr->load()) {
-                oscB->NoteOn(Frequency(note));
-            }else {
-                oscB->NoteOff(Frequency(note));
-            }
-        }
-
-        oscB->SetWaveformType(preset.synthOscBWaveform.load());
-        oscB->SetEnvelope(Envelope(
-            preset.synthOscAttack.load(),
-            preset.synthOscHold.load(),
-            preset.synthOscDec.load(),
-            preset.synthOscSus.load()
-        ));
-        oscB->SetOctave(preset.synthOscBOctave.load());
-
-        oscB->isOn = preset.synthOscBOn.load();
-        oscB->gain.SetLinear(preset.synthOscBVolume.load());
-        oscB->pan.Set(preset.synthOscBPan.load());
-    });
-
-    // Low pass
-    std::shared_ptr<AudioProcessor> lpFilter = std::make_shared<LowPassFilter>(
-        Frequency(m_preset->synthLpFilterCutoff.load()),
-        m_preset->synthLpFilterQ.load()
-    );
-    lpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        BaseFilter *f = dynamic_cast<BaseFilter*>(self);
-        f->SetCutoffAndPeaking(Frequency(preset.synthLpFilterCutoff.load()), preset.synthLpFilterQ.load());
-        f->isOn = preset.synthLpFilterOn.load();
-        f->mix = preset.synthLpFilterMix.load();
-    });
-    lpFilter->AddChild(oscA);
-    lpFilter->AddChild(oscB);
-
-    filterEnv->callback = [preset = m_preset](LFO *lfo, AudioProcessor *ap) {
-        Envelope *env = dynamic_cast<Envelope*>(lfo);
-        env->attack = preset->synthOscLpCutoffAttack.load();
-        env->dec = preset->synthOscLpCutoffDec.load();
-        LowPassFilter *osc = dynamic_cast<LowPassFilter*>(ap);
-        osc->AddCutoffModulation(lfo->GetNextSample() * preset->synthOscLpCutoffAmount.load());
-    };
-    lpFilter->AddLFO(filterEnv);
-
-
-    // High pass
-    std::shared_ptr<AudioProcessor> hpFilter = std::make_shared<HighPassFilter>(
-        Frequency(m_preset->synthHpFilterCutoff.load()),
-        m_preset->synthHpFilterQ.load()
-    );
-    hpFilter->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        BaseFilter *f = dynamic_cast<BaseFilter*>(self);
-        f->SetCutoffAndPeaking(Frequency(preset.synthHpFilterCutoff.load()), preset.synthHpFilterQ.load());
-        f->isOn = preset.synthHpFilterOn.load();
-        f->mix = preset.synthHpFilterMix.load();
-    });
-    hpFilter->AddChild(lpFilter);
-
-
-    // Delay
-    std::shared_ptr<AudioProcessor> delay = std::make_shared<FeedbackDelay>(
-        m_preset->synthDelayType.load(),
-        m_preset->synthDelayTime.load(),
-        m_preset->synthDelayFeedback.load()
-    );
-    delay->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        FeedbackDelay *d = dynamic_cast<FeedbackDelay *>(self);
-        d->SetDelayType(preset.synthDelayType.load());
-        d->SetDelayTime(preset.synthDelayTime.load());
-        d->SetFeedback(preset.synthDelayFeedback.load());
-        d->isOn = preset.synthDelayOn.load();
-        d->mix = preset.synthDelayMix.load();
-    });
-    delay->AddChild(hpFilter);
-
-
-    // Reverb
-    std::shared_ptr<AudioProcessor> reverb = std::make_shared<Reverb>();
-    reverb->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        Reverb *f = dynamic_cast<Reverb *>(self);
-        f->SetParams(preset.synthReverbFeedback.load(), preset.synthReverbDamp.load(), preset.synthReverbWet.load());
-        f->isOn = preset.synthReverbOn.load();
-    });
-    reverb->AddChild(delay);
-
-
-    // Global mixer
-    std::shared_ptr<AudioProcessor> mixer = std::make_shared<Mixer>();
-    mixer->SetCallbackForReadingPreset([](AudioProcessor *self, const AudioPreset& preset) {
-        Mixer *m = dynamic_cast<Mixer*>(self);
-        m->gain.SetLinear(preset.synthMasterVolume.load());
-    });
-
-    mixer->AddChild(reverb);
-
-
-    // Set root
-    m_synthRoot = mixer;
 }

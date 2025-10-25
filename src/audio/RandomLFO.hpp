@@ -8,7 +8,9 @@
 
 class RandomLFO: public LFO {
 public:
-    RandomLFO(Frequency freq);
+    RandomLFO(Frequency freq = Frequency(1.0f));
+
+    void SetFrequency(Frequency freq);
 
     float GetNextSample() override;
 
@@ -20,8 +22,8 @@ private:
     // Optional tangents m0 and m1; default to 0 for simple smoothness
     float CubicInterpolate(float y0, float y1, float t, float m0 = 0.0, float m1 = 0.0);
 
-    float lastRandValue;
-    float nextRandValue;
-    int sampleCount = 0;
-    int numSamplesPerPeriod;
+    float m_lastRandValue;
+    float m_nextRandValue;
+    int m_sampleCount = 0;
+    int m_numSamplesPerPeriod;
 };

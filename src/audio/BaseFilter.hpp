@@ -6,6 +6,7 @@
 #include "AudioProcessor.hpp"
 #include "BiquadFilter.hpp"
 #include "Frequency.hpp"
+#include "ModulationMatrix.hpp"
 
 #include <memory>
 
@@ -23,8 +24,8 @@ public:
     // If you want to set both, this call will only compute the coefficients once
     void SetCutoffAndPeaking(Frequency cutoff, float Q);
 
-    void ClearModulations() override;
-    void AddCutoffModulation(float semitones);
+    void ClearModulationsImpl() override;
+    void ApplyModulation(float amount, ModulationType modType) override;
 
 protected:
     // Is called every time cutoff or Q is modified, otherwise the changes won't take effect.
@@ -33,6 +34,7 @@ protected:
     // Cutoff frequency
     Frequency m_cutoff;
     float m_Q;
+    float m_modulationQ = 0.0f;
 
     BiquadFilter m_leftFilter;
     BiquadFilter m_rightFilter;
@@ -40,4 +42,5 @@ protected:
     static inline const float s_minCutoff = 5.0f;
     static inline const float s_maxCutoff = 20000.0f;
     static inline const float MIN_Q = 0.1f; // To avoid division-by-zero
+    static inline const float MAX_Q = 5.0f;
 };

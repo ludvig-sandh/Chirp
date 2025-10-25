@@ -11,7 +11,7 @@ class Reverb : public AudioProcessor {
 public:
     Reverb();
 
-    void SetParams(float roomSize, float damping, float wet);
+    void SetParams(float feedback, float damping, float wet);
 
     void ProcessFrame(AudioFrame& output) override;
 
