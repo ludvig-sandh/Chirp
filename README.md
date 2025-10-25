@@ -58,13 +58,11 @@ TODO:
 [X] Add delay effect
 [X] Allow for saving and loading presets to files
 [X] Add built-in synth presets that user can select from
-[ ] Let user choose if the filter envelope applies to LP or HP cutoff
-[ ] Add LFOs that can be linked to oscillator pitch etc
+[X] Add LFOs that can be linked to oscillator pitch etc
 [ ] Add release as part of envelope setting
 [ ] Add curves for envelope settings
 [ ] Add UI elements next to envelopes that visually show their shape
 [ ] Add visual keyboard UI element in synth mode
-[ ] Add visual UI element that shows current waveform (?)
 [ ] Add visual UI element that shows spectrum
 [ ] Organize (and stick) windows to look amazing
 [ ] Test on mac and linux as well
