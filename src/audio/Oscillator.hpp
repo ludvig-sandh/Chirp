@@ -23,7 +23,6 @@ public:
 private:
     std::unique_ptr<Waveform> m_wf;
     Envelope m_env;
-    int m_octave = 5;
     float m_currentPhase = 0.0f;
 };
 

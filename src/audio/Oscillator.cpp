@@ -12,7 +12,7 @@ Voice::Voice(Frequency freq, std::unique_ptr<Waveform> wf, const Envelope& env)
 
 float Voice::GetNextSample() {
     float dt = 1.0 / SAMPLE_RATE;
-    float dOffset = dt * freq.GetAbsolute() * std::pow(2.0f, static_cast<float>(m_octave) - 5.0f);
+    float dOffset = dt * freq.GetAbsolute();
     m_currentPhase += dOffset;
 
     // Loop back to always be in range [0, 1]
@@ -26,7 +26,7 @@ void Voice::SetWaveformType(WaveformInfo::Type type) {
 }
 
 void Voice::SetOctave(int octave) {
-    m_octave = octave;
+    freq.SetPitch((octave - 5) * 12);
 }
 
 bool Oscillator::NoteOn(Frequency freq) {
