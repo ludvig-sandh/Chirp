@@ -18,6 +18,7 @@
 #include "modulation/PeriodicLFO.hpp"
 #include "modulation/RandomLFO.hpp"
 #include <memory>
+#include <set>
 
 class SynthLayout final: public AudioLayout {
 public:
@@ -53,4 +54,6 @@ private:
     std::shared_ptr<Envelope> m_filterEnv;
 
     ModulationMatrix m_modMatrix;
+
+    std::set<Note> m_pressedNotes;
 };

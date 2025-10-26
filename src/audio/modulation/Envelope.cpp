@@ -4,7 +4,8 @@
 #include "modulation/Envelope.hpp"
 #include "engine/AudioEngine.hpp"
 
-Envelope::Envelope(float attack, float hold, float dec, float sus) : attack(attack), hold(hold), dec(dec), sus(sus) {
+Envelope::Envelope(float atk, float hld, float dec, float sus, float rel)
+    : attack(atk), hold(hld), decay(dec), sustain(sus), release(rel) {
     assert(sus >= 0.0 && sus <= 1.0 && "");
 }
 
@@ -12,19 +13,42 @@ float Envelope::GetNextSample() {
     // Progress time
     m_timeSinceStart += 1.0f / SAMPLE_RATE;
 
+    if (m_hasBeenReleased) {
+        if (m_timeSinceStart < release) {
+            return sustain - sustain * m_timeSinceStart / release;
+        }else {
+            return 0.0f;
+        }
+    }
+
     if (m_timeSinceStart < attack) {
         return m_timeSinceStart / attack;
     }
     if (m_timeSinceStart < attack + hold) {
         return 1.0;
     }
-    if (m_timeSinceStart < attack + hold + dec) {
+    if (m_timeSinceStart < attack + hold + decay) {
         float timeSinceDecStart = m_timeSinceStart - attack - hold;
-        return 1.0 - (1.0 - sus) * timeSinceDecStart / dec;
+        return 1.0 - (1.0 - sustain) * timeSinceDecStart / decay;
     }
-    return sus;
+    return sustain;
 }
 
 void Envelope::Restart() {
     m_timeSinceStart = 0.0f;
+    m_hasBeenReleased = false;
+}
+
+void Envelope::Release() {
+    if (!m_hasBeenReleased) {
+        m_timeSinceStart = 0.0f;
+        m_hasBeenReleased = true;
+    }
+}
+
+bool Envelope::IsComplete() const {
+    if (m_hasBeenReleased) {
+        return m_timeSinceStart >= release;
+    }
+    return false;
 }

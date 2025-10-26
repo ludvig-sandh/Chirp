@@ -17,9 +17,11 @@ public:
     float GetNextSample();
     void SetWaveformType(WaveformInfo::Type type);
     void SetOctave(int octave);
+    void Release(); // Tells the envelope to go into "release" state to fade out the note
+    bool IsDead() const; // Returns true if the note is quiet indefinitely from this point and onward
 
     Frequency freq;
-
+    bool isReleased = false; // Remove voice lazily which allows it to play the "release" of a note
 private:
     std::unique_ptr<Waveform> m_wf;
     Envelope m_env;
@@ -54,6 +56,8 @@ public:
     float GetNextSample() override;
     
 private:
+    void CleanUpDeadNotes();
+
     WaveformInfo::Type m_waveformType;
     Envelope m_env;
     std::unordered_map<float, Voice> m_voices;

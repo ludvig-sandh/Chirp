@@ -28,6 +28,7 @@ struct AudioPreset {
     std::atomic<float> synthOscHold { 0.0f };
     std::atomic<float> synthOscDec { 0.0f };
     std::atomic<float> synthOscSus { 1.0f };
+    std::atomic<float> synthOscRel { 0.0f };
 
     std::atomic<bool> synthLpFilterOn { true };
     std::atomic<float> synthLpFilterMix { 1.0f };

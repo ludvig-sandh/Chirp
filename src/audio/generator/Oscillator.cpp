@@ -29,19 +29,34 @@ void Voice::SetOctave(int octave) {
     freq.SetPitch((octave - 5) * 12);
 }
 
+void Voice::Release() {
+    isReleased = true;
+    m_env.Release();
+}
+
+bool Voice::IsDead() const {
+    return m_env.IsComplete();
+}
+
 bool Oscillator::NoteOn(Frequency freq) {
-    if (m_voices.find(freq.GetAbsolute()) != m_voices.end()) {
-        // Don't replay a note that is already currently playing
+    CleanUpDeadNotes(); // Regularly remove notes that have gone silent
+
+    auto it = m_voices.find(freq.GetAbsolute());
+    if (it != m_voices.end() && !it->second.isReleased) {
+        // Don't replay a note that is already currently playing (and has not yet been released)
         return false;
     }
-    
+
     Voice v(freq, Waveform::ConstructWaveform(m_waveformType), m_env);
-    m_voices.emplace(freq.GetAbsolute(), std::move(v));
+    m_voices.insert_or_assign(freq.GetAbsolute(), std::move(v));
     return true;
 }
 
 void Oscillator::NoteOff(Frequency freq) {
-    m_voices.erase(freq.GetAbsolute());
+    auto it = m_voices.find(freq.GetAbsolute());
+    if (it != m_voices.end() && !it->second.isReleased) {
+        it->second.Release();
+    }
 }
 
 void Oscillator::SetWaveformType(WaveformInfo::Type type) {
@@ -94,4 +109,10 @@ float Oscillator::GetNextSample() {
         sample += voice.GetNextSample();
     }
     return sample;
+}
+
+void Oscillator::CleanUpDeadNotes() {
+    std::erase_if(m_voices, [](auto const& pair){
+        return pair.second.IsDead(); 
+    });
 }

@@ -190,6 +190,11 @@ void GUIManager::DrawPresetControlWindow() {
     ImGui::SliderFloat("Sustain (level)##vol", &oscSusTemp, 0.0f, 1.0f);
     m_preset->synthOscSus.store(oscSusTemp);
 
+    // --- Release ---
+    float oscRelTemp = m_preset->synthOscRel.load();
+    ImGui::SliderFloat("Release (s)##vol", &oscRelTemp, 0.0f, 1.0f);
+    m_preset->synthOscRel.store(oscRelTemp);
+
 
     ImGui::SeparatorText("Low-pass filter");
 

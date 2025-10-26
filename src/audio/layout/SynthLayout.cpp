@@ -19,7 +19,7 @@ SynthLayout::SynthLayout()
     , m_lfo2Periodic(std::make_shared<PeriodicLFO>())
     , m_lfo2Env(std::make_shared<Envelope>())
     , m_lfo2Rnd(std::make_shared<RandomLFO>())
-    , m_filterEnv(std::make_shared<Envelope>(0.0f, 0.0f, 0.0f, 0.0f))
+    , m_filterEnv(std::make_shared<Envelope>(0.0f, 0.0f, 0.0f, 0.0f, 0.0f))
 {
     // Now connect all nodes into a graph
     m_lpFilter->AddChild(m_oscA);
@@ -53,20 +53,24 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
 
     for (auto& [keySettingPtr, note] : keySettingPairs) {
         if (keySettingPtr->load()) {
-            bool startedNewNote = m_oscA->NoteOn(Frequency(note));
-            m_oscB->NoteOn(Frequency(note));
-            if (startedNewNote) {
+            if (m_pressedNotes.find(note) == m_pressedNotes.end()) {
+                m_pressedNotes.insert(note);
+
+                // New note pressed
+                m_oscA->NoteOn(Frequency(note));
+                m_oscB->NoteOn(Frequency(note));
                 m_filterEnv->Restart();
-            }
-            if (startedNewNote && preset.synthLFO1Mode == LFOConfig::Mode::Envelope) {
                 m_lfo1Env->Restart();
-            }
-            if (startedNewNote && preset.synthLFO2Mode == LFOConfig::Mode::Envelope) {
                 m_lfo2Env->Restart();
             }
         }else {
-            m_oscA->NoteOff(Frequency(note));
-            m_oscB->NoteOff(Frequency(note));
+            if (m_pressedNotes.find(note) != m_pressedNotes.end()) {
+                m_pressedNotes.erase(note);
+
+                // Note released
+                m_oscA->NoteOff(Frequency(note));
+                m_oscB->NoteOff(Frequency(note));
+            }
         }
     }
 
@@ -78,7 +82,8 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
         preset.synthOscAttack.load(),
         preset.synthOscHold.load(),
         preset.synthOscDec.load(),
-        preset.synthOscSus.load()
+        preset.synthOscSus.load(),
+        preset.synthOscRel.load()
     ));
     m_oscA->SetOctave(preset.synthOscAOctave.load());
 
@@ -90,7 +95,8 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
         preset.synthOscAttack.load(),
         preset.synthOscHold.load(),
         preset.synthOscDec.load(),
-        preset.synthOscSus.load()
+        preset.synthOscSus.load(),
+        preset.synthOscRel.load()
     ));
     m_oscB->SetOctave(preset.synthOscBOctave.load());
 
@@ -117,7 +123,7 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     m_modMatrix.ClearRoutes();
 
     m_filterEnv->attack = preset.synthOscLpCutoffAttack.load();
-    m_filterEnv->dec = preset.synthOscLpCutoffDec.load();
+    m_filterEnv->decay = preset.synthOscLpCutoffDec.load();
     m_modMatrix.AddRoute(ModulationRoute(m_filterEnv, m_lpFilter, ModulationType::Cutoff, preset.synthOscLpCutoffAmount.load()));
 
     // Lfo1
@@ -128,8 +134,8 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     
     m_lfo1Env->attack = preset.synthLFO1EnvAttack.load();
     m_lfo1Env->hold = preset.synthLFO1EnvHold.load();
-    m_lfo1Env->dec = preset.synthLFO1EnvDec.load();
-    m_lfo1Env->sus = preset.synthLFO1EnvSus.load();
+    m_lfo1Env->decay = preset.synthLFO1EnvDec.load();
+    m_lfo1Env->sustain = preset.synthLFO1EnvSus.load();
 
     m_lfo1Rnd->SetFrequency(lfo1Freq);
 
@@ -141,8 +147,8 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     
     m_lfo2Env->attack = preset.synthLFO2EnvAttack.load();
     m_lfo2Env->hold = preset.synthLFO2EnvHold.load();
-    m_lfo2Env->dec = preset.synthLFO2EnvDec.load();
-    m_lfo2Env->sus = preset.synthLFO2EnvSus.load();
+    m_lfo2Env->decay = preset.synthLFO2EnvDec.load();
+    m_lfo2Env->sustain = preset.synthLFO2EnvSus.load();
 
     m_lfo2Rnd->SetFrequency(lfo2Freq);
 

@@ -31,6 +31,11 @@ struct Note {
             throw std::invalid_argument(std::format("Cannot create a note from octave {}. Octave must be in range [1, 13].", octave));
         }
     }
+
+    // Order notes first by octave, then by key
+    auto operator<(const Note& other) const -> bool {
+        return (octave < other.octave) || (octave == other.octave && key < other.key);
+    }
 };
 
 class Frequency {

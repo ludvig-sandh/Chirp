@@ -6,21 +6,32 @@
 #include <cassert>
 #include "modulation/LFO.hpp"
 
+// Models a typical ASDR envelope
 class Envelope : public LFO {
 public:
-    Envelope() : attack(0.0), hold(0.0), dec(0.0), sus(1.0) {} // "invisible" envelope, just lets the signal pass through
-    Envelope(float attack, float hold, float dec, float sus);
+    // "invisible" envelope, just lets the signal pass through
+    Envelope() : attack(0.0f), hold(0.0f), decay(0.0f), sustain(1.0f), release(0.0f) {}
+    Envelope(float atk, float hld, float dec, float sus, float rel);
 
     float GetNextSample() override;
 
     // Starts the envelope back from the beginning
     void Restart();
 
+    // Envelope goes into release mode (from sustain to quiet) when a note is released
+    void Release();
+
+    // Returns true if the envelope has gone through all stages and will be quiet until it is restarted.
+    bool IsComplete() const;
+
     float attack;
     float hold;
-    float dec;
-    float sus;
-
+    float decay;
+    float sustain;
+    float release;
+    
 private:
+
     float m_timeSinceStart = 0.0;
+    bool m_hasBeenReleased = false;
 };
