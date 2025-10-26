@@ -13,9 +13,10 @@ namespace WaveformInfo {
         Sine,
         Square,
         WhiteNoise,
+        Triangle
     };
 
-    inline constexpr const char* Names[] = { "Saw", "Sine", "Square", "White noise" };
+    inline constexpr const char* Names[] = { "Saw", "Sine", "Square", "White noise", "Triangle" };
 }
 
 // Base class for representing waveforms, such as sine waves or more complex waves  
@@ -48,4 +49,9 @@ public:
 private:
     std::mt19937 m_gen;
     std::uniform_real_distribution<float> m_dist;
+};
+
+class Triangle final : public Waveform {
+public:
+    float GetSampleAt(float offset) override;
 };
