@@ -9,19 +9,19 @@
 #include "modulation/Envelope.hpp"
 #include "modulation/LFO.hpp"
 
-#include <unordered_map>
+#include <vector>
 
 class Voice {
 public:
-    Voice(Frequency freq, std::unique_ptr<Waveform> wf, const Envelope& env);
+    Voice(Note note, std::unique_ptr<Waveform> wf, const Envelope& env);
     float GetNextSample();
     void SetWaveformType(WaveformInfo::Type type);
     void SetOctave(int octave);
     void Release(); // Tells the envelope to go into "release" state to fade out the note
     bool IsDead() const; // Returns true if the note is quiet indefinitely from this point and onward
 
+    Note note;
     Frequency freq;
-    bool isReleased = false; // Remove voice lazily which allows it to play the "release" of a note
 private:
     std::unique_ptr<Waveform> m_wf;
     Envelope m_env;
@@ -32,11 +32,11 @@ class Oscillator final : public Generator {
 public:
     explicit Oscillator(WaveformInfo::Type type = WaveformInfo::Type::Saw) : m_waveformType(type) {}
 
-    // Start a new voice. Returns true if started new note, and false if a note was already playing.
-    bool NoteOn(Frequency freq);
+    // Start a new voice
+    void NoteOn(Note note);
 
     // Stop an existing voice
-    void NoteOff(Frequency freq);
+    void NoteOff(Note note);
 
     // Update the waveform used by this oscillator
     void SetWaveformType(WaveformInfo::Type type);
@@ -56,10 +56,11 @@ public:
     float GetNextSample() override;
     
 private:
+    // Remove voices lazily which allows them to play the "release" of a note
     void CleanUpDeadNotes();
 
     WaveformInfo::Type m_waveformType;
     Envelope m_env;
-    std::unordered_map<float, Voice> m_voices;
+    std::vector<Voice> m_voices;
     int octave = 5;
 };

@@ -111,7 +111,7 @@ inline void FromJson(const json& j, AudioPreset& p)
     get(p.synthOscHold, "synthOscHold", 0.0f);
     get(p.synthOscDec, "synthOscDec", 0.0f);
     get(p.synthOscSus, "synthOscSus", 1.0f);
-    get(p.synthOscSus, "synthOscRel", 0.0f);
+    get(p.synthOscRel, "synthOscRel", 0.0f);
 
     get(p.synthLpFilterOn, "synthLpFilterOn", true);
     get(p.synthLpFilterMix, "synthLpFilterMix", 1.0f);

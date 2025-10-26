@@ -57,8 +57,8 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
                 m_pressedNotes.insert(note);
 
                 // New note pressed
-                m_oscA->NoteOn(Frequency(note));
-                m_oscB->NoteOn(Frequency(note));
+                m_oscA->NoteOn(note);
+                m_oscB->NoteOn(note);
                 m_filterEnv->Restart();
                 m_lfo1Env->Restart();
                 m_lfo2Env->Restart();
@@ -68,8 +68,8 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
                 m_pressedNotes.erase(note);
 
                 // Note released
-                m_oscA->NoteOff(Frequency(note));
-                m_oscB->NoteOff(Frequency(note));
+                m_oscA->NoteOff(note);
+                m_oscB->NoteOff(note);
             }
         }
     }

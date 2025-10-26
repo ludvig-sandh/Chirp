@@ -4,8 +4,9 @@
 #include "generator/Oscillator.hpp"
 #include "engine/AudioEngine.hpp"
 
-Voice::Voice(Frequency freq, std::unique_ptr<Waveform> wf, const Envelope& env)
-    : freq(freq)
+Voice::Voice(Note note, std::unique_ptr<Waveform> wf, const Envelope& env)
+    : note(note)
+    , freq(note)
     , m_wf(std::move(wf))
     , m_env(env)
 {}
@@ -30,7 +31,6 @@ void Voice::SetOctave(int octave) {
 }
 
 void Voice::Release() {
-    isReleased = true;
     m_env.Release();
 }
 
@@ -38,24 +38,18 @@ bool Voice::IsDead() const {
     return m_env.IsComplete();
 }
 
-bool Oscillator::NoteOn(Frequency freq) {
+void Oscillator::NoteOn(Note note) {
     CleanUpDeadNotes(); // Regularly remove notes that have gone silent
 
-    auto it = m_voices.find(freq.GetAbsolute());
-    if (it != m_voices.end() && !it->second.isReleased) {
-        // Don't replay a note that is already currently playing (and has not yet been released)
-        return false;
-    }
-
-    Voice v(freq, Waveform::ConstructWaveform(m_waveformType), m_env);
-    m_voices.insert_or_assign(freq.GetAbsolute(), std::move(v));
-    return true;
+    Voice v(note, Waveform::ConstructWaveform(m_waveformType), m_env);
+    m_voices.push_back(std::move(v));
 }
 
-void Oscillator::NoteOff(Frequency freq) {
-    auto it = m_voices.find(freq.GetAbsolute());
-    if (it != m_voices.end() && !it->second.isReleased) {
-        it->second.Release();
+void Oscillator::NoteOff(Note note) {
+    for (auto& v : m_voices) {
+        if (v.note == note) {
+            v.Release(); // Simply release all notes with the same frequency
+        }
     }
 }
 
@@ -66,7 +60,7 @@ void Oscillator::SetWaveformType(WaveformInfo::Type type) {
     m_waveformType = type;
 
     // Update all playing notes to use new waveform instead
-    for (auto& [_, voice] : m_voices) {
+    for (auto& voice : m_voices) {
         voice.SetWaveformType(type);
     }
 }
@@ -77,7 +71,7 @@ void Oscillator::SetEnvelope(Envelope envelope) {
 }
 
 void Oscillator::SetOctave(int octave) {
-    for (auto& [_, voice] : m_voices) {
+    for (auto& voice : m_voices) {
         voice.SetOctave(octave);
     }
 }
@@ -85,7 +79,7 @@ void Oscillator::SetOctave(int octave) {
 void Oscillator::ApplyModulation(float amount, ModulationType modType) {
     if (modType == ModulationType::Pitch) {
         // Modulates the pitch of all voices
-        for (auto& [_, voice] : m_voices) {
+        for (auto& voice : m_voices) {
             voice.freq.AddPitchModulation(amount);
         }
     }else if (modType == ModulationType::Volume) {
@@ -96,7 +90,7 @@ void Oscillator::ApplyModulation(float amount, ModulationType modType) {
 }
 
 void Oscillator::ClearModulationsImpl() {
-    for (auto& [_, voice] : m_voices) {
+    for (auto& voice : m_voices) {
         voice.freq.ClearModulations();
     }
     gain.ClearModulations();
@@ -105,14 +99,14 @@ void Oscillator::ClearModulationsImpl() {
 
 float Oscillator::GetNextSample() {
     float sample = 0.0f;
-    for (auto& [_, voice] : m_voices) {
+    for (auto& voice : m_voices) {
         sample += voice.GetNextSample();
     }
     return sample;
 }
 
 void Oscillator::CleanUpDeadNotes() {
-    std::erase_if(m_voices, [](auto const& pair){
-        return pair.second.IsDead(); 
+    std::erase_if(m_voices, [](auto const& voice){
+        return voice.IsDead(); 
     });
 }

@@ -192,7 +192,7 @@ void GUIManager::DrawPresetControlWindow() {
 
     // --- Release ---
     float oscRelTemp = m_preset->synthOscRel.load();
-    ImGui::SliderFloat("Release (s)##vol", &oscRelTemp, 0.0f, 1.0f);
+    ImGui::SliderFloat("Release (s)##vol", &oscRelTemp, 0.0f, 4.0f);
     m_preset->synthOscRel.store(oscRelTemp);
 
 

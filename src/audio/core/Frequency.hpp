@@ -36,6 +36,10 @@ struct Note {
     auto operator<(const Note& other) const -> bool {
         return (octave < other.octave) || (octave == other.octave && key < other.key);
     }
+
+    auto operator==(const Note& other) const -> bool {
+        return octave == other.octave && key == other.key;
+    }
 };
 
 class Frequency {
