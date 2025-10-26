@@ -57,8 +57,12 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
                 m_pressedNotes.insert(note);
 
                 // New note pressed
-                m_oscA->NoteOn(note);
-                m_oscB->NoteOn(note);
+                if (m_oscA->isOn) {
+                    m_oscA->NoteOn(note);
+                }
+                if (m_oscB->isOn) {
+                    m_oscB->NoteOn(note);
+                }
                 m_filterEnv->Restart();
                 m_lfo1Env->Restart();
                 m_lfo2Env->Restart();
