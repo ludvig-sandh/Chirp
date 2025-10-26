@@ -31,7 +31,9 @@ public:
     float release;
     
 private:
+    float GetNextSampleHelper();
 
     float m_timeSinceStart = 0.0;
     bool m_hasBeenReleased = false;
+    float m_lastValueBeforeRelease = 0.0f;
 };

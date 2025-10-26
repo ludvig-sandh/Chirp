@@ -10,12 +10,21 @@ Envelope::Envelope(float atk, float hld, float dec, float sus, float rel)
 }
 
 float Envelope::GetNextSample() {
+    float nextSample = GetNextSampleHelper();
+    if (!m_hasBeenReleased) {
+        m_lastValueBeforeRelease = nextSample;
+    }
+    return nextSample;
+}
+
+float Envelope::GetNextSampleHelper() {
     // Progress time
     m_timeSinceStart += 1.0f / SAMPLE_RATE;
 
     if (m_hasBeenReleased) {
         if (m_timeSinceStart < release) {
-            return sustain - sustain * m_timeSinceStart / release;
+            // When released, interpolate from current amplitude down to zero
+            return m_lastValueBeforeRelease * (1.0f - m_timeSinceStart / release);
         }else {
             return 0.0f;
         }
