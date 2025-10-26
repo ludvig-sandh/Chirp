@@ -48,6 +48,7 @@
     "synthOscLpCutoffAmount": 60.0,
     "synthOscLpCutoffAttack": 0.0,
     "synthOscLpCutoffDec": 0.6129999756813049,
+    "synthOscRel": 0.28299999237060547,
     "synthOscSus": 1.0,
     "synthReverbDamp": 0.20000000298023224,
     "synthReverbFeedback": 0.800000011920929,

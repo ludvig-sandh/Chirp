@@ -56,9 +56,9 @@ struct LFOConfig {
         { Destination::OscABVolume,{ "Osc AB Volume", std::nullopt, -1.0f, 1.0f, false } },
         { Destination::OscABPan,   { "Osc AB Pan", std::nullopt, -1.0f, 1.0f, false } },
         { Destination::OscABPitch, { "Osc AB Pitch", "%.1f semitones", -60.0f, 60.0f, false } },
-        { Destination::LPCutoff,   { "LP Cutoff", "%.1f Hz", -60.0f, 60.0f, true } },
+        { Destination::LPCutoff,   { "LP Cutoff", "%.1f semitones", -60.0f, 60.0f, true } },
         { Destination::LPPeaking,  { "LP Peaking", std::nullopt, -3.0f, 3.0f, false } },
-        { Destination::HPCutoff,   { "HP Cutoff", "%.1f Hz", -60.0f, 60.0f, true } },
+        { Destination::HPCutoff,   { "HP Cutoff", "%.1f semitones", -60.0f, 60.0f, true } },
         { Destination::HPPeaking,  { "HP Peaking", std::nullopt, -3.0f, 3.0f, false } },
     }};
 
