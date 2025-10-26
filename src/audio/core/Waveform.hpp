@@ -13,10 +13,11 @@ namespace WaveformInfo {
         Sine,
         Square,
         WhiteNoise,
-        Triangle
+        Triangle,
+        Organ
     };
 
-    inline constexpr const char* Names[] = { "Saw", "Sine", "Square", "White noise", "Triangle" };
+    inline constexpr const char* Names[] = { "Saw", "Sine", "Square", "White noise", "Triangle", "Organ" };
 }
 
 // Base class for representing waveforms, such as sine waves or more complex waves  
@@ -52,6 +53,11 @@ private:
 };
 
 class Triangle final : public Waveform {
+public:
+    float GetSampleAt(float offset) override;
+};
+
+class Organ final : public Waveform {
 public:
     float GetSampleAt(float offset) override;
 };

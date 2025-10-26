@@ -19,6 +19,8 @@ std::unique_ptr<Waveform> Waveform::ConstructWaveform(WaveformInfo::Type type) {
             return std::make_unique<WhiteNoise>();
         case WaveformInfo::Type::Triangle:
             return std::make_unique<Triangle>();
+        case WaveformInfo::Type::Organ:
+            return std::make_unique<Organ>();
     }
     throw std::invalid_argument("Cannot construct a waveform from unexpected WaveformType enum value");
     return nullptr;
@@ -46,4 +48,11 @@ float WhiteNoise::GetSampleAt(float currentOffset) {
 float Triangle::GetSampleAt(float currentOffset) {
     float phase = std::fmod(currentOffset, 1.0f);
     return 4.0f * std::fabs(phase - 0.5f) - 1.0f;
+}
+
+float Organ::GetSampleAt(float currentOffset) {
+    float fundamental = std::sin(currentOffset * 2.0 * std::numbers::pi);
+    float third = 0.4f * std::sin(currentOffset * 2.0 * std::numbers::pi * 3.0f);
+    float sixth = 0.2f * std::sin(currentOffset * 2.0 * std::numbers::pi * 6.0f);
+    return fundamental + third + sixth;
 }
