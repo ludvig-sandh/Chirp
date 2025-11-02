@@ -7,11 +7,8 @@
 #include <cmath>
 #include <format>
 
-enum Key {
-    A = 0,
-    As,
-    B,
-    C,
+enum class Key {
+    C = 0,
     Cs,
     D,
     Ds,
@@ -19,7 +16,10 @@ enum Key {
     F,
     Fs,
     G,
-    Gs
+    Gs,
+    A,
+    As,
+    B
 };
 
 struct Note {
