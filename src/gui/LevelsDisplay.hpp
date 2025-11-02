@@ -5,7 +5,7 @@
 
 #include "ImGuiDefinitions.hpp"
 #include "imgui.h"
-#include <GLFW/glfw3.h> // Will drag system OpenGL headers
+#include <GLFW/glfw3.h>
 #include "gui/LevelsHistory.hpp"
 #include "engine/AudioBackend.hpp"
 #include <vector>
@@ -45,6 +45,10 @@ private:
     static const std::array<unsigned char, 3> s_bgColor;
     static const std::array<unsigned char, 3> s_secondaryColor;
     static const std::array<unsigned char, 3> s_highlightColor;
+
+    static inline const std::array<unsigned char, 3> BG_COLOR{5, 9, 19};
+    static inline const std::array<unsigned char, 3> SECONDARY_COLOR{31, 64, 132};
+    static inline const std::array<unsigned char, 3> HIGHLIGHT_COLOR{107, 201, 255};
 
     LevelsHistory m_leftHistory;
     LevelsHistory m_rightHistory;

@@ -11,6 +11,7 @@ GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTC
     , m_fftComputer(fftComputer)
     , m_keyboard(SCREEN_WIDTH)
     , m_presetWindow(preset)
+    , m_oscAWaveformWindow(preset->synthOscAWaveform.load())
 {
     m_window = InitAux();
     if (m_window == nullptr) {
@@ -21,6 +22,7 @@ GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTC
     // Now that the GL context and window has been initialized
     m_spectrogram.InitTexture();
     m_levelsDisplay.InitTexture();
+    m_oscAWaveformWindow.InitTexture();
 }
 
 GUIManager::~GUIManager() {
@@ -69,6 +71,8 @@ void GUIManager::RunMainLoop() {
                 m_levelsDisplay.UpdateLevels(*levels.get());
                 m_levelsDisplay.Render();
             }
+
+            m_oscAWaveformWindow.Render(m_preset->synthOscAWaveform.load());
 
             // Provide keyboard with the Qwerty input since it cannot access it itself.
             std::set<Note> pressedNotes = m_keyboard.Render(pressedQwertyNotes);

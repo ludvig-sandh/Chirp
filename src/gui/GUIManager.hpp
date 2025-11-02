@@ -22,6 +22,7 @@
 #include "gui/PresetWindow.hpp"
 #include "gui/GlobalSettingsWindow.hpp"
 #include "gui/PresetLoaderWindow.hpp"
+#include "gui/WaveformWindow.hpp"
 
 #include <memory>
 #include <format>
@@ -49,6 +50,7 @@ private:
     std::shared_ptr<FFTComputer> m_fftComputer;
     Keyboard m_keyboard;
     PresetWindow m_presetWindow;
+    WaveformWindow m_oscAWaveformWindow;
 
     GLFWwindow *m_window;
     ImGuiIO *m_io;

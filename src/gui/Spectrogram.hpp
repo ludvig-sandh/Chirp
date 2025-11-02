@@ -4,7 +4,7 @@
 #pragma once
 
 #include "imgui.h"
-#include <GLFW/glfw3.h> // Will drag system OpenGL headers
+#include <GLFW/glfw3.h>
 #include <vector>
 
 class Spectrogram {

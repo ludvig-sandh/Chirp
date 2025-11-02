@@ -3,16 +3,9 @@
 
 #include "gui/LevelsDisplay.hpp"
 
-#include "imgui.h"
-#include <GLFW/glfw3.h> // Will drag system OpenGL headers
-#include <vector>
 #include <cstring>
 #include <cmath>
 #include <algorithm>
-
-const std::array<unsigned char, 3> LevelsDisplay::s_bgColor = {5, 9, 19};
-const std::array<unsigned char, 3> LevelsDisplay::s_secondaryColor = {31, 64, 132};
-const std::array<unsigned char, 3> LevelsDisplay::s_highlightColor = {107, 201, 255};
 
 void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 3>& rgb) {
     size_t pixelIndex = (TEXTURE_HEIGHT - y - 1) * TEXTURE_WIDTH + x;
@@ -35,7 +28,7 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
     std::vector<unsigned char> pixels(TEXTURE_WIDTH * TEXTURE_HEIGHT * 3);
     for (int x = 0; x < TEXTURE_WIDTH; x++) {
         for (int y = 0; y < TEXTURE_HEIGHT; y++) {
-            SetPixelHelper(pixels, x, y, s_bgColor);
+            SetPixelHelper(pixels, x, y, BG_COLOR);
         }
     }
 
@@ -50,12 +43,12 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
         size_t y = bar + 1;
         if (bar < numVolumeBarsLeft) {
             // Current vol
-            SetPixelHelper(pixels, 1, y, s_highlightColor);
-            SetPixelHelper(pixels, 2, y, s_highlightColor);
+            SetPixelHelper(pixels, 1, y, HIGHLIGHT_COLOR);
+            SetPixelHelper(pixels, 2, y, HIGHLIGHT_COLOR);
         }else {
             // Recent max
-            SetPixelHelper(pixels, 1, y, s_secondaryColor);
-            SetPixelHelper(pixels, 2, y, s_secondaryColor);
+            SetPixelHelper(pixels, 1, y, SECONDARY_COLOR);
+            SetPixelHelper(pixels, 2, y, SECONDARY_COLOR);
         }
     }
 
@@ -64,12 +57,12 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
         size_t y = bar + 1;
         if (bar < numVolumeBarsRight) {
             // Current vol
-            SetPixelHelper(pixels, 4, y, s_highlightColor);
-            SetPixelHelper(pixels, 5, y, s_highlightColor);
+            SetPixelHelper(pixels, 4, y, HIGHLIGHT_COLOR);
+            SetPixelHelper(pixels, 5, y, HIGHLIGHT_COLOR);
         }else {
             // Recent max
-            SetPixelHelper(pixels, 4, y, s_secondaryColor);
-            SetPixelHelper(pixels, 5, y, s_secondaryColor);
+            SetPixelHelper(pixels, 4, y, SECONDARY_COLOR);
+            SetPixelHelper(pixels, 5, y, SECONDARY_COLOR);
         }
     }
 
