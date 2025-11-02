@@ -3,15 +3,11 @@
 
 #pragma once
 
-#ifndef IMGUI_DEFINE_MATH_OPERATORS
-#define IMGUI_DEFINE_MATH_OPERATORS
-#endif
-
+#include "ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h" // For ImRect
-#include "ImGuiFileDialog.h"
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
@@ -23,6 +19,7 @@
 #include "fft/FFTComputer.hpp"
 #include "gui/LevelsDisplay.hpp"
 #include "gui/Keyboard.hpp"
+#include "gui/PresetWindow.hpp"
 
 #include <memory>
 #include <format>
@@ -40,14 +37,6 @@ public:
     static void glfw_error_callback(int error, const char* description);
     
 private:
-    void DrawPresetControlWindow();
-
-    // Used in synth UI to display export/load preset buttons
-    void DrawPresetControls();
-
-    // Used in synth UI display controls related to LFOs
-    void DrawLFOControls();
-
     GLFWwindow *InitAux();
     void DeinitAux();
 
@@ -57,6 +46,7 @@ private:
     std::shared_ptr<AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
     Keyboard m_keyboard;
+    PresetWindow m_presetWindow;
 
     GLFWwindow *m_window;
     ImGuiIO *m_io;

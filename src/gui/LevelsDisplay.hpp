@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 #include "gui/LevelsHistory.hpp"
@@ -15,7 +16,7 @@
 class LevelsDisplay {
 public:
     static const int WINDOW_HEIGHT = 294;
-    static const int WINDOW_WIDTH = 80;//48;
+    static const int WINDOW_WIDTH = 80;
 
     void UpdateLevels(const AudioFrame& levels);
 

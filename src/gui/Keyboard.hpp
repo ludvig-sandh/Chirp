@@ -1,5 +1,9 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Ludvig Sandh
+
 #pragma once
 
+#include "ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include "imgui_internal.h" // For ImRect
 #include "audio/core/Frequency.hpp"
@@ -34,6 +38,8 @@ struct UIKey {
 // Represents the keyboard UI element
 class Keyboard {
 public:
+    static inline const float WINDOW_HEIGHT = 160.0f;
+    
     // First and last key of keyboard
     static inline const Note FIRST_NOTE{Key::A, 0};
     static inline const Note LAST_NOTE{Key::C, 8};
@@ -63,7 +69,6 @@ private:
     std::vector<UIKey> m_keys;
     size_t m_keyboardWidth;
 
-    static inline const float KEYBOARD_HEIGHT = 160.0f;
     static inline const float WHITE_KEY_HEIGHT = 120.0f;
     static inline const float BLACK_KEY_HEIGHT = 70.0f;
     static inline const float WHITE_TO_BLACK_KEY_WIDTH_RATIO = 40.0f / 24.0f;

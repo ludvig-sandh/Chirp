@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Ludvig Sandh
+
 #include "gui/Keyboard.hpp"
 
 Keyboard::Keyboard(size_t keyboardWidth)
@@ -35,10 +38,10 @@ void Keyboard::ConfigureWindow() const {
 
     // Force window to bottom, full width
     ImGui::SetNextWindowPos(
-        ImVec2(viewport->Pos.x, viewport->Pos.y + viewport->Size.y - KEYBOARD_HEIGHT),
+        ImVec2(viewport->Pos.x, viewport->Pos.y + viewport->Size.y - WINDOW_HEIGHT),
         ImGuiCond_Always
     );
-    ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, KEYBOARD_HEIGHT), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, WINDOW_HEIGHT), ImGuiCond_Always);
 
     // Create a non-movable, non-collapsible, non-resizable, no-title-bar panel
     ImGui::Begin("Piano", nullptr,
