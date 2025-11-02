@@ -17,7 +17,7 @@
 GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
     , m_fftComputer(fftComputer)
-    , m_keyboard(WINDOW_WIDTH)
+    , m_keyboard(SCREEN_WIDTH - MARGIN)
 {
     m_window = InitAux();
     if (m_window == nullptr) {
@@ -64,13 +64,13 @@ void GUIManager::RunMainLoop() {
             std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
             if (column != nullptr) {
                 m_spectrogram.PushColumn(*column.get());
-                m_spectrogram.Show();
+                m_spectrogram.Render();
             }
 
             std::shared_ptr<AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
             if (levels != nullptr) {
                 m_levelsDisplay.UpdateLevels(*levels.get());
-                m_levelsDisplay.Show();
+                m_levelsDisplay.Render();
             }
 
             // Provide keyboard with the Qwerty input since it cannot access it itself.
@@ -685,7 +685,7 @@ GLFWwindow *GUIManager::InitAux() {
 
     // Create window with graphics context
     float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor()); // Valid on GLFW 3.3+ only
-    GLFWwindow* window = glfwCreateWindow((int)(WINDOW_WIDTH * main_scale), (int)(WINDOW_HEIGHT * main_scale), "Chirp Realtime Audio Synthesis", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow((int)(SCREEN_WIDTH * main_scale), (int)(SCREEN_HEIGHT * main_scale), "Chirp Realtime Audio Synthesis", nullptr, nullptr);
     if (window == nullptr) {
         return nullptr;
     }

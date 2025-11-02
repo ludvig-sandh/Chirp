@@ -9,11 +9,15 @@
 
 class Spectrogram {
 public:
+    // Dimensions of spectrogram window
+    static const int WINDOW_HEIGHT = 294;
+    static const int WINDOW_WIDTH = 528;
+
     // update per audio block
     void PushColumn(const std::vector<float>& magnitudes);
 
     // render in imgui
-    void Show();
+    void Render();
 
     // create texture once. Must be done after GL context has been initialized
     void InitTexture();
@@ -21,11 +25,13 @@ public:
     void ReallocateTexture();
 
 private:
+    void ConfigureWindow() const;
+
     static void MagnitudeToRGB(float mag, unsigned char& r, unsigned char& g, unsigned char& b);
 
-    // Dimensions of spectrogram UI element
-    static const int UI_SPEC_HEIGHT = 256;
-    static const int UI_SPEC_WIDTH = 512;
+    // Dimensions of spectrogram image element
+    static const int UI_IMAGE_HEIGHT = 256;
+    static const int UI_IMAGE_WIDTH = 512;
 
     GLuint m_spectrogramTex = 0;
     int m_currentColumn = 0;

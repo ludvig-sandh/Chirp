@@ -48,8 +48,6 @@ private:
     // Used in synth UI display controls related to LFOs
     void DrawLFOControls();
 
-    void DrawPianoKeyboard(int numOctaves = 1);
-
     GLFWwindow *InitAux();
     void DeinitAux();
 
@@ -68,6 +66,7 @@ private:
     // Background color
     static inline const ImVec4 CLEAR_COLOR = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);
 
-    static inline const size_t WINDOW_WIDTH = 1280;
-    static inline const size_t WINDOW_HEIGHT = 800;
-};
+    static inline const size_t SCREEN_WIDTH = 1280;
+    static inline const size_t SCREEN_HEIGHT = 800;
+    static inline const size_t MARGIN = 16;
+}; 

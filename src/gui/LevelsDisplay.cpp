@@ -15,7 +15,7 @@ const std::array<unsigned char, 3> LevelsDisplay::s_secondaryColor = {31, 64, 13
 const std::array<unsigned char, 3> LevelsDisplay::s_highlightColor = {107, 201, 255};
 
 void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 3>& rgb) {
-    size_t pixelIndex = (s_texHeight - y - 1) * s_texWidth + x;
+    size_t pixelIndex = (TEXTURE_HEIGHT - y - 1) * TEXTURE_WIDTH + x;
     std::memcpy(&pixels[pixelIndex * 3], rgb.data(), 3 * sizeof(unsigned char));
 }
 
@@ -32,9 +32,9 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
     m_rightHistory.Add(normR);
 
     // Init pixels with background colors
-    std::vector<unsigned char> pixels(s_texWidth * s_texHeight * 3);
-    for (int x = 0; x < s_texWidth; x++) {
-        for (int y = 0; y < s_texHeight; y++) {
+    std::vector<unsigned char> pixels(TEXTURE_WIDTH * TEXTURE_HEIGHT * 3);
+    for (int x = 0; x < TEXTURE_WIDTH; x++) {
+        for (int y = 0; y < TEXTURE_HEIGHT; y++) {
             SetPixelHelper(pixels, x, y, s_bgColor);
         }
     }
@@ -75,15 +75,41 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
 
     // Upload to OpenGL texture
     glBindTexture(GL_TEXTURE_2D, m_levelsTex);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, s_texWidth, s_texHeight,
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT,
                     GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
 }
 
-void LevelsDisplay::Show() {
-    ImGui::Begin("Lvl");
+void LevelsDisplay::Render() {
+    ConfigureWindow();
+
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + IMAGE_START_X); // shift image slightly to the right
     ImGui::Image((ImTextureID)(intptr_t)m_levelsTex,
-                 ImVec2(s_UIWidth, s_UIHeight));
+                 ImVec2(IMAGE_WIDTH, IMAGE_HEIGHT));
+
     ImGui::End();
+}
+
+void LevelsDisplay::ConfigureWindow() const {
+    // Get viewport (the main window area)
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+    // Force window to bottom, full width
+    ImGui::SetNextWindowPos(
+        ImVec2(viewport->Pos.x + viewport->Size.x - WINDOW_WIDTH, viewport->Pos.y),
+        ImGuiCond_Always
+    );
+    ImGui::SetNextWindowSize(ImVec2(WINDOW_WIDTH, WINDOW_HEIGHT), ImGuiCond_Always);
+
+    // Create a non-movable, non-collapsible, non-resizable, no-title-bar panel
+    ImGui::Begin("Levels", nullptr,
+        ImGuiWindowFlags_NoTitleBar
+        | ImGuiWindowFlags_NoMove
+        | ImGuiWindowFlags_NoResize
+        | ImGuiWindowFlags_NoCollapse
+        | ImGuiWindowFlags_NoScrollbar
+        | ImGuiWindowFlags_NoScrollWithMouse);
+
+    ImGui::SeparatorText("Levels");
 }
 
 void LevelsDisplay::InitTexture() {
@@ -91,7 +117,7 @@ void LevelsDisplay::InitTexture() {
     glBindTexture(GL_TEXTURE_2D, m_levelsTex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-                 s_texWidth, s_texHeight, 0,
+                 TEXTURE_WIDTH, TEXTURE_HEIGHT, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

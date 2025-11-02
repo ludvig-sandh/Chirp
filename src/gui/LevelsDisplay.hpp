@@ -14,24 +14,32 @@
 
 class LevelsDisplay {
 public:
+    static const int WINDOW_HEIGHT = 294;
+    static const int WINDOW_WIDTH = 80;//48;
+
     void UpdateLevels(const AudioFrame& levels);
 
     // Render in imgui
-    void Show();
+    void Render();
     
     // Create texture once. Must be done after GL context has been initialized
     void InitTexture();
 
 private:
-    void SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 3>& rgb);
-    
-    // Dimensions of spectrogram UI element
-    static const int s_UIHeight = 256;
-    static const int s_UIWidth = 32;
+    void ConfigureWindow() const;
 
-    static const int s_texHeight = 64;
-    static const int s_texWidth = 7;
-    static const size_t maxVolumeBars = s_texHeight - 2; // Leave 1 pixel gap on top and bottom
+    void SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 3>& rgb);
+
+    // Size of texture in pixels
+    static const int TEXTURE_HEIGHT = 64;
+    static const int TEXTURE_WIDTH = 7;
+    
+    // Size that the texture will show up on screen with
+    static const int IMAGE_HEIGHT = 256;
+    static const int IMAGE_WIDTH = 32;
+    static inline const float IMAGE_START_X = 16.0f; // Offset in x from left window border
+
+    static const size_t maxVolumeBars = TEXTURE_HEIGHT - 2; // Leave 1 pixel gap on top and bottom
 
     static const std::array<unsigned char, 3> s_bgColor;
     static const std::array<unsigned char, 3> s_secondaryColor;

@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "gui/Spectrogram.hpp"
+#include "gui/LevelsDisplay.hpp"
 
 #include <cmath>
 #include <algorithm>
@@ -42,13 +43,36 @@ void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
                     GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
 }
 
-void Spectrogram::Show() {
+void Spectrogram::Render() {
     if (m_specHeight == 0) return;
 
-    ImGui::Begin("Spectrogram");
+    ConfigureWindow();
     ImGui::Image((ImTextureID)(intptr_t)m_spectrogramTex,
-                 ImVec2(UI_SPEC_WIDTH, UI_SPEC_HEIGHT));
+                 ImVec2(UI_IMAGE_WIDTH, UI_IMAGE_HEIGHT));
     ImGui::End();
+}
+
+void Spectrogram::ConfigureWindow() const {
+    // Get viewport (the main window area)
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+    // Force window to bottom, full width
+    ImGui::SetNextWindowPos(
+        ImVec2(viewport->Pos.x + viewport->Size.x - LevelsDisplay::WINDOW_WIDTH - WINDOW_WIDTH, viewport->Pos.y),
+        ImGuiCond_Always
+    );
+    ImGui::SetNextWindowSize(ImVec2(WINDOW_WIDTH, WINDOW_HEIGHT), ImGuiCond_Always);
+
+    // Create a non-movable, non-collapsible, non-resizable, no-title-bar panel
+    ImGui::Begin("Spectrogram", nullptr,
+        ImGuiWindowFlags_NoTitleBar
+        | ImGuiWindowFlags_NoMove
+        | ImGuiWindowFlags_NoResize
+        | ImGuiWindowFlags_NoCollapse
+        | ImGuiWindowFlags_NoScrollbar
+        | ImGuiWindowFlags_NoScrollWithMouse);
+
+    ImGui::SeparatorText("Spectrogram");
 }
 
 void Spectrogram::InitTexture() {
