@@ -9,13 +9,16 @@
 #include "preset/AudioPresetSerialization.hpp"
 #include "preset/BuiltInPresetsLoader.hpp"
 #include "modulation/LFO.hpp"
+#include "core/Frequency.hpp"
 #include <utility>
 #include <iostream>
 
 // RAII class for managing the GLFW window
 GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
-    , m_fftComputer(fftComputer) {
+    , m_fftComputer(fftComputer)
+    , m_keyboard(WINDOW_WIDTH)
+{
     m_window = InitAux();
     if (m_window == nullptr) {
         std::cerr << "Couldn't initialize window\n";
@@ -46,8 +49,8 @@ void GUIManager::RunMainLoop() {
             continue;
         }
 
-        // Handle key input BEFORE starting new ImGui frame
-        HandleKeyboardInput();
+        // Handle key input BEFORE starting new ImGui frame. Will pass this along to the keyboard class
+        std::set<Note> pressedQwertyNotes = GetQwertyNotesPressed();
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -68,6 +71,16 @@ void GUIManager::RunMainLoop() {
             if (levels != nullptr) {
                 m_levelsDisplay.UpdateLevels(*levels.get());
                 m_levelsDisplay.Show();
+            }
+
+            // Provide keyboard with the Qwerty input since it cannot access it itself.
+            std::set<Note> pressedNotes = m_keyboard.Render(pressedQwertyNotes);
+
+            // Store keyboard state (all pressed notes returned) via the shared preset
+            for (Note note = Keyboard::FIRST_NOTE; note <= Keyboard::LAST_NOTE; ++note) {
+                size_t noteIdx = static_cast<size_t>(note - Keyboard::FIRST_NOTE);
+                bool isPressed = pressedNotes.find(note) != pressedNotes.end();
+                m_preset->noteStates[noteIdx].store(isPressed);
             }
         }
 
@@ -672,9 +685,11 @@ GLFWwindow *GUIManager::InitAux() {
 
     // Create window with graphics context
     float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor()); // Valid on GLFW 3.3+ only
-    GLFWwindow* window = glfwCreateWindow((int)(1280 * main_scale), (int)(800 * main_scale), "Chirp Realtime Audio Synthesis", nullptr, nullptr);
-    if (window == nullptr)
+    GLFWwindow* window = glfwCreateWindow((int)(WINDOW_WIDTH * main_scale), (int)(WINDOW_HEIGHT * main_scale), "Chirp Realtime Audio Synthesis", nullptr, nullptr);
+    if (window == nullptr) {
         return nullptr;
+    }
+
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
@@ -699,7 +714,7 @@ GLFWwindow *GUIManager::InitAux() {
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Set background color
-    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+    glClearColor(CLEAR_COLOR.x * CLEAR_COLOR.w, CLEAR_COLOR.y * CLEAR_COLOR.w, CLEAR_COLOR.z * CLEAR_COLOR.w, CLEAR_COLOR.w);
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -730,17 +745,45 @@ void GUIManager::DeinitAux() {
     glfwTerminate();
 }
 
-void GUIManager::HandleKeyboardInput() {
-    m_preset->noteA5.store(glfwGetKey(m_window, GLFW_KEY_Z) == GLFW_PRESS);
-    m_preset->noteAs5.store(glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS);
-    m_preset->noteB5.store(glfwGetKey(m_window, GLFW_KEY_X) == GLFW_PRESS);
-    m_preset->noteC5.store(glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS);
-    m_preset->noteCs5.store(glfwGetKey(m_window, GLFW_KEY_C) == GLFW_PRESS);
-    m_preset->noteD5.store(glfwGetKey(m_window, GLFW_KEY_V) == GLFW_PRESS);
-    m_preset->noteDs5.store(glfwGetKey(m_window, GLFW_KEY_G) == GLFW_PRESS);
-    m_preset->noteE5.store(glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS);
-    m_preset->noteF5.store(glfwGetKey(m_window, GLFW_KEY_H) == GLFW_PRESS);
-    m_preset->noteFs5.store(glfwGetKey(m_window, GLFW_KEY_N) == GLFW_PRESS);
-    m_preset->noteG5.store(glfwGetKey(m_window, GLFW_KEY_J) == GLFW_PRESS);
-    m_preset->noteGs5.store(glfwGetKey(m_window, GLFW_KEY_M) == GLFW_PRESS);
+std::set<Note> GUIManager::GetQwertyNotesPressed() const {
+    // Map keys onto notes
+    static const std::pair<int, Note> QWERTY_NOTE_MAP[] = {
+        // Lower octave
+        { GLFW_KEY_Z, Note(Key::C, 4) },
+        { GLFW_KEY_S, Note(Key::Cs, 4) },
+        { GLFW_KEY_X, Note(Key::D, 4) },
+        { GLFW_KEY_D, Note(Key::Ds, 4) },
+        { GLFW_KEY_C, Note(Key::E, 4) },
+        { GLFW_KEY_V, Note(Key::F, 4) },
+        { GLFW_KEY_G, Note(Key::Fs, 4) },
+        { GLFW_KEY_B, Note(Key::G, 4) },
+        { GLFW_KEY_H, Note(Key::Gs, 4) },
+        { GLFW_KEY_N, Note(Key::A, 4) },
+        { GLFW_KEY_J, Note(Key::As, 4) },
+        { GLFW_KEY_M, Note(Key::B, 4) },
+
+        // Higher octave
+        { GLFW_KEY_W, Note(Key::C, 5) },
+        { GLFW_KEY_3, Note(Key::Cs, 5) },
+        { GLFW_KEY_E, Note(Key::D, 5) },
+        { GLFW_KEY_4, Note(Key::Ds, 5) },
+        { GLFW_KEY_R, Note(Key::E, 5) },
+        { GLFW_KEY_T, Note(Key::F, 5) },
+        { GLFW_KEY_6, Note(Key::Fs, 5) },
+        { GLFW_KEY_Y, Note(Key::G, 5) },
+        { GLFW_KEY_7, Note(Key::Gs, 5) },
+        { GLFW_KEY_U, Note(Key::A, 5) },
+        { GLFW_KEY_8, Note(Key::As, 5) },
+        { GLFW_KEY_I, Note(Key::B, 5) },
+    };
+
+    // Check which keys are pressed
+    std::set<Note> pressedKeys;
+    for (auto const& [glfwKey, note] : QWERTY_NOTE_MAP) {
+        if (glfwGetKey(m_window, glfwKey) == GLFW_PRESS) {
+            pressedKeys.insert(note);
+        }
+    }
+
+    return pressedKeys;
 }

@@ -3,9 +3,14 @@
 
 #pragma once
 
+#ifndef IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS
+#endif
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_internal.h" // For ImRect
 #include "ImGuiFileDialog.h"
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -17,10 +22,12 @@
 #include "gui/Spectrogram.hpp"
 #include "fft/FFTComputer.hpp"
 #include "gui/LevelsDisplay.hpp"
+#include "gui/Keyboard.hpp"
 
 #include <memory>
 #include <iostream>
 #include <format>
+#include <set>
 
 // RAII class for managing the GLFW window
 class GUIManager {
@@ -42,13 +49,17 @@ private:
     // Used in synth UI display controls related to LFOs
     void DrawLFOControls();
 
+    void DrawPianoKeyboard(int numOctaves = 1);
+
     GLFWwindow *InitAux();
     void DeinitAux();
 
-    void HandleKeyboardInput();
+    // Returns
+    std::set<Note> GetQwertyNotesPressed() const;
 
     std::shared_ptr<AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
+    Keyboard m_keyboard;
 
     GLFWwindow *m_window;
     ImGuiIO *m_io;
@@ -56,5 +67,8 @@ private:
     LevelsDisplay m_levelsDisplay;
 
     // Background color
-    static inline ImVec4 clear_color = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);
+    static inline const ImVec4 CLEAR_COLOR = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);
+
+    static inline const size_t WINDOW_WIDTH = 1280;
+    static inline const size_t WINDOW_HEIGHT = 800;
 };

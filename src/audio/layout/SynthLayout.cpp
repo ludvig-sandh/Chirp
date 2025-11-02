@@ -2,8 +2,10 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "layout/SynthLayout.hpp"
+#include "gui/Keyboard.hpp"
 
 #include <cassert>
+#include <iostream>
 
 SynthLayout::SynthLayout()
     : m_oscA(std::make_shared<Oscillator>())
@@ -35,25 +37,11 @@ std::shared_ptr<AudioProcessor> SynthLayout::GetRootNode() {
 }
 
 void SynthLayout::LoadPreset(AudioPreset& preset) {
-    // Map all key inputs to notes and play the ones currently held down
-    static std::vector<std::pair<const std::atomic<bool>*, Note>> keySettingPairs = {
-        { &preset.noteA5, Note(Key::A, 5) },
-        { &preset.noteAs5, Note(Key::As, 5) },
-        { &preset.noteB5, Note(Key::B, 5) },
-        { &preset.noteC5, Note(Key::C, 5) },
-        { &preset.noteCs5, Note(Key::Cs, 5) },
-        { &preset.noteD5, Note(Key::D, 5) },
-        { &preset.noteDs5, Note(Key::Ds, 5) },
-        { &preset.noteE5, Note(Key::E, 5) },
-        { &preset.noteF5, Note(Key::F, 5) },
-        { &preset.noteFs5, Note(Key::Fs, 5) },
-        { &preset.noteG5, Note(Key::G, 5) },
-        { &preset.noteGs5, Note(Key::Gs, 5) }
-    };
-
-    for (auto& [keySettingPtr, note] : keySettingPairs) {
-        if (keySettingPtr->load()) {
+    Note note = Keyboard::FIRST_NOTE;
+    for (auto& isPressed : preset.noteStates) {
+        if (isPressed.load()) {
             if (m_pressedNotes.find(note) == m_pressedNotes.end()) {
+                // std::cout << "new note!\n";
                 m_pressedNotes.insert(note);
 
                 // New note pressed
@@ -76,6 +64,8 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
                 m_oscB->NoteOff(note);
             }
         }
+        
+        ++note;
     }
 
     m_oscA->isOn = preset.synthOscAOn.load();

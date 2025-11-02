@@ -78,16 +78,8 @@ struct AudioPreset {
     std::atomic<float> synthLFO2Frequency { 1.0f };
 
     // Non-settings. Used to communicate key-presses to audio engine
-    std::atomic<bool> noteA5 { false };
-    std::atomic<bool> noteAs5 { false };
-    std::atomic<bool> noteB5 { false };
-    std::atomic<bool> noteC5 { false };
-    std::atomic<bool> noteCs5 { false };
-    std::atomic<bool> noteD5 { false };
-    std::atomic<bool> noteDs5 { false };
-    std::atomic<bool> noteE5 { false };
-    std::atomic<bool> noteF5 { false };
-    std::atomic<bool> noteFs5 { false };
-    std::atomic<bool> noteG5 { false };
-    std::atomic<bool> noteGs5 { false };
+    static constexpr int NUM_KEYS = 88;
+
+    // Indexed by keyboard note index from left to right (0: leftmost key, etc.)
+    std::array<std::atomic<bool>, NUM_KEYS> noteStates; // Default init. to false
 };
