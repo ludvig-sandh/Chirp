@@ -71,17 +71,41 @@ void WaveformWindow::UpdateTexture() {
     // Prepare pixels
     std::unique_ptr<Waveform> wf = Waveform::ConstructWaveform(m_waveformType);
     std::vector<unsigned char> pixels(TEXTURE_HEIGHT * TEXTURE_WIDTH * 3, 0);
+    int prevRow = 0;
     for (int col = 0; col < TEXTURE_WIDTH; col++) {
         float waveformValue = wf->GetSampleAt(static_cast<float>(col) / (TEXTURE_WIDTH - 1));
-        waveformValue = waveformValue / 2.0f + 0.5f; // Shift range from [-1, 1] to [0, 1]
-        int row = static_cast<int>(waveformValue * TEXTURE_HEIGHT); // Map function value to row
-        row = std::clamp(row, 0, TEXTURE_HEIGHT - 1); // Bounds safety
-        
-        // Paint the function value at the calculated row
-        int pixelIdx = ((TEXTURE_HEIGHT - row - 1) * TEXTURE_WIDTH + col) * 3;
-        pixels[pixelIdx + 0] = HIGHLIGHT_COLOR[0];
-        pixels[pixelIdx + 1] = HIGHLIGHT_COLOR[1];
-        pixels[pixelIdx + 2] = HIGHLIGHT_COLOR[2];
+        waveformValue = waveformValue / 2.0f + 0.5f;
+        int row = static_cast<int>(waveformValue * TEXTURE_HEIGHT);
+        row = std::clamp(row, 0, TEXTURE_HEIGHT - 1);
+
+        if (col > 0) {
+            // Draw line from (col-1, prevRow) to (col, row)
+            int x0 = col - 1, y0 = prevRow;
+            int x1 = col, y1 = row;
+            int dx = abs(x1 - x0), dy = -abs(y1 - y0);
+            int sx = x0 < x1 ? 1 : -1;
+            int sy = y0 < y1 ? 1 : -1;
+            int err = dx + dy;
+
+            while (true) {
+                int pixelIdx = ((TEXTURE_HEIGHT - y0 - 1) * TEXTURE_WIDTH + x0) * 3;
+                pixels[pixelIdx + 0] = HIGHLIGHT_COLOR[0];
+                pixels[pixelIdx + 1] = HIGHLIGHT_COLOR[1];
+                pixels[pixelIdx + 2] = HIGHLIGHT_COLOR[2];
+                if (x0 == x1 && y0 == y1) {
+                    break;
+                }
+                int e2 = 2 * err;
+                if (e2 >= dy) {
+                    err += dy; x0 += sx;
+                }
+                if (e2 <= dx) {
+                    err += dx; y0 += sy;
+                }
+            }
+        }
+
+        prevRow = row;
     }
 
     // Upload to OpenGL texture
