@@ -52,6 +52,9 @@ void GUIManager::RunMainLoop() {
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
+            m_globalSettingsWindow.Render(*m_preset);
+            m_presetLoaderWindow.Render(*m_preset);
+
             float framerate = m_io->Framerate;
             m_presetWindow.Render(framerate); // Pass framerate to display it at the bottom
 

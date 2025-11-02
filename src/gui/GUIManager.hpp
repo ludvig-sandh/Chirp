@@ -20,6 +20,8 @@
 #include "gui/LevelsDisplay.hpp"
 #include "gui/Keyboard.hpp"
 #include "gui/PresetWindow.hpp"
+#include "gui/GlobalSettingsWindow.hpp"
+#include "gui/PresetLoaderWindow.hpp"
 
 #include <memory>
 #include <format>
@@ -52,6 +54,9 @@ private:
     ImGuiIO *m_io;
     Spectrogram m_spectrogram;
     LevelsDisplay m_levelsDisplay;
+    GlobalSettingsWindow m_globalSettingsWindow;
+    PresetLoaderWindow m_presetLoaderWindow;
+
 
     // Background color
     static inline const ImVec4 CLEAR_COLOR = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);

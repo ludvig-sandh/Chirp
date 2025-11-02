@@ -6,20 +6,18 @@
 #include "gui/Spectrogram.hpp"
 #include "gui/LevelsDisplay.hpp"
 #include "gui/Keyboard.hpp"
+#include "gui/GlobalSettingsWindow.hpp"
+#include "gui/PresetLoaderWindow.hpp"
 #include "engine/AudioBackend.hpp"
 #include "core/Waveform.hpp"
 #include "effects/util/FeedbackDelayLine.hpp"
 #include "effects/util/FeedbackDelayInfo.hpp"
-#include "preset/AudioPresetSerialization.hpp"
-#include "preset/BuiltInPresetsLoader.hpp"
 #include "modulation/LFO.hpp"
 #include "core/Frequency.hpp"
 
 void PresetWindow::Render(float framerate) const {
     ConfigureWindow();
 
-    DrawGlobalSettings();
-    DrawPresetLoader();
     DrawOscillatorA();
     DrawOscillatorB();
     DrawVolumeEnvelope();
@@ -38,13 +36,15 @@ void PresetWindow::ConfigureWindow() const {
     // Get viewport (the main window area)
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
+    const float x = viewport->Pos.x;
+    const float y = viewport->Pos.y + GlobalSettingsWindow::WINDOW_HEIGHT + PresetLoaderWindow::WINDOW_HEIGHT;
     ImGui::SetNextWindowPos(
-        ImVec2(viewport->Pos.x, viewport->Pos.y),
+        ImVec2(x, y),
         ImGuiCond_Always
     );
 
     const float windowWidth = viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsDisplay::WINDOW_WIDTH;
-    const float windowHeight = viewport->Size.y - Keyboard::WINDOW_HEIGHT;
+    const float windowHeight = viewport->Size.y - Keyboard::WINDOW_HEIGHT - GlobalSettingsWindow::WINDOW_HEIGHT - PresetLoaderWindow::WINDOW_HEIGHT;
     ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_Always);
 
     // Create a non-movable, non-collapsible, non-resizable, no-title-bar panel
@@ -53,118 +53,6 @@ void PresetWindow::ConfigureWindow() const {
         | ImGuiWindowFlags_NoMove
         | ImGuiWindowFlags_NoResize
         | ImGuiWindowFlags_NoCollapse);
-}
-
-void PresetWindow::DrawGlobalSettings() const {
-    ImGui::SeparatorText("Global settings");
-
-    float volumeTemp = m_preset->synthMasterVolume.load();
-    ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
-    m_preset->synthMasterVolume.store(volumeTemp);
-}
-
-void PresetWindow::DrawPresetLoader() const {
-    ImGui::SeparatorText("Preset loader");
-
-    // --- Browse and export preset file ---
-    if (ImGui::Button("Export Preset")) {
-        IGFD::FileDialogConfig config;
-        config.path = "."; // starting directory
-        config.countSelectionMax = 1;
-        ImGuiFileDialog::Instance()->OpenDialog("SavePresetDlg", "Export Preset", ".json", config);
-    }
-
-    if (ImGuiFileDialog::Instance()->Display("SavePresetDlg")) {
-        if (ImGuiFileDialog::Instance()->IsOk()) {
-            std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
-            if (AudioPresetIO::SaveToFile(*m_preset, filePath))
-                ImGui::OpenPopup("SaveSuccess");
-            else
-                ImGui::OpenPopup("SaveFail");
-        }
-        ImGuiFileDialog::Instance()->Close();
-    }
-
-    if (ImGui::BeginPopup("SaveSuccess")) {
-        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset exported successfully!");
-        ImGui::EndPopup();
-    }
-    if (ImGui::BeginPopup("SaveFail")) {
-        ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to export preset!");
-        ImGui::EndPopup();
-    }
-
-    ImGui::SameLine();
-
-    // --- Browse and load preset file  ---
-    if (ImGui::Button("Load Preset")) {
-        IGFD::FileDialogConfig config;
-        config.path = "."; // starting directory
-        config.countSelectionMax = 1;
-        ImGuiFileDialog::Instance()->OpenDialog("LoadPresetDlg", "Load Preset", ".json", config);
-    }
-
-    if (ImGuiFileDialog::Instance()->Display("LoadPresetDlg")) {
-        if (ImGuiFileDialog::Instance()->IsOk()) {
-            std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
-            if (AudioPresetIO::LoadFromFile(*m_preset, filePath))
-                ImGui::OpenPopup("LoadSuccess");
-            else
-                ImGui::OpenPopup("LoadFail");
-        }
-        ImGuiFileDialog::Instance()->Close();
-    }
-
-    if (ImGui::BeginPopup("LoadSuccess")) {
-        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset loaded successfully!");
-        ImGui::EndPopup();
-    }
-    if (ImGui::BeginPopup("LoadFail")) {
-        ImGui::TextColored(ImVec4(1.0f, 0.2f, 0.2f, 1.0f), "Failed to load preset!");
-        ImGui::EndPopup();
-    }
-
-
-    // --- Select and load built-in preset ---
-    auto& loader = BuiltInPresetsLoader::GetShared();
-    auto& presetNames = loader.GetPresetNames();
-    static int currentPresetIndex = loader.GetIndexOfDefaultPreset(); // index of the selected preset
-
-    if (presetNames.empty()) {
-        ImGui::TextDisabled("No built-in presets found.");
-        return;
-    }
-
-    // Current label: show the selected preset name, or placeholder
-    const char* currentLabel =
-        (currentPresetIndex >= 0 && currentPresetIndex < (int)presetNames.size())
-        ? presetNames[currentPresetIndex].c_str()
-        : "Select preset...";
-
-    if (ImGui::BeginCombo("Built-in Presets", currentLabel)) {
-        for (int i = 0; i < (int)presetNames.size(); i++) {
-            bool isSelected = (currentPresetIndex == i);
-            if (ImGui::Selectable(presetNames[i].c_str(), isSelected)) {
-                currentPresetIndex = i;
-
-                // Load the selected preset
-                loader.LoadBuiltInPreset(*m_preset, presetNames[i]);
-
-                ImGui::OpenPopup("PresetLoadedPopup");
-            }
-            if (isSelected)
-                ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
-    }
-
-    // Optional: feedback popup
-    if (ImGui::BeginPopup("PresetLoadedPopup")) {
-        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f),
-                           "Preset '%s' loaded successfully!",
-                           presetNames[currentPresetIndex].c_str());
-        ImGui::EndPopup();
-    }
 }
 
 void PresetWindow::DrawOscillatorA() const {

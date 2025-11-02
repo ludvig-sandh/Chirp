@@ -5,7 +5,6 @@
 
 #include "ImGuiDefinitions.hpp"
 #include "imgui.h"
-#include "ImGuiFileDialog.h"
 #include "audio/preset/AudioPreset.hpp"
 #include <memory>
 
@@ -19,11 +18,6 @@ public:
 
 private:
     void ConfigureWindow() const;
-
-    void DrawGlobalSettings() const;
-
-    // Display export/load preset buttons
-    void DrawPresetLoader() const;
 
     void DrawOscillatorA() const;
     void DrawOscillatorB() const;
