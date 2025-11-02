@@ -44,7 +44,7 @@ public:
     static inline const Note FIRST_NOTE{Key::A, 0};
     static inline const Note LAST_NOTE{Key::C, 8};
 
-    Keyboard(size_t keyboardWidth);
+    Keyboard(size_t windowWidth);
 
     // Renders the keyboard and all pressed notes. The set of pressed notes
     // from QWERTY keyboard (rather than midi keyboard) is provided via parameter "pressedQwertyNotes".
@@ -67,11 +67,14 @@ private:
 
     size_t m_numKeys;
     std::vector<UIKey> m_keys;
-    size_t m_keyboardWidth;
+    size_t m_windowWidth;
 
     static inline const float WHITE_KEY_HEIGHT = 120.0f;
     static inline const float BLACK_KEY_HEIGHT = 70.0f;
     static inline const float WHITE_TO_BLACK_KEY_WIDTH_RATIO = 40.0f / 24.0f;
+
+    // Padding after last key before right window border
+    static inline const int KEYBOARD_PADDING = 16;
 
     // Filter lambdas
     static inline const auto BLACK_FILTER = [](UIKey const& k){ return k.note.IsBlackKey(); };

@@ -9,7 +9,7 @@
 GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
     , m_fftComputer(fftComputer)
-    , m_keyboard(SCREEN_WIDTH - MARGIN)
+    , m_keyboard(SCREEN_WIDTH)
     , m_presetWindow(preset)
 {
     m_window = InitAux();

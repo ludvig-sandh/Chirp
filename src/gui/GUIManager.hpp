@@ -12,7 +12,7 @@
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
 #endif
-#include <GLFW/glfw3.h> // Will drag system OpenGL headers
+#include <GLFW/glfw3.h>
 
 #include "preset/AudioPreset.hpp"
 #include "gui/Spectrogram.hpp"
@@ -25,7 +25,7 @@
 #include <format>
 #include <set>
 
-// RAII class for managing the GLFW window
+// Responsible for managing the GLFW window and running the main loop
 class GUIManager {
 public:
     GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
@@ -58,5 +58,4 @@ private:
 
     static inline const size_t SCREEN_WIDTH = 1280;
     static inline const size_t SCREEN_HEIGHT = 800;
-    static inline const size_t MARGIN = 16;
 }; 

@@ -38,7 +38,6 @@ void PresetWindow::ConfigureWindow() const {
     // Get viewport (the main window area)
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    // Force window to bottom, full width
     ImGui::SetNextWindowPos(
         ImVec2(viewport->Pos.x, viewport->Pos.y),
         ImGuiCond_Always

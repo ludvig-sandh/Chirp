@@ -56,7 +56,6 @@ void Spectrogram::ConfigureWindow() const {
     // Get viewport (the main window area)
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    // Force window to bottom, full width
     ImGui::SetNextWindowPos(
         ImVec2(viewport->Pos.x + viewport->Size.x - LevelsDisplay::WINDOW_WIDTH - WINDOW_WIDTH, viewport->Pos.y),
         ImGuiCond_Always

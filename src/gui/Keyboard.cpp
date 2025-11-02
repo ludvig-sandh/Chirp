@@ -6,7 +6,7 @@
 Keyboard::Keyboard(size_t keyboardWidth)
     : m_numKeys(std::abs(FIRST_NOTE - LAST_NOTE) + 1) // Inclusive ends
     , m_keys(HelpCreateKeys(keyboardWidth))
-    , m_keyboardWidth(keyboardWidth)
+    , m_windowWidth(keyboardWidth)
 {}
 
 std::set<Note> Keyboard::Render(const std::set<Note>& pressedQwertyNotes) const {
@@ -25,7 +25,7 @@ std::set<Note> Keyboard::Render(const std::set<Note>& pressedQwertyNotes) const 
 
     DrawAllKeys(offset, pressedNotes);
 
-    ImGui::Dummy(ImVec2(static_cast<float>(m_keyboardWidth), WHITE_KEY_HEIGHT));
+    ImGui::Dummy(ImVec2(static_cast<float>(m_windowWidth), WHITE_KEY_HEIGHT));
     ImGui::End();
 
     return pressedNotes;
@@ -60,7 +60,7 @@ std::vector<UIKey> Keyboard::HelpCreateKeys(size_t keyboardWidth) {
     result.reserve(std::abs(FIRST_NOTE - LAST_NOTE));
 
     size_t numWhiteKeys = HelpCountWhiteKeys();
-    float whiteKeyWidth = static_cast<float>(keyboardWidth) / numWhiteKeys;
+    float whiteKeyWidth = static_cast<float>(keyboardWidth - KEYBOARD_PADDING) / numWhiteKeys;
     float blackKeyWidth = whiteKeyWidth / WHITE_TO_BLACK_KEY_WIDTH_RATIO;
     float x = 0.0f;
     for (Note note = FIRST_NOTE; note <= LAST_NOTE; ++note) {

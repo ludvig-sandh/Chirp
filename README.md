@@ -59,12 +59,13 @@ TODO:
 [X] Allow for saving and loading presets to files
 [X] Add built-in synth presets that user can select from
 [X] Add LFOs that can be linked to oscillator pitch etc
-[ ] Add release as part of envelope setting
-[ ] Add curves for envelope settings
-[ ] Add UI elements next to envelopes that visually show their shape
-[ ] Add visual keyboard UI element in synth mode
+[X] Add release as part of envelope setting
+[No] Add curves for envelope settings
+[X] Add visual keyboard UI element in synth mode
+[ ] Make global settings and preset loader their own windows
 [ ] Add visual UI element that shows spectrum
-[ ] Organize (and stick) windows to look amazing
+[ ] Display wavetables
+[X] Organize (and stick) windows to look amazing
 [ ] Test on mac and linux as well
 [ ] Record a demo of the application and upload to youtube
 [ ] Write extensive readme with explanations and figures
