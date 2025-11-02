@@ -44,6 +44,6 @@ float Frequency::GetAbsolute() const {
 float Frequency::ConvertNoteToHz(Note note) {
     float A5 = 440.0f;
     float twelvethSq2 = std::pow(2.0f, 1.0f / 12.0f); // Twelveth square root of two
-    float hz = A5 * std::pow(twelvethSq2, note.key) * std::pow(2.0f, static_cast<float>(note.octave - 5));
+    float hz = A5 * std::pow(twelvethSq2, static_cast<float>(note.key)) * std::pow(2.0f, static_cast<float>(note.octave - 5));
     return hz;
 }
