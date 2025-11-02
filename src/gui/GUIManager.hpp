@@ -25,7 +25,6 @@
 #include "gui/Keyboard.hpp"
 
 #include <memory>
-#include <iostream>
 #include <format>
 #include <set>
 

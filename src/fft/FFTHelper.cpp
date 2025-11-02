@@ -10,7 +10,6 @@
 #include <complex>
 #include <cmath>
 #include <numbers>
-#include <iostream>
 
 // Helper: next power of two
 size_t FFTHelper::next_pow2(size_t v) {

@@ -70,7 +70,7 @@ OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
-CXXFLAGS := -std=c++23 -O2 -Wall -Wextra $(addprefix -I, $(INCLUDE_DIRS))
+CXXFLAGS := -std=c++23 -O2 -Wall -Wextra -Wpedantic $(addprefix -I, $(INCLUDE_DIRS))
 LIBS = -lportaudio
 
 ##---------------------------------------------------------------------

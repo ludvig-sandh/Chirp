@@ -11,7 +11,6 @@
 #include "fft/FFTComputer.hpp"
 
 #include <memory>
-#include <iostream>
 #include <thread>
 #include <atomic>
 

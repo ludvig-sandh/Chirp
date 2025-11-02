@@ -5,7 +5,6 @@
 #include "FFTHelper.hpp"
 
 #include <cassert>
-#include <iostream>
 #include <cmath>
 
 std::shared_ptr<std::vector<float>> FFTComputer::GetLastFFTResult() const {

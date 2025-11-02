@@ -5,7 +5,6 @@
 #include "gui/Keyboard.hpp"
 
 #include <cassert>
-#include <iostream>
 
 SynthLayout::SynthLayout()
     : m_oscA(std::make_shared<Oscillator>())
@@ -41,7 +40,6 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     for (auto& isPressed : preset.noteStates) {
         if (isPressed.load()) {
             if (m_pressedNotes.find(note) == m_pressedNotes.end()) {
-                // std::cout << "new note!\n";
                 m_pressedNotes.insert(note);
 
                 // New note pressed
