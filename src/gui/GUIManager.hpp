@@ -51,6 +51,7 @@ private:
     Keyboard m_keyboard;
     PresetWindow m_presetWindow;
     WaveformWindow m_oscAWaveformWindow;
+    WaveformWindow m_oscBWaveformWindow;
 
     GLFWwindow *m_window;
     ImGuiIO *m_io;

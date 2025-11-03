@@ -11,7 +11,8 @@ GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTC
     , m_fftComputer(fftComputer)
     , m_keyboard(SCREEN_WIDTH)
     , m_presetWindow(preset)
-    , m_oscAWaveformWindow(preset->synthOscAWaveform.load())
+    , m_oscAWaveformWindow(preset->synthOscAWaveform.load(), "Oscillator A waveform")
+    , m_oscBWaveformWindow(preset->synthOscBWaveform.load(), "Oscillator B waveform")
 {
     m_window = InitAux();
     if (m_window == nullptr) {
@@ -23,6 +24,7 @@ GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTC
     m_spectrogram.InitTexture();
     m_levelsDisplay.InitTexture();
     m_oscAWaveformWindow.InitTexture();
+    m_oscBWaveformWindow.InitTexture();
 }
 
 GUIManager::~GUIManager() {
@@ -72,7 +74,10 @@ void GUIManager::RunMainLoop() {
                 m_levelsDisplay.Render();
             }
 
-            m_oscAWaveformWindow.Render(m_preset->synthOscAWaveform.load());
+            bool isOscAOn = m_preset->synthOscAOn.load();
+            bool isOscBOn = m_preset->synthOscBOn.load();
+            m_oscAWaveformWindow.Render(m_preset->synthOscAWaveform.load(), true, isOscAOn);
+            m_oscBWaveformWindow.Render(m_preset->synthOscBWaveform.load(), false, isOscBOn);
 
             // Provide keyboard with the Qwerty input since it cannot access it itself.
             std::set<Note> pressedNotes = m_keyboard.Render(pressedQwertyNotes);

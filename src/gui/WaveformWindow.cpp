@@ -4,14 +4,15 @@
 #include "gui/LevelsDisplay.hpp"
 #include "gui/Keyboard.hpp"
 
-WaveformWindow::WaveformWindow(WaveformInfo::Type waveformType)
+WaveformWindow::WaveformWindow(WaveformInfo::Type waveformType, const std::string& windowName)
     : m_waveformType(waveformType)
+    , m_windowName(windowName)
 {
     UpdateTexture();
 }
 
-void WaveformWindow::Render(WaveformInfo::Type waveformType) {
-    ImVec2 windowSize = ConfigureWindow();
+void WaveformWindow::Render(WaveformInfo::Type waveformType, bool comesFirst, bool isOn) {
+    ImVec2 windowSize = ConfigureWindow(comesFirst);
     ImVec2 imageSize = ImVec2(windowSize.x - IMAGE_PADDING_RIGHT, windowSize.y - IMAGE_PADDING_BOTTOM);
 
     if (waveformType != m_waveformType) {
@@ -20,30 +21,39 @@ void WaveformWindow::Render(WaveformInfo::Type waveformType) {
     }
 
     if (m_waveformTex) {
-        ImGui::Image((ImTextureID)(intptr_t)m_waveformTex, imageSize);
+        float opacity = isOn ? ON_OPACITY : OFF_OPACITY;
+        ImGui::Image(
+            (ImTextureID)(intptr_t)m_waveformTex,
+            imageSize,
+            ImVec2(0,0), // uv0
+            ImVec2(1,1), // uv1
+            ImVec4(1, 1, 1, opacity), // Tint color
+            ImVec4(0, 0, 0, 0) // Border
+        );
     }
     
     ImGui::End();
 }
 
-ImVec2 WaveformWindow::ConfigureWindow() const {
+ImVec2 WaveformWindow::ConfigureWindow(bool comesFirst) const {
     // Get viewport (the main window area)
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    // Force window to bottom, full width
-    const float x = viewport->Pos.x + viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsDisplay::WINDOW_WIDTH;
+    const float xFirstSlot = viewport->Pos.x + viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsDisplay::WINDOW_WIDTH;
     const float y = viewport->Pos.y + Spectrogram::WINDOW_HEIGHT;
-    const float w = (viewport->Size.x - x) / 2.0f; // Fit two waveform windows in the remaining space
+    const float w = (viewport->Size.x - xFirstSlot) / 2.0f; // Fit two waveform windows in this space
     const float h = (viewport->Size.y - Spectrogram::WINDOW_HEIGHT - Keyboard::WINDOW_HEIGHT) / 2.0f;
+    const float xSecondSlot = xFirstSlot + w;
+
     ImVec2 windowSize(w, h);
     ImGui::SetNextWindowPos(
-        ImVec2(x, y),
+        ImVec2(comesFirst ? xFirstSlot : xSecondSlot, y),
         ImGuiCond_Always
     );
     ImGui::SetNextWindowSize(windowSize, ImGuiCond_Always);
 
     // Create a non-movable, non-collapsible, non-resizable, no-title-bar panel
-    ImGui::Begin("Oscillator A waveform", nullptr,
+    ImGui::Begin(m_windowName.c_str(), nullptr,
         ImGuiWindowFlags_NoTitleBar
         | ImGuiWindowFlags_NoMove
         | ImGuiWindowFlags_NoResize
@@ -51,7 +61,7 @@ ImVec2 WaveformWindow::ConfigureWindow() const {
         | ImGuiWindowFlags_NoScrollbar
         | ImGuiWindowFlags_NoScrollWithMouse);
 
-    ImGui::SeparatorText("Oscillator A waveform");
+    ImGui::SeparatorText(m_windowName.c_str());
 
     return windowSize;
 }

@@ -11,15 +11,15 @@
 
 class WaveformWindow {
 public:
-    WaveformWindow(WaveformInfo::Type waveformType);
+    WaveformWindow(WaveformInfo::Type waveformType, const std::string& windowName);
 
-    // render in imgui
-    void Render(WaveformInfo::Type waveformType);
+    // render in imgui. comesFirst tells us if this should be rendered in the first or second slot
+    void Render(WaveformInfo::Type waveformType, bool comesFirst, bool isOn);
 
     void InitTexture();
 
 private:
-    ImVec2 ConfigureWindow() const;
+    ImVec2 ConfigureWindow(bool comesFirst) const;
 
     void UpdateTexture();
 
@@ -33,8 +33,11 @@ private:
 
     GLuint m_waveformTex = 0;
     WaveformInfo::Type m_waveformType;
+    std::string m_windowName;
 
     static inline const std::array<unsigned char, 3> BG_COLOR{5, 9, 19};
     static inline const std::array<unsigned char, 3> SECONDARY_COLOR{31, 64, 132};
     static inline const std::array<unsigned char, 3> HIGHLIGHT_COLOR{107, 201, 255};
+    static inline const float ON_OPACITY = 1.0f;
+    static inline const float OFF_OPACITY = 0.2f;
 };
