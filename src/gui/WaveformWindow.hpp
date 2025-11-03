@@ -24,8 +24,8 @@ private:
     void UpdateTexture();
 
     // Size of texture in pixels
-    static const int TEXTURE_HEIGHT = 64;
-    static const int TEXTURE_WIDTH = 128;
+    static const int TEXTURE_HEIGHT = 256;
+    static const int TEXTURE_WIDTH = 512;
     
     // Make sure to fit entire image neatly within window
     static const int IMAGE_PADDING_BOTTOM = 40;
@@ -35,5 +35,6 @@ private:
     WaveformInfo::Type m_waveformType;
 
     static inline const std::array<unsigned char, 3> BG_COLOR{5, 9, 19};
+    static inline const std::array<unsigned char, 3> SECONDARY_COLOR{31, 64, 132};
     static inline const std::array<unsigned char, 3> HIGHLIGHT_COLOR{107, 201, 255};
 };

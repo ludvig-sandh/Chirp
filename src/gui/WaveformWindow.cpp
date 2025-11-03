@@ -63,23 +63,64 @@ void WaveformWindow::InitTexture() {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
                  TEXTURE_WIDTH, TEXTURE_HEIGHT, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 void WaveformWindow::UpdateTexture() {
     // Prepare pixels
     std::unique_ptr<Waveform> wf = Waveform::ConstructWaveform(m_waveformType);
     std::vector<unsigned char> pixels(TEXTURE_HEIGHT * TEXTURE_WIDTH * 3, 0);
+    for (size_t i = 0; i < TEXTURE_HEIGHT * TEXTURE_WIDTH * 3; i += 3) {
+        pixels[i] = BG_COLOR[0];
+        pixels[i + 1] = BG_COLOR[1];
+        pixels[i + 2] = BG_COLOR[2];
+    }
+
+    // Convenient helper function to paint a pixel with a thick brush (a circle). With radius=0 paints only 1 pixel
+    auto paintFn = [&](int row, int col, int radius, const std::array<unsigned char, 3>& color){
+        for (int dc = -radius; dc <= radius; dc++) {
+            for (int dr = -radius; dr <= radius; dr++) {
+                // Check bounds
+                int newCol = col + dc;
+                int newRow = row + dr;
+                if (newCol < 0 || newCol >= TEXTURE_WIDTH) {
+                    continue;
+                }
+                if (newRow < 0 || newRow >= TEXTURE_HEIGHT) {
+                    continue;
+                }
+
+                // Paint a circle => pixels must be within radius
+                float dist = std::hypotf(static_cast<float>(dc), static_cast<float>(dr));
+                if (dist > radius) {
+                    continue;
+                }
+
+                int pixelIdx = ((TEXTURE_HEIGHT - newRow - 1) * TEXTURE_WIDTH + newCol) * 3;
+                pixels[pixelIdx + 0] = color[0];
+                pixels[pixelIdx + 1] = color[1];
+                pixels[pixelIdx + 2] = color[2];
+            }
+        }
+    };
+
     int prevRow = 0;
     for (int col = 0; col < TEXTURE_WIDTH; col++) {
         float waveformValue = wf->GetSampleAt(static_cast<float>(col) / (TEXTURE_WIDTH - 1));
-        waveformValue = waveformValue / 2.0f + 0.5f;
+        waveformValue *= 0.9f; // Looks nicer if the waveform doesn't touch the top/bottom image edges
+        waveformValue = waveformValue / 2.0f + 0.5f; // Go from range [-1, 1] to [0, 1]
         int row = static_cast<int>(waveformValue * TEXTURE_HEIGHT);
         row = std::clamp(row, 0, TEXTURE_HEIGHT - 1);
 
+        // Paint the "shadow" of the waveform
+        const int midRow = TEXTURE_HEIGHT / 2;
+        for (int shadowRow = std::min(row, midRow); shadowRow < std::max(row, midRow); shadowRow++) {
+            paintFn(shadowRow, col, 0, SECONDARY_COLOR);
+        }
+
+        // Linear interpolation between last point and this one: (col-1, prevRow) to (col, row)
         if (col > 0) {
-            // Draw line from (col-1, prevRow) to (col, row)
             int x0 = col - 1, y0 = prevRow;
             int x1 = col, y1 = row;
             int dx = abs(x1 - x0), dy = -abs(y1 - y0);
@@ -88,10 +129,7 @@ void WaveformWindow::UpdateTexture() {
             int err = dx + dy;
 
             while (true) {
-                int pixelIdx = ((TEXTURE_HEIGHT - y0 - 1) * TEXTURE_WIDTH + x0) * 3;
-                pixels[pixelIdx + 0] = HIGHLIGHT_COLOR[0];
-                pixels[pixelIdx + 1] = HIGHLIGHT_COLOR[1];
-                pixels[pixelIdx + 2] = HIGHLIGHT_COLOR[2];
+                paintFn(y0, x0, 1, HIGHLIGHT_COLOR);
                 if (x0 == x1 && y0 == y1) {
                     break;
                 }
