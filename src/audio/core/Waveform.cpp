@@ -26,33 +26,33 @@ std::unique_ptr<Waveform> Waveform::ConstructWaveform(WaveformInfo::Type type) {
     return nullptr;
 }
 
-float Saw::GetSampleAt(float currentOffset) {
-    return -1.0f + 2.0f * currentOffset;
+float Saw::GetSampleAt(float phase) {
+    return -1.0f + 2.0f * phase;
 }
 
-float Sine::GetSampleAt(float currentOffset) {
-    return std::sin(currentOffset * 2.0 * std::numbers::pi);
+float Sine::GetSampleAt(float phase) {
+    return std::sin(phase * 2.0 * std::numbers::pi);
 }
 
-float Square::GetSampleAt(float currentOffset) {
-    return currentOffset >= 0.5f ? 1.0f : -1.0f;
+float Square::GetSampleAt(float phase) {
+    return phase >= 0.5f ? 1.0f : -1.0f;
 }
 
-float WhiteNoise::GetSampleAt(float currentOffset) {
-    (void)currentOffset;
+float WhiteNoise::GetSampleAt(float phase) {
+    (void)phase;
     
     // Generate a random sample in range [-1.0, 1.0]
     return m_dist(m_gen);
 }
 
-float Triangle::GetSampleAt(float currentOffset) {
-    float phase = std::fmod(currentOffset, 1.0f);
-    return 4.0f * std::fabs(phase - 0.5f) - 1.0f;
+float Triangle::GetSampleAt(float phase) {
+    return -4.0f * std::fabs(phase - 0.5f) + 1.0f;
 }
 
-float Organ::GetSampleAt(float currentOffset) {
-    float fundamental = std::sin(currentOffset * 2.0 * std::numbers::pi);
-    float third = 0.4f * std::sin(currentOffset * 2.0 * std::numbers::pi * 3.0f);
-    float sixth = 0.2f * std::sin(currentOffset * 2.0 * std::numbers::pi * 6.0f);
-    return fundamental + third + sixth;
+float Organ::GetSampleAt(float phase) {
+    float fundamental = std::sin(phase * 2.0 * std::numbers::pi);
+    float third = 0.4f * std::sin(phase * 2.0 * std::numbers::pi * 3.0f);
+    float sixth = 0.2f * std::sin(phase * 2.0 * std::numbers::pi * 6.0f);
+    static const float scale = 0.9; // To keep signal in range [-1, 1]
+    return scale * (fundamental + third + sixth);
 }
