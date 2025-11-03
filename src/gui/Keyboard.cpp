@@ -3,6 +3,25 @@
 
 #include "gui/Keyboard.hpp"
 
+void UIKey::Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) const {
+    static const ImU32 pressedKeyColor = IM_COL32(
+        GUIConstants::HIGHLIGHT_COLOR[0],
+        GUIConstants::HIGHLIGHT_COLOR[1],
+        GUIConstants::HIGHLIGHT_COLOR[2],
+        255
+    );
+    ImU32 color = isPressed
+        ? pressedKeyColor
+        : (note.IsBlackKey() ? BLACK_KEY_COLOR : WHITE_KEY_COLOR);
+
+    // Applying the cursor offset (computing absolute window positions)
+    ImVec2 rectMin = ImVec2(rect.Min.x + offset.x, rect.Min.y + offset.y);
+    ImVec2 rectMax = ImVec2(rect.Max.x + offset.x, rect.Max.y + offset.y);
+
+    drawList->AddRectFilled(rectMin, rectMax, color, 2.0f);
+    drawList->AddRect(rectMin, rectMax, IM_COL32(0, 0, 0, 255), 2.0f);
+}
+
 Keyboard::Keyboard(size_t keyboardWidth)
     : m_numKeys(std::abs(FIRST_NOTE - LAST_NOTE) + 1) // Inclusive ends
     , m_keys(HelpCreateKeys(keyboardWidth))

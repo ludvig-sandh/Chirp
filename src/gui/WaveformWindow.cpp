@@ -3,6 +3,7 @@
 #include "gui/Spectrogram.hpp"
 #include "gui/LevelsDisplay.hpp"
 #include "gui/Keyboard.hpp"
+#include "gui/GUIConstants.hpp"
 
 WaveformWindow::WaveformWindow(WaveformInfo::Type waveformType, const std::string& windowName)
     : m_waveformType(waveformType)
@@ -82,9 +83,9 @@ void WaveformWindow::UpdateTexture() {
     std::unique_ptr<Waveform> wf = Waveform::ConstructWaveform(m_waveformType);
     std::vector<unsigned char> pixels(TEXTURE_HEIGHT * TEXTURE_WIDTH * 3, 0);
     for (size_t i = 0; i < TEXTURE_HEIGHT * TEXTURE_WIDTH * 3; i += 3) {
-        pixels[i] = BG_COLOR[0];
-        pixels[i + 1] = BG_COLOR[1];
-        pixels[i + 2] = BG_COLOR[2];
+        pixels[i] = GUIConstants::BG_COLOR[0];
+        pixels[i + 1] = GUIConstants::BG_COLOR[1];
+        pixels[i + 2] = GUIConstants::BG_COLOR[2];
     }
 
     // Convenient helper function to paint a pixel with a thick brush (a circle). With radius=0 paints only 1 pixel
@@ -126,7 +127,7 @@ void WaveformWindow::UpdateTexture() {
         // Paint the "shadow" of the waveform
         const int midRow = TEXTURE_HEIGHT / 2;
         for (int shadowRow = std::min(row, midRow); shadowRow < std::max(row, midRow); shadowRow++) {
-            paintFn(shadowRow, col, 0, SECONDARY_COLOR);
+            paintFn(shadowRow, col, 0, GUIConstants::SECONDARY_COLOR);
         }
 
         // Linear interpolation between last point and this one: (col-1, prevRow) to (col, row)
@@ -139,7 +140,7 @@ void WaveformWindow::UpdateTexture() {
             int err = dx + dy;
 
             while (true) {
-                paintFn(y0, x0, 1, HIGHLIGHT_COLOR);
+                paintFn(y0, x0, 1, GUIConstants::HIGHLIGHT_COLOR);
                 if (x0 == x1 && y0 == y1) {
                     break;
                 }

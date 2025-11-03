@@ -6,6 +6,7 @@
 #include "ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include "imgui_internal.h" // For ImRect
+#include "gui/GUIConstants.hpp"
 #include "audio/core/Frequency.hpp"
 #include <vector>
 #include <ranges>
@@ -17,22 +18,10 @@ struct UIKey {
     ImRect rect; // Relative coordinates to top left of keyboard
 
     // Adds the key to the drawlist
-    void Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) const {
-        ImU32 color = isPressed
-            ? PRESSED_KEY_COLOR
-            : (note.IsBlackKey() ? BLACK_KEY_COLOR : WHITE_KEY_COLOR);
-
-        // Applying the cursor offset (computing absolute window positions)
-        ImVec2 rectMin = ImVec2(rect.Min.x + offset.x, rect.Min.y + offset.y);
-        ImVec2 rectMax = ImVec2(rect.Max.x + offset.x, rect.Max.y + offset.y);
-
-        drawList->AddRectFilled(rectMin, rectMax, color, 2.0f);
-        drawList->AddRect(rectMin, rectMax, IM_COL32(0, 0, 0, 255), 2.0f);
-    }
+    void Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) const;
 
     static inline const ImU32 BLACK_KEY_COLOR = IM_COL32(20, 20, 20, 255);
     static inline const ImU32 WHITE_KEY_COLOR = IM_COL32(240, 240, 240, 255);
-    static inline const ImU32 PRESSED_KEY_COLOR = IM_COL32(107, 201, 255, 255);
 };
 
 // Represents the keyboard UI element

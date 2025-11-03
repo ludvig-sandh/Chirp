@@ -3,6 +3,7 @@
 
 #include "gui/Spectrogram.hpp"
 #include "gui/LevelsDisplay.hpp"
+#include "gui/GUIConstants.hpp"
 
 #include <cmath>
 #include <algorithm>
@@ -98,34 +99,23 @@ void Spectrogram::MagnitudeToRGB(float mag, unsigned char& r, unsigned char& g, 
     mag *= 2;
     mag = std::clamp(mag, 0.0f, 1.0f);
 
-    // Define 3 anchor colors (in linear RGB)
-    const float c0[3] = { 0x05 / 255.0f, 0x09 / 255.0f, 0x13 / 255.0f }; // very dark
-    const float c1[3] = { 0x11 / 255.0f, 0x26 / 255.0f, 0x5C / 255.0f }; // base (#11265C)
-    const float c2[3] = { 0x6B / 255.0f, 0xC9 / 255.0f, 0xFF / 255.0f }; // highlight
-
     float r_f, g_f, b_f;
 
     if (mag < 0.5f) {
-        // interpolate c0 → c1
+        // interpolate c0 -> c1
         float t = mag / 0.5f;
-        r_f = (1 - t) * c0[0] + t * c1[0];
-        g_f = (1 - t) * c0[1] + t * c1[1];
-        b_f = (1 - t) * c0[2] + t * c1[2];
+        r_f = (1 - t) * GUIConstants::BG_COLOR[0] + t * GUIConstants::SECONDARY_COLOR[0];
+        g_f = (1 - t) * GUIConstants::BG_COLOR[1] + t * GUIConstants::SECONDARY_COLOR[1];
+        b_f = (1 - t) * GUIConstants::BG_COLOR[2] + t * GUIConstants::SECONDARY_COLOR[2];
     } else {
-        // interpolate c1 → c2
+        // interpolate c1 -> c2
         float t = (mag - 0.5f) / 0.5f;
-        r_f = (1 - t) * c1[0] + t * c2[0];
-        g_f = (1 - t) * c1[1] + t * c2[1];
-        b_f = (1 - t) * c1[2] + t * c2[2];
+        r_f = (1 - t) * GUIConstants::SECONDARY_COLOR[0] + t * GUIConstants::HIGHLIGHT_COLOR[0];
+        g_f = (1 - t) * GUIConstants::SECONDARY_COLOR[1] + t * GUIConstants::HIGHLIGHT_COLOR[1];
+        b_f = (1 - t) * GUIConstants::SECONDARY_COLOR[2] + t * GUIConstants::HIGHLIGHT_COLOR[2];
     }
 
-    // // Optional: apply slight brightness curve to enhance contrast
-    // float gamma = 0.8f; // lower = more contrast
-    // r_f = std::pow(r_f, gamma);
-    // g_f = std::pow(g_f, gamma);
-    // b_f = std::pow(b_f, gamma);
-
-    r = (unsigned char)(std::clamp(r_f, 0.0f, 1.0f) * 255);
-    g = (unsigned char)(std::clamp(g_f, 0.0f, 1.0f) * 255);
-    b = (unsigned char)(std::clamp(b_f, 0.0f, 1.0f) * 255);
+    r = static_cast<unsigned char>(std::clamp(r_f, 0.0f, 255.0f));
+    g = static_cast<unsigned char>(std::clamp(g_f, 0.0f, 255.0f));
+    b = static_cast<unsigned char>(std::clamp(b_f, 0.0f, 255.0f));
 }

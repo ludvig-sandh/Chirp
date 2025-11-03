@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "gui/LevelsDisplay.hpp"
+#include "gui/GUIConstants.hpp"
 
 #include <cstring>
 #include <cmath>
@@ -28,7 +29,7 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
     std::vector<unsigned char> pixels(TEXTURE_WIDTH * TEXTURE_HEIGHT * 3);
     for (int x = 0; x < TEXTURE_WIDTH; x++) {
         for (int y = 0; y < TEXTURE_HEIGHT; y++) {
-            SetPixelHelper(pixels, x, y, BG_COLOR);
+            SetPixelHelper(pixels, x, y, GUIConstants::BG_COLOR);
         }
     }
 
@@ -43,12 +44,12 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
         size_t y = bar + 1;
         if (bar < numVolumeBarsLeft) {
             // Current vol
-            SetPixelHelper(pixels, 1, y, HIGHLIGHT_COLOR);
-            SetPixelHelper(pixels, 2, y, HIGHLIGHT_COLOR);
+            SetPixelHelper(pixels, 1, y, GUIConstants::HIGHLIGHT_COLOR);
+            SetPixelHelper(pixels, 2, y, GUIConstants::HIGHLIGHT_COLOR);
         }else {
             // Recent max
-            SetPixelHelper(pixels, 1, y, SECONDARY_COLOR);
-            SetPixelHelper(pixels, 2, y, SECONDARY_COLOR);
+            SetPixelHelper(pixels, 1, y, GUIConstants::SECONDARY_COLOR);
+            SetPixelHelper(pixels, 2, y, GUIConstants::SECONDARY_COLOR);
         }
     }
 
@@ -57,12 +58,12 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
         size_t y = bar + 1;
         if (bar < numVolumeBarsRight) {
             // Current vol
-            SetPixelHelper(pixels, 4, y, HIGHLIGHT_COLOR);
-            SetPixelHelper(pixels, 5, y, HIGHLIGHT_COLOR);
+            SetPixelHelper(pixels, 4, y, GUIConstants::HIGHLIGHT_COLOR);
+            SetPixelHelper(pixels, 5, y, GUIConstants::HIGHLIGHT_COLOR);
         }else {
             // Recent max
-            SetPixelHelper(pixels, 4, y, SECONDARY_COLOR);
-            SetPixelHelper(pixels, 5, y, SECONDARY_COLOR);
+            SetPixelHelper(pixels, 4, y, GUIConstants::SECONDARY_COLOR);
+            SetPixelHelper(pixels, 5, y, GUIConstants::SECONDARY_COLOR);
         }
     }
 

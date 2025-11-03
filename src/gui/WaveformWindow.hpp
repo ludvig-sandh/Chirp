@@ -35,9 +35,6 @@ private:
     WaveformInfo::Type m_waveformType;
     std::string m_windowName;
 
-    static inline const std::array<unsigned char, 3> BG_COLOR{5, 9, 19};
-    static inline const std::array<unsigned char, 3> SECONDARY_COLOR{31, 64, 132};
-    static inline const std::array<unsigned char, 3> HIGHLIGHT_COLOR{107, 201, 255};
     static inline const float ON_OPACITY = 1.0f;
     static inline const float OFF_OPACITY = 0.2f;
 };

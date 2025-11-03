@@ -42,14 +42,6 @@ private:
 
     static const size_t maxVolumeBars = TEXTURE_HEIGHT - 2; // Leave 1 pixel gap on top and bottom
 
-    static const std::array<unsigned char, 3> s_bgColor;
-    static const std::array<unsigned char, 3> s_secondaryColor;
-    static const std::array<unsigned char, 3> s_highlightColor;
-
-    static inline const std::array<unsigned char, 3> BG_COLOR{5, 9, 19};
-    static inline const std::array<unsigned char, 3> SECONDARY_COLOR{31, 64, 132};
-    static inline const std::array<unsigned char, 3> HIGHLIGHT_COLOR{107, 201, 255};
-
     LevelsHistory m_leftHistory;
     LevelsHistory m_rightHistory;
 
