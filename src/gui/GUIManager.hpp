@@ -23,6 +23,7 @@
 #include "gui/GlobalSettingsWindow.hpp"
 #include "gui/PresetLoaderWindow.hpp"
 #include "gui/WaveformWindow.hpp"
+#include "gui/SpectrumWindow.hpp"
 
 #include <memory>
 #include <format>
@@ -52,6 +53,7 @@ private:
     PresetWindow m_presetWindow;
     WaveformWindow m_oscAWaveformWindow;
     WaveformWindow m_oscBWaveformWindow;
+    SpectrumWindow m_spectrumWindow;
 
     GLFWwindow *m_window;
     ImGuiIO *m_io;
