@@ -62,10 +62,11 @@ TODO:
 [X] Add release as part of envelope setting
 [No] Add curves for envelope settings
 [X] Add visual keyboard UI element in synth mode
-[ ] Make global settings and preset loader their own windows
-[ ] Add visual UI element that shows spectrum
-[ ] Display wavetables
+[X] Make global settings and preset loader their own windows
+[X] Add visual UI element that shows spectrum
+[X] Display wavetables
 [X] Organize (and stick) windows to look amazing
+[ ] Check why the screen displays in incorrect size some computers
 [ ] Test on mac and linux as well
 [ ] Record a demo of the application and upload to youtube
 [ ] Write extensive readme with explanations and figures

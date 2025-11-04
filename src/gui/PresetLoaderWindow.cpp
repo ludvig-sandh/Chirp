@@ -46,7 +46,12 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
         ImGuiFileDialog::Instance()->OpenDialog("SavePresetDlg", "Export Preset", ".json", config);
     }
 
-    if (ImGuiFileDialog::Instance()->Display("SavePresetDlg")) {
+    if (ImGuiFileDialog::Instance()->Display(
+        "SavePresetDlg",
+        ImGuiWindowFlags_NoCollapse,
+        ImVec2(800, 400),
+        ImVec2(1100, 700)
+    )) {
         if (ImGuiFileDialog::Instance()->IsOk()) {
             std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
             if (AudioPresetIO::SaveToFile(preset, filePath))
@@ -76,7 +81,12 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
         ImGuiFileDialog::Instance()->OpenDialog("LoadPresetDlg", "Load Preset", ".json", config);
     }
 
-    if (ImGuiFileDialog::Instance()->Display("LoadPresetDlg")) {
+    if (ImGuiFileDialog::Instance()->Display(
+        "LoadPresetDlg",
+        ImGuiWindowFlags_NoCollapse,
+        ImVec2(800, 400),
+        ImVec2(1100, 700)
+    )) {
         if (ImGuiFileDialog::Instance()->IsOk()) {
             std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
             if (AudioPresetIO::LoadFromFile(preset, filePath))
