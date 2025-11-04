@@ -68,7 +68,9 @@ void GUIManager::RunMainLoop() {
             std::shared_ptr<std::vector<float>> column = m_fftComputer->GetLastFFTResult();
             if (column != nullptr) {
                 m_spectrogram.PushColumn(*column.get());
+                m_spectrumWindow.PushMagnitudes(*column.get());
                 m_spectrogram.Render();
+                m_spectrumWindow.Render();
             }
 
             std::shared_ptr<AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
