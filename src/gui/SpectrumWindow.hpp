@@ -10,10 +10,10 @@ public:
     static const int WINDOW_WIDTH = 528;
     static const int WINDOW_HEIGHT = 140;
 
-    // push the latest FFT magnitudes (normalized 0..1 recommended)
+    // Push the latest FFT magnitudes
     void PushMagnitudes(const std::vector<float>& magnitudes);
 
-    // draw inside ImGui
+    // Draw inside ImGui
     void Render();
 
 private:
