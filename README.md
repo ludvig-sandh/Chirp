@@ -66,7 +66,7 @@ TODO:
 [X] Add visual UI element that shows spectrum
 [X] Display wavetables
 [X] Organize (and stick) windows to look amazing
-[ ] Check why the screen displays in incorrect size some computers
+[X] Check why the screen displays in incorrect size some computers
 [ ] Test on mac and linux as well
 [ ] Record a demo of the application and upload to youtube
 [ ] Write extensive readme with explanations and figures

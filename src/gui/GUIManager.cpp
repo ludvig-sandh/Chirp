@@ -146,8 +146,7 @@ GLFWwindow *GUIManager::InitAux() {
 #endif
 
     // Create window with graphics context
-    float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor()); // Valid on GLFW 3.3+ only
-    GLFWwindow* window = glfwCreateWindow((int)(SCREEN_WIDTH * main_scale), (int)(SCREEN_HEIGHT * main_scale), "Chirp Realtime Audio Synthesis", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow((int)(SCREEN_WIDTH), (int)(SCREEN_HEIGHT), "Chirp Realtime Audio Synthesis", nullptr, nullptr);
     if (window == nullptr) {
         return nullptr;
     }
@@ -162,14 +161,7 @@ GLFWwindow *GUIManager::InitAux() {
     m_io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     m_io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-    // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
-
-    // Setup scaling
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
-    style.FontScaleDpi = main_scale;        // Set initial font scale. (using io.ConfigDpiScaleFonts=true makes this unnecessary. We leave both here for documentation purpose)
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
