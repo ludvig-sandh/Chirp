@@ -36,19 +36,22 @@ void SpectrumWindow::Render() {
     const int n = (int)m_smoothed.size();
     float barWidth = size.x / (float)n;
 
-    static const ImU32 color = IM_COL32(
-        GUIConstants::Colors::HIGHLIGHT[0],
-        GUIConstants::Colors::HIGHLIGHT[1],
-        GUIConstants::Colors::HIGHLIGHT[2],
-        255
-    );
-
     for (int i = 0; i < n; i++) {
-        float m = m_smoothed[i];
-        float h = m * size.y;
+        float mag = m_smoothed[i];
+        float height = mag * size.y;
+        
+        // Larger magnitude => lighter color. Remapped magnitude to a lighter color curve:
+        float m = 1.0f - (1.0f - mag) * (1.0f - mag);
+        m = std::min(m * 2, 1.0f);
+        ImU32 color = IM_COL32(
+            GUIConstants::Colors::HIGHLIGHT[0] * m + GUIConstants::Colors::MIDTONE[0] * (1.0f - m),
+            GUIConstants::Colors::HIGHLIGHT[1] * m + GUIConstants::Colors::MIDTONE[1] * (1.0f - m),
+            GUIConstants::Colors::HIGHLIGHT[2] * m + GUIConstants::Colors::MIDTONE[2] * (1.0f - m),
+            255
+        );
 
         ImVec2 p0(pos.x + i * barWidth, pos.y + size.y);
-        ImVec2 p1(pos.x + (i + 1) * barWidth, pos.y + size.y - h);
+        ImVec2 p1(pos.x + (i + 1) * barWidth, pos.y + size.y - height);
 
         draw_list->AddRectFilled(p1, p0, color);
     }
