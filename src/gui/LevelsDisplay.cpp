@@ -8,9 +8,12 @@
 #include <cmath>
 #include <algorithm>
 
-void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 3>& rgb) {
-    size_t pixelIndex = (TEXTURE_HEIGHT - y - 1) * TEXTURE_WIDTH + x;
-    std::memcpy(&pixels[pixelIndex * 3], rgb.data(), 3 * sizeof(unsigned char));
+void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 4>& rgba) {
+    size_t pixelIndex = 4 * ((TEXTURE_HEIGHT - y - 1) * TEXTURE_WIDTH + x);
+    pixels[pixelIndex] = rgba[0];
+    pixels[pixelIndex + 1] = rgba[1];
+    pixels[pixelIndex + 2] = rgba[2];
+    pixels[pixelIndex + 3] = rgba[3];
 }
 
 void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
@@ -25,13 +28,8 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
     m_leftHistory.Add(normL);
     m_rightHistory.Add(normR);
 
-    // Init pixels with background colors
-    std::vector<unsigned char> pixels(TEXTURE_WIDTH * TEXTURE_HEIGHT * 3);
-    for (int x = 0; x < TEXTURE_WIDTH; x++) {
-        for (int y = 0; y < TEXTURE_HEIGHT; y++) {
-            SetPixelHelper(pixels, x, y, GUIConstants::Colors::BG);
-        }
-    }
+    // Init pixels with clear color
+    std::vector<unsigned char> pixels(TEXTURE_WIDTH * TEXTURE_HEIGHT * 4, 0);
 
     // Find out how tall the bars should be in the texture
     size_t numVolumeBarsLeft = static_cast<size_t>(normL * maxVolumeBars);
@@ -70,7 +68,7 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
     // Upload to OpenGL texture
     glBindTexture(GL_TEXTURE_2D, m_levelsTex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT,
-                    GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+                    GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 }
 
 void LevelsDisplay::Render() {
@@ -110,9 +108,9 @@ void LevelsDisplay::InitTexture() {
     glGenTextures(1, &m_levelsTex);
     glBindTexture(GL_TEXTURE_2D, m_levelsTex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                  TEXTURE_WIDTH, TEXTURE_HEIGHT, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
