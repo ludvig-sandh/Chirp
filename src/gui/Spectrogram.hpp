@@ -27,7 +27,8 @@ public:
 private:
     void ConfigureWindow() const;
 
-    static void MagnitudeToRGB(float mag, unsigned char& r, unsigned char& g, unsigned char& b);
+    // Turns a magnitude in range [0, 1] into an array of RGBA colors
+    static std::array<unsigned char, 4> MagnitudeToRGBA(float mag);
 
     // Dimensions of spectrogram image element
     static const int UI_IMAGE_HEIGHT = 256;

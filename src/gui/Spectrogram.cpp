@@ -23,25 +23,25 @@ void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
     m_currentColumn = (m_currentColumn + 1) % m_specWidth;
 
     // Prepare pixels
-    std::vector<unsigned char> pixels(m_specHeight * m_specHeight * 3, 0);
+    std::vector<unsigned char> pixels(m_specWidth * m_specHeight * 4, 0);
     for (int column_idx = 0; column_idx < m_specWidth; column_idx++) {
         int x = (m_currentColumn + column_idx) % m_specWidth;
         for (int y = 0; y < m_specHeight; y++) {
             float mag = std::clamp(m_magnitudeHistory[x][y], 0.0f, 1.0f);
-            unsigned char r, g, b;
-            Spectrogram::MagnitudeToRGB(mag, r, g, b);
+            std::array<unsigned char, 4> rgba = Spectrogram::MagnitudeToRGBA(mag);
 
-            int pixel_idx = ((m_specHeight - y - 1) * m_specWidth + column_idx) * 3;
-            pixels[pixel_idx + 0] = r;
-            pixels[pixel_idx + 1] = g;
-            pixels[pixel_idx + 2] = b;
+            int pixel_idx = ((m_specHeight - y - 1) * m_specWidth + column_idx) * 4;
+            pixels[pixel_idx + 0] = rgba[0];
+            pixels[pixel_idx + 1] = rgba[1];
+            pixels[pixel_idx + 2] = rgba[2];
+            pixels[pixel_idx + 3] = rgba[3];
         }
     }
 
     // Upload to OpenGL texture
     glBindTexture(GL_TEXTURE_2D, m_spectrogramTex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_specWidth, m_specHeight,
-                    GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+                    GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 }
 
 void Spectrogram::Render() {
@@ -87,23 +87,24 @@ void Spectrogram::ReallocateTexture() {
     glGenTextures(1, &m_spectrogramTex);
     glBindTexture(GL_TEXTURE_2D, m_spectrogramTex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                  m_specWidth, m_specHeight, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-void Spectrogram::MagnitudeToRGB(float mag, unsigned char& r, unsigned char& g, unsigned char& b)
-{
+std::array<unsigned char, 4> Spectrogram::MagnitudeToRGBA(float mag) {
     mag *= 2;
     mag = std::clamp(mag, 0.0f, 1.0f);
 
     float r_f, g_f, b_f;
+    float a_f = 255.0f;
 
     if (mag < 0.5f) {
         // interpolate c0 -> c1
         float t = mag / 0.5f;
+        a_f = t * 255.0f;
         r_f = (1 - t) * GUIConstants::Colors::BG[0] + t * GUIConstants::Colors::MIDTONE[0];
         g_f = (1 - t) * GUIConstants::Colors::BG[1] + t * GUIConstants::Colors::MIDTONE[1];
         b_f = (1 - t) * GUIConstants::Colors::BG[2] + t * GUIConstants::Colors::MIDTONE[2];
@@ -114,8 +115,11 @@ void Spectrogram::MagnitudeToRGB(float mag, unsigned char& r, unsigned char& g, 
         g_f = (1 - t) * GUIConstants::Colors::MIDTONE[1] + t * GUIConstants::Colors::HIGHLIGHT[1];
         b_f = (1 - t) * GUIConstants::Colors::MIDTONE[2] + t * GUIConstants::Colors::HIGHLIGHT[2];
     }
-
-    r = static_cast<unsigned char>(std::clamp(r_f, 0.0f, 255.0f));
-    g = static_cast<unsigned char>(std::clamp(g_f, 0.0f, 255.0f));
-    b = static_cast<unsigned char>(std::clamp(b_f, 0.0f, 255.0f));
+    
+    return {
+        static_cast<unsigned char>(std::clamp(r_f, 0.0f, 255.0f)),
+        static_cast<unsigned char>(std::clamp(g_f, 0.0f, 255.0f)),
+        static_cast<unsigned char>(std::clamp(b_f, 0.0f, 255.0f)),
+        static_cast<unsigned char>(std::clamp(a_f, 0.0f, 255.0f)),
+    };
 }
