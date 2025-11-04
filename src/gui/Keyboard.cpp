@@ -5,9 +5,9 @@
 
 void UIKey::Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) const {
     static const ImU32 pressedKeyColor = IM_COL32(
-        GUIConstants::HIGHLIGHT_COLOR[0],
-        GUIConstants::HIGHLIGHT_COLOR[1],
-        GUIConstants::HIGHLIGHT_COLOR[2],
+        GUIConstants::Colors::HIGHLIGHT[0],
+        GUIConstants::Colors::HIGHLIGHT[1],
+        GUIConstants::Colors::HIGHLIGHT[2],
         255
     );
     ImU32 color = isPressed

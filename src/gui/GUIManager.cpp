@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "GUIManager.hpp"
+#include "ColorThemeApplier.hpp"
 #include <utility>
 #include <iostream>
 
@@ -56,6 +57,8 @@ void GUIManager::RunMainLoop() {
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
+            ColorThemeApplier applier; // Applies the color theme and automatically pops at the end of this block.
+
             m_globalSettingsWindow.Render(*m_preset);
             m_presetLoaderWindow.Render(*m_preset);
 

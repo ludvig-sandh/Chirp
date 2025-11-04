@@ -104,15 +104,15 @@ void Spectrogram::MagnitudeToRGB(float mag, unsigned char& r, unsigned char& g, 
     if (mag < 0.5f) {
         // interpolate c0 -> c1
         float t = mag / 0.5f;
-        r_f = (1 - t) * GUIConstants::BG_COLOR[0] + t * GUIConstants::SECONDARY_COLOR[0];
-        g_f = (1 - t) * GUIConstants::BG_COLOR[1] + t * GUIConstants::SECONDARY_COLOR[1];
-        b_f = (1 - t) * GUIConstants::BG_COLOR[2] + t * GUIConstants::SECONDARY_COLOR[2];
+        r_f = (1 - t) * GUIConstants::Colors::BG[0] + t * GUIConstants::Colors::MIDTONE[0];
+        g_f = (1 - t) * GUIConstants::Colors::BG[1] + t * GUIConstants::Colors::MIDTONE[1];
+        b_f = (1 - t) * GUIConstants::Colors::BG[2] + t * GUIConstants::Colors::MIDTONE[2];
     } else {
         // interpolate c1 -> c2
         float t = (mag - 0.5f) / 0.5f;
-        r_f = (1 - t) * GUIConstants::SECONDARY_COLOR[0] + t * GUIConstants::HIGHLIGHT_COLOR[0];
-        g_f = (1 - t) * GUIConstants::SECONDARY_COLOR[1] + t * GUIConstants::HIGHLIGHT_COLOR[1];
-        b_f = (1 - t) * GUIConstants::SECONDARY_COLOR[2] + t * GUIConstants::HIGHLIGHT_COLOR[2];
+        r_f = (1 - t) * GUIConstants::Colors::MIDTONE[0] + t * GUIConstants::Colors::HIGHLIGHT[0];
+        g_f = (1 - t) * GUIConstants::Colors::MIDTONE[1] + t * GUIConstants::Colors::HIGHLIGHT[1];
+        b_f = (1 - t) * GUIConstants::Colors::MIDTONE[2] + t * GUIConstants::Colors::HIGHLIGHT[2];
     }
 
     r = static_cast<unsigned char>(std::clamp(r_f, 0.0f, 255.0f));

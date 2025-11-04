@@ -29,7 +29,7 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
     std::vector<unsigned char> pixels(TEXTURE_WIDTH * TEXTURE_HEIGHT * 3);
     for (int x = 0; x < TEXTURE_WIDTH; x++) {
         for (int y = 0; y < TEXTURE_HEIGHT; y++) {
-            SetPixelHelper(pixels, x, y, GUIConstants::BG_COLOR);
+            SetPixelHelper(pixels, x, y, GUIConstants::Colors::BG);
         }
     }
 
@@ -44,12 +44,12 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
         size_t y = bar + 1;
         if (bar < numVolumeBarsLeft) {
             // Current vol
-            SetPixelHelper(pixels, 1, y, GUIConstants::HIGHLIGHT_COLOR);
-            SetPixelHelper(pixels, 2, y, GUIConstants::HIGHLIGHT_COLOR);
+            SetPixelHelper(pixels, 1, y, GUIConstants::Colors::HIGHLIGHT);
+            SetPixelHelper(pixels, 2, y, GUIConstants::Colors::HIGHLIGHT);
         }else {
             // Recent max
-            SetPixelHelper(pixels, 1, y, GUIConstants::SECONDARY_COLOR);
-            SetPixelHelper(pixels, 2, y, GUIConstants::SECONDARY_COLOR);
+            SetPixelHelper(pixels, 1, y, GUIConstants::Colors::MIDTONE);
+            SetPixelHelper(pixels, 2, y, GUIConstants::Colors::MIDTONE);
         }
     }
 
@@ -58,12 +58,12 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
         size_t y = bar + 1;
         if (bar < numVolumeBarsRight) {
             // Current vol
-            SetPixelHelper(pixels, 4, y, GUIConstants::HIGHLIGHT_COLOR);
-            SetPixelHelper(pixels, 5, y, GUIConstants::HIGHLIGHT_COLOR);
+            SetPixelHelper(pixels, 4, y, GUIConstants::Colors::HIGHLIGHT);
+            SetPixelHelper(pixels, 5, y, GUIConstants::Colors::HIGHLIGHT);
         }else {
             // Recent max
-            SetPixelHelper(pixels, 4, y, GUIConstants::SECONDARY_COLOR);
-            SetPixelHelper(pixels, 5, y, GUIConstants::SECONDARY_COLOR);
+            SetPixelHelper(pixels, 4, y, GUIConstants::Colors::MIDTONE);
+            SetPixelHelper(pixels, 5, y, GUIConstants::Colors::MIDTONE);
         }
     }
 
