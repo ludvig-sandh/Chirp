@@ -47,7 +47,7 @@ void SpectrumWindow::Render() {
             GUIConstants::Colors::HIGHLIGHT[0] * m + GUIConstants::Colors::MIDTONE[0] * (1.0f - m),
             GUIConstants::Colors::HIGHLIGHT[1] * m + GUIConstants::Colors::MIDTONE[1] * (1.0f - m),
             GUIConstants::Colors::HIGHLIGHT[2] * m + GUIConstants::Colors::MIDTONE[2] * (1.0f - m),
-            255
+            GUIConstants::Colors::HIGHLIGHT[3] * m + GUIConstants::Colors::MIDTONE[3] * (1.0f - m)
         );
 
         ImVec2 p0(pos.x + i * barWidth, pos.y + size.y);

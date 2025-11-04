@@ -29,7 +29,7 @@ public:
 private:
     void ConfigureWindow() const;
 
-    void SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 3>& rgb);
+    void SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 4>& rgb);
 
     // Size of texture in pixels
     static const int TEXTURE_HEIGHT = 64;

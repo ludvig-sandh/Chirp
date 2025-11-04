@@ -71,9 +71,9 @@ void WaveformWindow::InitTexture() {
     glGenTextures(1, &m_waveformTex);
     glBindTexture(GL_TEXTURE_2D, m_waveformTex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                  TEXTURE_WIDTH, TEXTURE_HEIGHT, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
@@ -81,15 +81,10 @@ void WaveformWindow::InitTexture() {
 void WaveformWindow::UpdateTexture() {
     // Prepare pixels
     std::unique_ptr<Waveform> wf = Waveform::ConstructWaveform(m_waveformType);
-    std::vector<unsigned char> pixels(TEXTURE_HEIGHT * TEXTURE_WIDTH * 3, 0);
-    for (size_t i = 0; i < TEXTURE_HEIGHT * TEXTURE_WIDTH * 3; i += 3) {
-        pixels[i] = GUIConstants::Colors::BG[0];
-        pixels[i + 1] = GUIConstants::Colors::BG[1];
-        pixels[i + 2] = GUIConstants::Colors::BG[2];
-    }
+    std::vector<unsigned char> pixels(TEXTURE_HEIGHT * TEXTURE_WIDTH * 4, 0);
 
     // Convenient helper function to paint a pixel with a thick brush (a circle). With radius=0 paints only 1 pixel
-    auto paintFn = [&](int row, int col, int radius, const std::array<unsigned char, 3>& color){
+    auto paintFn = [&](int row, int col, int radius, const std::array<unsigned char, 4>& color){
         for (int dc = -radius; dc <= radius; dc++) {
             for (int dr = -radius; dr <= radius; dr++) {
                 // Check bounds
@@ -108,10 +103,11 @@ void WaveformWindow::UpdateTexture() {
                     continue;
                 }
 
-                int pixelIdx = ((TEXTURE_HEIGHT - newRow - 1) * TEXTURE_WIDTH + newCol) * 3;
+                int pixelIdx = ((TEXTURE_HEIGHT - newRow - 1) * TEXTURE_WIDTH + newCol) * 4;
                 pixels[pixelIdx + 0] = color[0];
                 pixels[pixelIdx + 1] = color[1];
                 pixels[pixelIdx + 2] = color[2];
+                pixels[pixelIdx + 3] = color[3];
             }
         }
     };
@@ -160,5 +156,5 @@ void WaveformWindow::UpdateTexture() {
     // Upload to OpenGL texture
     glBindTexture(GL_TEXTURE_2D, m_waveformTex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT,
-                    GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+                    GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 }

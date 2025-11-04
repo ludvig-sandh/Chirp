@@ -104,16 +104,17 @@ std::array<unsigned char, 4> Spectrogram::MagnitudeToRGBA(float mag) {
     if (mag < 0.5f) {
         // interpolate c0 -> c1
         float t = mag / 0.5f;
-        a_f = t * 255.0f;
-        r_f = (1 - t) * GUIConstants::Colors::BG[0] + t * GUIConstants::Colors::MIDTONE[0];
-        g_f = (1 - t) * GUIConstants::Colors::BG[1] + t * GUIConstants::Colors::MIDTONE[1];
-        b_f = (1 - t) * GUIConstants::Colors::BG[2] + t * GUIConstants::Colors::MIDTONE[2];
+        r_f = GUIConstants::Colors::MIDTONE[0];
+        g_f = GUIConstants::Colors::MIDTONE[1];
+        b_f = GUIConstants::Colors::MIDTONE[2];
+        a_f = t * GUIConstants::Colors::MIDTONE[3];
     } else {
         // interpolate c1 -> c2
         float t = (mag - 0.5f) / 0.5f;
         r_f = (1 - t) * GUIConstants::Colors::MIDTONE[0] + t * GUIConstants::Colors::HIGHLIGHT[0];
         g_f = (1 - t) * GUIConstants::Colors::MIDTONE[1] + t * GUIConstants::Colors::HIGHLIGHT[1];
         b_f = (1 - t) * GUIConstants::Colors::MIDTONE[2] + t * GUIConstants::Colors::HIGHLIGHT[2];
+        a_f = (1 - t) * GUIConstants::Colors::MIDTONE[3] + t * GUIConstants::Colors::HIGHLIGHT[3];
     }
     
     return {
