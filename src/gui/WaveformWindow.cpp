@@ -79,6 +79,11 @@ void WaveformWindow::InitTexture() {
 }
 
 void WaveformWindow::UpdateTexture() {
+    if (m_waveformTex == 0) {
+        // If texture hasn't been initialized yet, we shouldn't call glBindTexture on it.
+        return;
+    }
+    
     // Prepare pixels
     std::unique_ptr<Waveform> wf = Waveform::ConstructWaveform(m_waveformType);
     std::vector<unsigned char> pixels(TEXTURE_HEIGHT * TEXTURE_WIDTH * 4, 0);
