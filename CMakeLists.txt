@@ -1,0 +1,152 @@
+cmake_minimum_required(VERSION 3.15)
+project(chirp LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#
+# ===========================
+# PortAudio (submodule under src/external/portaudio)
+# ===========================
+#
+set(PA_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/external/portaudio)
+set(PA_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/_deps/portaudio-build)
+
+set(PA_BUILD_SHARED OFF CACHE BOOL "" FORCE)
+set(PA_BUILD_STATIC ON  CACHE BOOL "" FORCE)
+
+add_subdirectory(${PA_SRC_DIR} ${PA_BUILD_DIR})
+
+#
+# Collect only the core sources (not src/external)
+#
+file(GLOB CHIRP_CORE_SRCS
+    src/*.cpp
+    src/audio/*.cpp
+    src/audio/core/*.cpp
+    src/audio/effects/*.cpp
+    src/audio/effects/util/*.cpp
+    src/audio/engine/*.cpp
+    src/audio/generator/*.cpp
+    src/audio/layout/*.cpp
+    src/audio/modulation/*.cpp
+    src/audio/preset/*.cpp
+    src/fft/*.cpp
+    src/gui/*.cpp
+    src/synchronization/*.cpp
+)
+
+#
+# ImGui sources (match your Makefile exactly)
+#
+set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/external/imgui)
+
+set(IMGUI_SRCS
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+)
+
+#
+# ImGuiFileDialog source (must be built)
+#
+set(IMGUI_FILE_DIALOG ${CMAKE_CURRENT_SOURCE_DIR}/src/external/ImGuiFileDialog/ImGuiFileDialog.cpp)
+
+#
+# Final source list
+#
+set(SRC_FILES
+    ${CHIRP_CORE_SRCS}
+    ${IMGUI_SRCS}
+    ${IMGUI_FILE_DIALOG}
+)
+
+#
+# Create executable *before* linking or adding include dirs
+#
+add_executable(chirp ${SRC_FILES})
+
+#
+# PortAudio include paths
+#
+target_include_directories(chirp PRIVATE
+    ${PA_SRC_DIR}/include
+    ${PA_BUILD_DIR}
+)
+
+# portaudio target name differs by version
+set(PORTAUDIO_TGT portaudio)
+if (TARGET portaudio_static)
+    set(PORTAUDIO_TGT portaudio_static)
+endif()
+
+#
+# User include directories
+#
+target_include_directories(chirp PRIVATE
+    src
+    src/audio
+    src/external
+    src/external/imgui
+    src/external/imgui/backends
+    src/external/ImGuiFileDialog
+    src/external/pocketfft
+)
+
+#
+# ===========================
+# GLFW
+# ===========================
+#
+include(FetchContent)
+
+# Fetch GLFW (static)
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    GIT_TAG        latest
+)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(glfw)
+
+target_link_libraries(chirp PRIVATE glfw)
+
+#
+# Link PortAudio
+#
+target_link_libraries(chirp PRIVATE ${PORTAUDIO_TGT})
+
+#
+# ===========================
+# Platform-specific OpenGL & system libs
+# ===========================
+#
+if (WIN32 AND MINGW)
+    target_link_libraries(chirp PRIVATE
+        opengl32
+        gdi32
+        imm32
+        winmm
+        ole32
+        uuid
+    )
+elseif (APPLE)
+    target_link_libraries(chirp PRIVATE
+        "-framework Cocoa"
+        "-framework IOKit"
+        "-framework CoreVideo"
+        "-framework OpenGL"
+    )
+elseif (UNIX)
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(chirp PRIVATE OpenGL::GL pthread dl)
+endif()
