@@ -6,12 +6,12 @@
 #include <memory>
 #include <unordered_set>
 
-#include "engine/AudioBackend.hpp"
-#include "preset/AudioPreset.hpp"
-#include "engine/AudioProcessor.hpp"
+#include "audio/engine/AudioBackend.hpp"
+#include "audio/preset/AudioPreset.hpp"
+#include "audio/engine/AudioProcessor.hpp"
 #include "fft/FFTComputer.hpp"
-#include "layout/AudioLayout.hpp"
-#include "layout/SynthLayout.hpp"
+#include "audio/layout/AudioLayout.hpp"
+#include "audio/layout/SynthLayout.hpp"
 
 #define SAMPLE_RATE (44100)
 

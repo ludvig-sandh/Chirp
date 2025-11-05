@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "generator/Generator.hpp"
+#include "audio/generator/Generator.hpp"
 
 Generator::Generator() {
     m_headroom.SetDecibels(s_headroomLeveldB);

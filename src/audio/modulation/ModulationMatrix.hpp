@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "modulation/LFO.hpp"
-#include "preset/AudioPreset.hpp"
+#include "audio/modulation/LFO.hpp"
+#include "audio/preset/AudioPreset.hpp"
 #include <vector>
 #include <memory>
 

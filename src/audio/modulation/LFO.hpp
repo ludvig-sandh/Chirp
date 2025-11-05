@@ -8,7 +8,7 @@
 #include <optional>
 #include <cassert>
 
-#include "core/Waveform.hpp"
+#include "audio/core/Waveform.hpp"
 
 // Fwd dec.
 class AudioProcessor;

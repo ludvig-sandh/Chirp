@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "engine/AudioProcessor.hpp"
-#include "core/Gain.hpp"
+#include "audio/engine/AudioProcessor.hpp"
+#include "audio/core/Gain.hpp"
 
 // Represents an AudioProcessor base class that specifically generates sound, in contrast to one that modifies sound (Effects)
 class Generator : public AudioProcessor {

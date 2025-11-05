@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "engine/AudioFrame.hpp"
+#include "audio/engine/AudioFrame.hpp"
 
 // Keeps track of gain values. When updating gain, it needs to change smoothly rather than jump in value.
 // The Gain class takes care of this.

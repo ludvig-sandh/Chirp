@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "engine/AudioFrame.hpp"
+#include "audio/engine/AudioFrame.hpp"
 
 #include <algorithm>
 #include <cmath>

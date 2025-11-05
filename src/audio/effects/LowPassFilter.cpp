@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "effects/LowPassFilter.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/effects/LowPassFilter.hpp"
+#include "audio/engine/AudioEngine.hpp"
 #include <numbers>
 
 LowPassFilter::LowPassFilter(Frequency cutoff, float Q) : BaseFilter(cutoff, Q) {

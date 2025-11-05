@@ -11,9 +11,9 @@
 #include <cassert>
 #include <numbers>
 
-#include "core/Frequency.hpp"
-#include "preset/AudioPreset.hpp"
-#include "engine/AudioFrame.hpp"
+#include "audio/core/Frequency.hpp"
+#include "audio/preset/AudioPreset.hpp"
+#include "audio/engine/AudioFrame.hpp"
 #include "portaudio.h"
 
 // Forward declaration

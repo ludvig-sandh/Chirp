@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "effects/util/Delay.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/effects/util/Delay.hpp"
+#include "audio/engine/AudioEngine.hpp"
 
 Delay::Delay(float delaySeconds)
 {

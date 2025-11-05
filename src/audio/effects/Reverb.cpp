@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "effects/Reverb.hpp"
+#include "audio/effects/Reverb.hpp"
 
 #include <numbers>
 

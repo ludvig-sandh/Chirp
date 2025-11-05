@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include "effects/util/FeedbackDelayInfo.hpp"
-#include "effects/util/FeedbackDelayLine.hpp"
-#include "engine/AudioProcessor.hpp"
-#include "effects/util/Delay.hpp"
+#include "audio/effects/util/FeedbackDelayInfo.hpp"
+#include "audio/effects/util/FeedbackDelayLine.hpp"
+#include "audio/engine/AudioProcessor.hpp"
+#include "audio/effects/util/Delay.hpp"
 
 // Adds a looping delay effect that repeats audio but with less volume (depending on feedback)
 // The processed audio contains both dry input signal and wet delay tail

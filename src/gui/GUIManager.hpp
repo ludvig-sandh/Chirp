@@ -14,7 +14,7 @@
 #endif
 #include <GLFW/glfw3.h>
 
-#include "preset/AudioPreset.hpp"
+#include "audio/preset/AudioPreset.hpp"
 #include "gui/Spectrogram.hpp"
 #include "fft/FFTComputer.hpp"
 #include "gui/LevelsDisplay.hpp"

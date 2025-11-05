@@ -8,12 +8,12 @@
 #include "gui/Keyboard.hpp"
 #include "gui/GlobalSettingsWindow.hpp"
 #include "gui/PresetLoaderWindow.hpp"
-#include "engine/AudioBackend.hpp"
-#include "core/Waveform.hpp"
-#include "effects/util/FeedbackDelayLine.hpp"
-#include "effects/util/FeedbackDelayInfo.hpp"
-#include "modulation/LFO.hpp"
-#include "core/Frequency.hpp"
+#include "audio/engine/AudioBackend.hpp"
+#include "audio/core/Waveform.hpp"
+#include "audio/effects/util/FeedbackDelayLine.hpp"
+#include "audio/effects/util/FeedbackDelayInfo.hpp"
+#include "audio/modulation/LFO.hpp"
+#include "audio/core/Frequency.hpp"
 
 void PresetWindow::Render(float framerate) const {
     ConfigureWindow();
@@ -48,7 +48,7 @@ void PresetWindow::ConfigureWindow() const {
     ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_Always);
 
     // Create a non-movable, non-collapsible, non-resizable, no-title-bar panel
-    ImGui::Begin("Preset control", nullptr,
+    ImGui::Begin("audio/preset control", nullptr,
         ImGuiWindowFlags_NoTitleBar
         | ImGuiWindowFlags_NoMove
         | ImGuiWindowFlags_NoResize

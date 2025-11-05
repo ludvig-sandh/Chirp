@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "core/Gain.hpp"
-#include "engine/AudioFrame.hpp"
+#include "audio/core/Gain.hpp"
+#include "audio/engine/AudioFrame.hpp"
 
 class Pan {
 public:

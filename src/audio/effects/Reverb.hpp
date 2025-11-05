@@ -4,8 +4,8 @@
 #pragma once
 
 #include <vector>
-#include "engine/AudioProcessor.hpp"
-#include "engine/AudioFrame.hpp"
+#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioFrame.hpp"
 
 class Reverb : public AudioProcessor {
 public:

@@ -61,7 +61,7 @@ bool BuiltInPresetsLoader::LoadBuiltInPreset(AudioPreset& preset, const std::str
     fs::path presetPath = m_builtInPresetsFolder / (name + ".json");
 
     if (!fs::exists(presetPath)) {
-        std::cerr << "Preset not found: " << presetPath << std::endl;
+        std::cerr << "audio/preset not found: " << presetPath << std::endl;
         return false;
     }
 
@@ -85,7 +85,7 @@ BuiltInPresetsLoader::BuiltInPresetsLoader()
                 }
             }
         }else {
-            std::cerr << "Preset folder not found: " << m_builtInPresetsFolder << std::endl;
+            std::cerr << "audio/preset folder not found: " << m_builtInPresetsFolder << std::endl;
         }
     }catch (const std::exception& e) {
         std::cerr << "Error loading presets: " << e.what() << std::endl;

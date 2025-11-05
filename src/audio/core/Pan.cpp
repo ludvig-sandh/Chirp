@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "core/Pan.hpp"
+#include "audio/core/Pan.hpp"
 
 #include <algorithm>
 

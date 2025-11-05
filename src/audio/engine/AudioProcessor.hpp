@@ -9,12 +9,12 @@
 #include <functional>
 #include <optional>
 
-#include "core/Frequency.hpp"
-#include "engine/AudioBackend.hpp"
-#include "modulation/LFO.hpp"
-#include "core/Gain.hpp"
-#include "core/Pan.hpp"
-#include "modulation/ModulationMatrix.hpp"
+#include "audio/core/Frequency.hpp"
+#include "audio/engine/AudioBackend.hpp"
+#include "audio/modulation/LFO.hpp"
+#include "audio/core/Gain.hpp"
+#include "audio/core/Pan.hpp"
+#include "audio/modulation/ModulationMatrix.hpp"
 
 // Represents a node in a tree showing how audio is routed throughout the engine.
 class AudioProcessor {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "core/Gain.hpp"
+#include "audio/core/Gain.hpp"
 
 #include <cmath>
 #include <algorithm>

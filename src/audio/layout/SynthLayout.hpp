@@ -3,20 +3,20 @@
 
 #pragma once
 
-#include "layout/AudioLayout.hpp"
-#include "engine/AudioProcessor.hpp"
-#include "preset/AudioPreset.hpp"
-#include "generator/Oscillator.hpp"
-#include "effects/LowPassFilter.hpp"
-#include "effects/HighPassFilter.hpp"
-#include "effects/FeedbackDelay.hpp"
-#include "effects/Reverb.hpp"
-#include "effects/Mixer.hpp"
-#include "modulation/Envelope.hpp"
-#include "modulation/ModulationMatrix.hpp"
-#include "modulation/LFO.hpp"
-#include "modulation/PeriodicLFO.hpp"
-#include "modulation/RandomLFO.hpp"
+#include "audio/layout/AudioLayout.hpp"
+#include "audio/engine/AudioProcessor.hpp"
+#include "audio/preset/AudioPreset.hpp"
+#include "audio/generator/Oscillator.hpp"
+#include "audio/effects/LowPassFilter.hpp"
+#include "audio/effects/HighPassFilter.hpp"
+#include "audio/effects/FeedbackDelay.hpp"
+#include "audio/effects/Reverb.hpp"
+#include "audio/effects/Mixer.hpp"
+#include "audio/modulation/Envelope.hpp"
+#include "audio/modulation/ModulationMatrix.hpp"
+#include "audio/modulation/LFO.hpp"
+#include "audio/modulation/PeriodicLFO.hpp"
+#include "audio/modulation/RandomLFO.hpp"
 #include <memory>
 #include <set>
 

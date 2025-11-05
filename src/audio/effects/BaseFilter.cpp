@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "effects/BaseFilter.hpp"
-#include "engine/AudioEngine.hpp"
-#include "effects/LowPassFilter.hpp"
-#include "effects/HighPassFilter.hpp"
+#include "audio/effects/BaseFilter.hpp"
+#include "audio/engine/AudioEngine.hpp"
+#include "audio/effects/LowPassFilter.hpp"
+#include "audio/effects/HighPassFilter.hpp"
 
 #include <algorithm>
 

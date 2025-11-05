@@ -11,19 +11,19 @@
 #include <unordered_set>
 
 #include "portaudio.h"
-#include "engine/AudioEngine.hpp"
-#include "engine/AudioBackend.hpp"
-#include "core/Frequency.hpp"
-#include "preset/AudioPreset.hpp"
-#include "generator/Oscillator.hpp"
-#include "core/Waveform.hpp"
-#include "modulation/RandomLFO.hpp"
-#include "effects/Mixer.hpp"
-#include "effects/BaseFilter.hpp"
-#include "effects/LowPassFilter.hpp"
-#include "effects/HighPassFilter.hpp"
-#include "effects/FeedbackDelay.hpp"
-#include "effects/Reverb.hpp"
+#include "audio/engine/AudioEngine.hpp"
+#include "audio/engine/AudioBackend.hpp"
+#include "audio/core/Frequency.hpp"
+#include "audio/preset/AudioPreset.hpp"
+#include "audio/generator/Oscillator.hpp"
+#include "audio/core/Waveform.hpp"
+#include "audio/modulation/RandomLFO.hpp"
+#include "audio/effects/Mixer.hpp"
+#include "audio/effects/BaseFilter.hpp"
+#include "audio/effects/LowPassFilter.hpp"
+#include "audio/effects/HighPassFilter.hpp"
+#include "audio/effects/FeedbackDelay.hpp"
+#include "audio/effects/Reverb.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)

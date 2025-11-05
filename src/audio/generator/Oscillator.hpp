@@ -3,11 +3,11 @@
 
 #pragma once
 
-#include "core/Frequency.hpp"
-#include "Generator.hpp"
-#include "core/Waveform.hpp"
-#include "modulation/Envelope.hpp"
-#include "modulation/LFO.hpp"
+#include "audio/core/Frequency.hpp"
+#include "audio/generator/generator.hpp"
+#include "audio/core/Waveform.hpp"
+#include "audio/modulation/Envelope.hpp"
+#include "audio/modulation/LFO.hpp"
 
 #include <vector>
 
