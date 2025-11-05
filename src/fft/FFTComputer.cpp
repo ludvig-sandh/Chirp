@@ -8,19 +8,21 @@
 #include <cmath>
 
 std::shared_ptr<std::vector<float>> FFTComputer::GetLastFFTResult() const {
-    return m_lastResult.load(std::memory_order_acquire);
+    return std::atomic_load(&m_lastResult);
 }
 
 std::shared_ptr<AudioFrame> FFTComputer::GetLastAudioLevels() const {
-    return m_lastAudioLevels.load(std::memory_order_acquire);
+    return std::atomic_load(&m_lastAudioLevels);
 }
 
 void FFTComputer::StoreNewFFTResult(std::shared_ptr<std::vector<float>> result) {
-    m_lastResult.store(result, std::memory_order_release);
+    
+    // Lock free way to regularly update a result while another thread is reading it
+    std::atomic_store(&m_lastResult, result);
 }
 
 void FFTComputer::StoreNewAudioLevels(AudioFrame result) {
-    m_lastAudioLevels.store(std::make_shared<AudioFrame>(result), std::memory_order_release);
+    std::atomic_store(&m_lastAudioLevels, std::make_shared<AudioFrame>(result));
 }
 
 void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {

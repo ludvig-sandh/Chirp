@@ -32,9 +32,8 @@ private:
 
     std::vector<float> m_fftBuffer;
 
-    // Lock free way to regularly update a result while another thread is reading it
-    std::atomic<std::shared_ptr<std::vector<float>>> m_lastResult;
-    std::atomic<std::shared_ptr<AudioFrame>> m_lastAudioLevels;
+    std::shared_ptr<std::vector<float>> m_lastResult;
+    std::shared_ptr<AudioFrame> m_lastAudioLevels;
 
     std::mutex m_resultMtx;
 };
