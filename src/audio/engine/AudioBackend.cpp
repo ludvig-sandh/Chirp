@@ -7,9 +7,6 @@
 
 #include "engine/AudioBackend.hpp"
 #include "engine/AudioEngine.hpp"
-#include "core/Frequency.hpp"
-#include "preset/AudioPreset.hpp"
-#include "portaudio.h"
 
 AudioBackend::AudioBackend(AudioEngine *engine)
     : stream(0)
