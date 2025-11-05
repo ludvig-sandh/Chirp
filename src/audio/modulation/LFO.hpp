@@ -7,6 +7,7 @@
 #include <functional>
 #include <optional>
 #include <cassert>
+#include <exception>
 
 #include "audio/core/Waveform.hpp"
 
