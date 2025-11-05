@@ -40,8 +40,8 @@ void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
     // Mean and root (RMS)
     rms.left /= static_cast<float>(buffer.numFrames);
     rms.right /= static_cast<float>(buffer.numFrames);
-    rms.left = std::sqrtf(rms.left);
-    rms.right = std::sqrtf(rms.right);
+    rms.left = std::sqrt(rms.left);
+    rms.right = std::sqrt(rms.right);
 
     StoreNewAudioLevels(rms);
     m_producerConsumer.Produce(std::move(output));
