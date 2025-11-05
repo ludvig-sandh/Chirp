@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "modulation/RandomLFO.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/modulation/RandomLFO.hpp"
+#include "audio/engine/AudioEngine.hpp"
 
 RandomLFO::RandomLFO(Frequency freq) {
     m_numSamplesPerPeriod = SAMPLE_RATE / freq.GetAbsolute();

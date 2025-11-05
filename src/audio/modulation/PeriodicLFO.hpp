@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include "modulation/LFO.hpp"
-#include "core/Frequency.hpp"
-#include "core/Waveform.hpp"
+#include "audio/modulation/LFO.hpp"
+#include "audio/core/Frequency.hpp"
+#include "audio/core/Waveform.hpp"
 
 class PeriodicLFO: public LFO {
 public:

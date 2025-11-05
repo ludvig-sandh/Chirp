@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "MainApplication.hpp"
-#include "preset/BuiltInPresetsLoader.hpp"
+#include "audio/preset/BuiltInPresetsLoader.hpp"
 
 MainApplication::MainApplication()
     : m_preset(std::make_shared<AudioPreset>())

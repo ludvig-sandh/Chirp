@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "core/Waveform.hpp"
+#include "audio/core/Waveform.hpp"
 
 #include <random>
 #include <cmath>

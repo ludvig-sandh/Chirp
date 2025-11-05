@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "core/Frequency.hpp"
+#include "audio/core/Frequency.hpp"
 #include <random>
 #include <memory>
 

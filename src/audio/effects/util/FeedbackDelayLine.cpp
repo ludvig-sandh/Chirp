@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "effects/util/FeedbackDelayLine.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/effects/util/FeedbackDelayLine.hpp"
+#include "audio/engine/AudioEngine.hpp"
 #include <cmath>
 
 FeedbackDelayLine::FeedbackDelayLine(float delayTime, float feedback) {

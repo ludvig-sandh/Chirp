@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "generator/Oscillator.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/generator/Oscillator.hpp"
+#include "audio/engine/AudioEngine.hpp"
 
 Voice::Voice(Note note, std::unique_ptr<Waveform> wf, const Envelope& env)
     : note(note)

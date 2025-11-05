@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include "effects/BaseFilter.hpp"
-#include "engine/AudioProcessor.hpp"
-#include "effects/util/BiquadFilter.hpp"
+#include "audio/effects/BaseFilter.hpp"
+#include "audio/engine/AudioProcessor.hpp"
+#include "audio/effects/util/BiquadFilter.hpp"
 
 // LP IIR filter using biquad transfer function
 class LowPassFilter final : public BaseFilter {

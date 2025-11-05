@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "modulation/Envelope.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/modulation/Envelope.hpp"
+#include "audio/engine/AudioEngine.hpp"
 
 Envelope::Envelope(float atk, float hld, float dec, float sus, float rel)
     : attack(atk), hold(hld), decay(dec), sustain(sus), release(rel) {

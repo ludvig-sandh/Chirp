@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessor.hpp"
 
 // The Mixer class doesn't provide any extra functionality, but is a great semantically to use
 // if the only thing you need is to group together outputs.

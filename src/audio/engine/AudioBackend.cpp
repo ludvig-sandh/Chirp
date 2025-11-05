@@ -5,8 +5,8 @@
 #include <memory>
 #include <unordered_set>
 
-#include "engine/AudioBackend.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/engine/AudioBackend.hpp"
+#include "audio/engine/AudioEngine.hpp"
 
 AudioBackend::AudioBackend(AudioEngine *engine)
     : stream(0)

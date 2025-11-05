@@ -4,9 +4,9 @@
 #pragma once
 
 #include <atomic>
-#include "core/Waveform.hpp"
-#include "effects/util/FeedbackDelayInfo.hpp"
-#include "modulation/LFO.hpp"
+#include "audio/core/Waveform.hpp"
+#include "audio/effects/util/FeedbackDelayInfo.hpp"
+#include "audio/modulation/LFO.hpp"
 
 struct AudioPreset {
     // Synth settings

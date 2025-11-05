@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "layout/SynthLayout.hpp"
+#include "audio/layout/SynthLayout.hpp"
 #include "gui/Keyboard.hpp"
 
 #include <cassert>

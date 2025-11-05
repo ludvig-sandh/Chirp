@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessor.hpp"
 
 // A simple biquad filter for a single channel.
 // https://arachnoid.com/BiQuadDesigner/index.html

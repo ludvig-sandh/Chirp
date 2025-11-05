@@ -6,8 +6,8 @@
 #include "gui/Spectrogram.hpp"
 #include "gui/LevelsDisplay.hpp"
 #include "gui/GlobalSettingsWindow.hpp"
-#include "preset/AudioPresetSerialization.hpp"
-#include "preset/BuiltInPresetsLoader.hpp"
+#include "audio/preset/AudioPresetSerialization.hpp"
+#include "audio/preset/BuiltInPresetsLoader.hpp"
 
 void PresetLoaderWindow::Render(AudioPreset& preset) const {
     ConfigureWindow();
@@ -28,7 +28,7 @@ void PresetLoaderWindow::ConfigureWindow() const {
     ImGui::SetNextWindowSize(ImVec2(windowWidth, WINDOW_HEIGHT), ImGuiCond_Always);
 
     // Create a non-movable, non-collapsible, non-resizable, no-title-bar panel
-    ImGui::Begin("Preset loader", nullptr,
+    ImGui::Begin("audio/preset loader", nullptr,
         ImGuiWindowFlags_NoTitleBar
         | ImGuiWindowFlags_NoMove
         | ImGuiWindowFlags_NoResize
@@ -36,7 +36,7 @@ void PresetLoaderWindow::ConfigureWindow() const {
 }
 
 void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
-    ImGui::SeparatorText("Preset loader");
+    ImGui::SeparatorText("audio/preset loader");
 
     // --- Browse and export preset file ---
     if (ImGui::Button("Export Preset")) {
@@ -63,7 +63,7 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
     }
 
     if (ImGui::BeginPopup("SaveSuccess")) {
-        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset exported successfully!");
+        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "audio/preset exported successfully!");
         ImGui::EndPopup();
     }
     if (ImGui::BeginPopup("SaveFail")) {
@@ -98,7 +98,7 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
     }
 
     if (ImGui::BeginPopup("LoadSuccess")) {
-        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "Preset loaded successfully!");
+        ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f), "audio/preset loaded successfully!");
         ImGui::EndPopup();
     }
     if (ImGui::BeginPopup("LoadFail")) {
@@ -132,7 +132,7 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
                 // Load the selected preset
                 loader.LoadBuiltInPreset(preset, presetNames[i]);
 
-                ImGui::OpenPopup("PresetLoadedPopup");
+                ImGui::OpenPopup("audio/presetLoadedPopup");
             }
             if (isSelected)
                 ImGui::SetItemDefaultFocus();
@@ -141,9 +141,9 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
     }
 
     // Optional: feedback popup
-    if (ImGui::BeginPopup("PresetLoadedPopup")) {
+    if (ImGui::BeginPopup("audio/presetLoadedPopup")) {
         ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f),
-                           "Preset '%s' loaded successfully!",
+                           "audio/preset '%s' loaded successfully!",
                            presetNames[currentPresetIndex].c_str());
         ImGui::EndPopup();
     }

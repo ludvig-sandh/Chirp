@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "engine/AudioProcessor.hpp"
-#include "preset/AudioPreset.hpp"
+#include "audio/engine/AudioProcessor.hpp"
+#include "audio/preset/AudioPreset.hpp"
 #include <memory>
 
 // Represents an audio processing graph along with a modulation matrix.

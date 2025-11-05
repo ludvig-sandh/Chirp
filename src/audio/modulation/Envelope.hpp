@@ -4,7 +4,7 @@
 #pragma once
 
 #include <cassert>
-#include "modulation/LFO.hpp"
+#include "audio/modulation/LFO.hpp"
 
 // Models a typical ASDR envelope
 class Envelope : public LFO {

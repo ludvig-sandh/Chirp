@@ -89,7 +89,6 @@ endif()
 #
 target_include_directories(chirp PRIVATE
     src
-    src/audio
     src/external
     src/external/imgui
     src/external/imgui/backends

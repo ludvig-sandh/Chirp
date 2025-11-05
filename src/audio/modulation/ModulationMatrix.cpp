@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "modulation/ModulationMatrix.hpp"
-#include "engine/AudioProcessor.hpp"
+#include "audio/modulation/ModulationMatrix.hpp"
+#include "audio/engine/AudioProcessor.hpp"
 
 void ModulationMatrix::ClearRoutes() {
     m_routes.clear();

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "engine/AudioProcessor.hpp"
-#include "engine/AudioEngine.hpp"
-#include "engine/AudioBackend.hpp"
-#include "modulation/LFO.hpp"
+#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioEngine.hpp"
+#include "audio/engine/AudioBackend.hpp"
+#include "audio/modulation/LFO.hpp"
 #include <iostream>
 
 void AudioProcessor::AddChild(std::shared_ptr<AudioProcessor> child) {

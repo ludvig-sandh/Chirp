@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "effects/FeedbackDelay.hpp"
+#include "audio/effects/FeedbackDelay.hpp"
 
 FeedbackDelay::FeedbackDelay() 
     : m_leftLine(m_delayTime, m_feedback)

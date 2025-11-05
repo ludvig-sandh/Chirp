@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include "engine/AudioProcessor.hpp"
-#include "effects/util/BiquadFilter.hpp"
-#include "core/Frequency.hpp"
-#include "modulation/ModulationMatrix.hpp"
+#include "audio/engine/AudioProcessor.hpp"
+#include "audio/effects/util/BiquadFilter.hpp"
+#include "audio/core/Frequency.hpp"
+#include "audio/modulation/ModulationMatrix.hpp"
 
 #include <memory>
 

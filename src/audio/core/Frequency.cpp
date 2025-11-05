@@ -3,8 +3,8 @@
 
 #include <algorithm>
 
-#include "core/Frequency.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/core/Frequency.hpp"
+#include "audio/engine/AudioEngine.hpp"
 
 Frequency::Frequency(float hertz)
     : m_hertz(hertz)

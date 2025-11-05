@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "modulation/PeriodicLFO.hpp"
-#include "engine/AudioEngine.hpp"
+#include "audio/modulation/PeriodicLFO.hpp"
+#include "audio/engine/AudioEngine.hpp"
 
 PeriodicLFO::PeriodicLFO(WaveformInfo::Type type, Frequency frequency)
     : m_waveform(Waveform::ConstructWaveform(type))
