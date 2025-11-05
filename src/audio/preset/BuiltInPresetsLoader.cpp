@@ -47,8 +47,8 @@ std::vector<std::string>& BuiltInPresetsLoader::GetPresetNames() {
 }
 
 int BuiltInPresetsLoader::GetIndexOfDefaultPreset() {
-    for (auto [idx, name] : std::views::enumerate(GetPresetNames())) {
-        if (name == DEFAULT_PRESET_NAME) {
+    for (size_t idx = 0; idx < GetPresetNames().size(); idx++) {
+        if (GetPresetNames()[idx] == DEFAULT_PRESET_NAME) {
             return idx;
         }
     }
