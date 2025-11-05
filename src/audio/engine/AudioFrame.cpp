@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numbers>
 
 // Clamp the amplitude to avoid the possibility of going deaf
 void AudioFrame::ClipToValidRange() {
