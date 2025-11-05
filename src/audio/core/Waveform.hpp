@@ -23,6 +23,7 @@ namespace WaveformInfo {
 // Base class for representing waveforms, such as sine waves or more complex waves  
 class Waveform {
 public:
+    virtual ~Waveform() {}
     // Returns the sample value at a specific phase in the waveform in the range [0, 1]
     virtual float GetSampleAt(float phase) = 0;
     static std::unique_ptr<Waveform> ConstructWaveform(WaveformInfo::Type type);
