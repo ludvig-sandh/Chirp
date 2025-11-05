@@ -4,7 +4,7 @@
 #pragma once
 
 #include "audio/core/Frequency.hpp"
-#include "audio/generator/generator.hpp"
+#include "audio/generator/Generator.hpp"
 #include "audio/core/Waveform.hpp"
 #include "audio/modulation/Envelope.hpp"
 #include "audio/modulation/LFO.hpp"
