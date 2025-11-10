@@ -12,7 +12,6 @@
 
 #include "portaudio.h"
 #include "audio/engine/AudioEngine.hpp"
-#include "audio/engine/AudioBackend.hpp"
 #include "audio/core/Frequency.hpp"
 #include "audio/preset/AudioPreset.hpp"
 #include "audio/generator/Oscillator.hpp"
