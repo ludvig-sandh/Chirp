@@ -38,10 +38,9 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --parallel
 
-      - name: Upload executable (optional)
-        if: runner.os != 'Linux' # skip for Linux if you want
+      - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: chirp-${{ runner.os }}
-          path: |
-            build/chirp*
+          name: chirp-${{ matrix.os }}
+          path: build/chirp*
+          

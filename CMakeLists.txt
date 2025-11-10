@@ -24,9 +24,12 @@ if (TARGET portaudio_static)
 endif()
 
 # Suppress ALSA deprecation warnings inside PortAudio only
-target_compile_options(${PORTAUDIO_TGT} PRIVATE
-    -Wno-deprecated-declarations
-)
+if (NOT MSVC)
+    # safe on GCC/Clang only
+    target_compile_options(${PORTAUDIO_TGT} PRIVATE
+        -Wno-deprecated-declarations
+    )
+endif()
 
 #
 # Collect only the core sources (not src/external)
@@ -150,6 +153,9 @@ elseif (APPLE)
         "-framework CoreVideo"
         "-framework OpenGL"
     )
+
+    # Since macOS now wants to use metal rather than opengl, we suppress the warnings about this
+    target_compile_definitions(chirp PRIVATE GL_SILENCE_DEPRECATION)
 elseif (UNIX)
     find_package(OpenGL REQUIRED)
     target_link_libraries(chirp PRIVATE OpenGL::GL pthread dl)
