@@ -1,30 +1,30 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/engine/AudioEngine.hpp"
 #include "audio/engine/AudioBackend.hpp"
 #include "audio/modulation/LFO.hpp"
 #include <iostream>
 
-void AudioProcessor::AddChild(std::shared_ptr<AudioProcessor> child) {
+void AudioProcessorNode::AddChild(std::shared_ptr<AudioProcessorNode> child) {
     m_children.insert(child);
 }
 
-void AudioProcessor::ClearModulations() {
+void AudioProcessorNode::ClearModulations() {
     ClearModulationsImpl(); // Clears for this node
     for (const auto& child : m_children) { // Clears all children nodes
         child->ClearModulations();
     }
 }
 
-void AudioProcessor::ApplyModulation(float amount, ModulationType modType) {
+void AudioProcessorNode::ApplyModulation(float amount, ModulationType modType) {
     (void)amount;
     (void)modType;
     std::cerr << "WARNING: Tried to apply modulation on a node that doesn't support it.\n";
 }
 
-AudioFrame AudioProcessor::GenerateFrame(const AudioPreset& preset) {
+AudioFrame AudioProcessorNode::GenerateFrame(const AudioPreset& preset) {
     if (m_visited) {
         // Don't compute the result of this node twice
         return m_cachedResult;
@@ -54,14 +54,14 @@ AudioFrame AudioProcessor::GenerateFrame(const AudioPreset& preset) {
     return m_cachedResult;
 }
 
-void AudioProcessor::ClearVisited() {
+void AudioProcessorNode::ClearVisited() {
     m_visited = false;
-    for (const std::shared_ptr<AudioProcessor>& child : m_children) {
+    for (const std::shared_ptr<AudioProcessorNode>& child : m_children) {
         child->ClearVisited();
     }
 }
 
-void AudioProcessor::ApplyGainAndPan(AudioFrame& output) {
+void AudioProcessorNode::ApplyGainAndPan(AudioFrame& output) {
     output = gain.Apply(output);
     output = pan.Apply(output);
 }

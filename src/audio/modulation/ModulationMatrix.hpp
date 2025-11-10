@@ -9,7 +9,7 @@
 #include <memory>
 
 // Fwd dec.
-class AudioProcessor;
+class AudioProcessorNode;
 
 enum class ModulationType {
     Pitch,
@@ -21,12 +21,12 @@ enum class ModulationType {
 
 struct ModulationRoute {
     std::shared_ptr<LFO> source;
-    std::shared_ptr<AudioProcessor> destination;
+    std::shared_ptr<AudioProcessorNode> destination;
     ModulationType modType;
     float amount;
 
     ModulationRoute(std::shared_ptr<LFO> source,
-                    std::shared_ptr<AudioProcessor> destination,
+                    std::shared_ptr<AudioProcessorNode> destination,
                     ModulationType modType,
                     float amount)
         : source(source)

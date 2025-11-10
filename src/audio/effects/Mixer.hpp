@@ -3,11 +3,11 @@
 
 #pragma once
 
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 
 // The Mixer class doesn't provide any extra functionality, but is a great semantically to use
 // if the only thing you need is to group together outputs.
-class Mixer : public AudioProcessor {
+class Mixer : public AudioProcessorNode {
 public:
     // Empty implementation means audio passes through.
     void ProcessFrame(AudioFrame&) override {}

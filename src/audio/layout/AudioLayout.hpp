@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/preset/AudioPreset.hpp"
 #include <memory>
 
@@ -12,7 +12,7 @@
 // routing.
 class AudioLayout {
 public:
-    virtual std::shared_ptr<AudioProcessor> GetRootNode() = 0;
+    virtual std::shared_ptr<AudioProcessorNode> GetRootNode() = 0;
     virtual void LoadPreset(AudioPreset& preset) = 0;
     void ClearAllModulations() {
         auto root = GetRootNode();

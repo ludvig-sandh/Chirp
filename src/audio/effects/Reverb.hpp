@@ -4,10 +4,10 @@
 #pragma once
 
 #include <vector>
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/engine/AudioFrame.hpp"
 
-class Reverb : public AudioProcessor {
+class Reverb : public AudioProcessorNode {
 public:
     Reverb();
 

@@ -9,7 +9,7 @@
 #include "audio/engine/AudioBackend.hpp"
 #include "audio/preset/AudioPreset.hpp"
 #include "audio/engine/AudioBuffer.hpp"
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "fft/FFTComputer.hpp"
 #include "audio/layout/AudioLayout.hpp"
 #include "audio/layout/SynthLayout.hpp"

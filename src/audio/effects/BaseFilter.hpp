@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/effects/util/BiquadFilter.hpp"
 #include "audio/core/Frequency.hpp"
 #include "audio/modulation/ModulationMatrix.hpp"
@@ -11,7 +11,7 @@
 #include <memory>
 
 // LP IIR filter using biquad transfer function
-class BaseFilter : public AudioProcessor {
+class BaseFilter : public AudioProcessorNode {
 public:
     BaseFilter(Frequency cutoff, float Q);
 

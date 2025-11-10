@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "audio/modulation/ModulationMatrix.hpp"
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 
 void ModulationMatrix::ClearRoutes() {
     m_routes.clear();

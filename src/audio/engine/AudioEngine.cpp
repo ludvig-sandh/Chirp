@@ -32,7 +32,7 @@ AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FF
 
 // Recurse from the root of the graph
 AudioBuffer AudioEngine::ProcessBuffer(size_t numFrames) {
-    std::shared_ptr<AudioProcessor> rootNode = m_synthLayout.GetRootNode();
+    std::shared_ptr<AudioProcessorNode> rootNode = m_synthLayout.GetRootNode();
     if (!rootNode) {
         // Empty processing graph, so provide empty audio
         return AudioBuffer(numFrames);

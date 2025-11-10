@@ -31,7 +31,7 @@ SynthLayout::SynthLayout()
     m_mixer->AddChild(m_reverb);
 }
 
-std::shared_ptr<AudioProcessor> SynthLayout::GetRootNode() {
+std::shared_ptr<AudioProcessorNode> SynthLayout::GetRootNode() {
     return m_mixer;
 }
 

@@ -17,12 +17,12 @@
 #include "audio/modulation/ModulationMatrix.hpp"
 
 // Represents a node in a tree showing how audio is routed throughout the engine.
-class AudioProcessor {
+class AudioProcessorNode {
 public:
-    AudioProcessor() = default;
-    virtual ~AudioProcessor() = default;
+    AudioProcessorNode() = default;
+    virtual ~AudioProcessorNode() = default;
 
-    void AddChild(std::shared_ptr<AudioProcessor> child);
+    void AddChild(std::shared_ptr<AudioProcessorNode> child);
     
     void ClearModulations();
     virtual void ClearModulationsImpl() {};
@@ -44,18 +44,18 @@ private:
     bool m_visited = false;
     AudioFrame m_cachedResult;
 
-    std::unordered_set<std::shared_ptr<AudioProcessor>> m_children;
+    std::unordered_set<std::shared_ptr<AudioProcessorNode>> m_children;
 };
 
 /*
 CLASS HIERARCHY:
 
-AudioProcessor (base)
+AudioProcessorNode (base)
 
 LFO (base)
 
 Generator (base)
-    is AudioProcessor
+    is AudioProcessorNode
 
 Oscillator
     is Generator

@@ -3,11 +3,11 @@
 
 #pragma once
 
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/core/Gain.hpp"
 
-// Represents an AudioProcessor base class that specifically generates sound, in contrast to one that modifies sound (Effects)
-class Generator : public AudioProcessor {
+// Represents an AudioProcessorNode base class that specifically generates sound, in contrast to one that modifies sound (Effects)
+class Generator : public AudioProcessorNode {
 public:
     Generator();
     virtual ~Generator() = default;

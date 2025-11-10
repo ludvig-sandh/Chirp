@@ -5,12 +5,12 @@
 
 #include "audio/effects/util/FeedbackDelayInfo.hpp"
 #include "audio/effects/util/FeedbackDelayLine.hpp"
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/effects/util/Delay.hpp"
 
 // Adds a looping delay effect that repeats audio but with less volume (depending on feedback)
 // The processed audio contains both dry input signal and wet delay tail
-class FeedbackDelay : public AudioProcessor {
+class FeedbackDelay : public AudioProcessorNode {
 public:
     FeedbackDelay();
     FeedbackDelay(FeedbackDelayInfo::Type delayType, float delayTime, float feedback);

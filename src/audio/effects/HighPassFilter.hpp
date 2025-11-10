@@ -4,7 +4,7 @@
 #pragma once
 
 #include "audio/effects/BaseFilter.hpp"
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/effects/util/BiquadFilter.hpp"
 
 // HP IIR filter using biquad transfer function

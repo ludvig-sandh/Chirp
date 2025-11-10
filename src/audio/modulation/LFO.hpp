@@ -15,7 +15,7 @@
 #include "audio/core/Waveform.hpp"
 
 // Fwd dec.
-class AudioProcessor;
+class AudioProcessorNode;
 
 struct LFOConfig {
     enum class Mode {

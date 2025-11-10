@@ -4,7 +4,7 @@
 #pragma once
 
 #include "audio/layout/AudioLayout.hpp"
-#include "audio/engine/AudioProcessor.hpp"
+#include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/preset/AudioPreset.hpp"
 #include "audio/generator/Oscillator.hpp"
 #include "audio/effects/LowPassFilter.hpp"
@@ -23,7 +23,7 @@
 class SynthLayout final: public AudioLayout {
 public:
     SynthLayout();
-    std::shared_ptr<AudioProcessor> GetRootNode() override;
+    std::shared_ptr<AudioProcessorNode> GetRootNode() override;
     void LoadPreset(AudioPreset& preset) override;
     void ApplyAllModulations() override;
 
