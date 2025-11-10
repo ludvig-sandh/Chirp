@@ -71,7 +71,6 @@ void AudioEngine::Start(std::atomic<bool>& running) {
         }
         
         m_backend.close();
-        printf("Audio stopped.\n");
     }
     m_fftComputer->FinishedProducing();
 }

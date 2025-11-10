@@ -14,7 +14,7 @@ MainApplication::MainApplication()
 void MainApplication::Start() {
     BuiltInPresetsLoader::GetShared().LoadDefaultPreset(*m_preset);
 
-    // Start the mixer in its own thread
+    // Start the engine in its own thread
     std::thread audioThread([&]() {
         m_audioEngine.Start(m_isRunning);
     });
@@ -27,7 +27,7 @@ void MainApplication::Start() {
     // Start gui on main thread, blocks until application closes
     m_gui.RunMainLoop();
 
-    // Signal the audio engine to stop
+    // Signal the audio engine to stop when the GUI is closed by the user
     m_isRunning.store(false);
     audioThread.join();
     fftThread.join();
