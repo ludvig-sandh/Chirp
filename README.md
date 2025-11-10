@@ -1,4 +1,4 @@
-# 🎵 Chirp
+# Chirp 🎵
 A cross-platform real-time modular synthesizer written in modern C++ with ImGui and PortAudio.
 
 ![Build](https://github.com/ludvig-sandh/Chirp/actions/workflows/build.yml/badge.svg)
@@ -8,6 +8,55 @@ A cross-platform real-time modular synthesizer written in modern C++ with ImGui 
 
 ![Chirp screenshot](assets/screenshot.png)
 
+---
+
+## About
+
+**Chirp** started out as a small personal experiment. I wanted to see if I could synthesize bird sounds entirely from code.  
+That idea sort of grew as I implemented modules such as oscillators, LFOs, filters, reverb, etc. I realized I could just turn it into a full modular audio engine instead.
+The original “bird synthesis” experiment still lives on as one of the built-in presets, which is why the project kept its name: **Chirp**
+
+This project is entirely built by me as a hobby and learning experience.  
+It’s a way for me to explore and apply what I’ve learned about **digital signal processing (DSP)**, **modern C++** and **software architecture** in general.
+At the same time, I wanted to challenge myself to create a **complete, cross-platform desktop application** with features like real-time DSP, GUI and build automation.
+
+My goal has been to create something personal that combines my interests in music and programming.
+Since 2020, I've been spending as much time on coding as I have on creating music, so a great deal of inspiration for this project has come from that part of my life.
+
+---
+
+## Features
+- Oscillators that supports generating sounds from a set of different waveforms
+- Volume and pan control
+- Envelopes to specify the "shape" of the sound, by modulating volume over time
+- Low-pass and high-pass filters to remove or highlight certain frequencies contained in the sound
+- Feedback delay for echo effect, with different modes of stereo separation
+- Reverb effect for ...
+- Custom modulation of different audio parameters for even more control and creativity
+- Customizable LFO/envelope shapes used as modulation sources
+- Spectrogram and spectrum visualizers that show the frequency content over time
+- Audio level bars that indicate loudness in both left and right audio channels
+- Waveform displays that show the currently selected waveforms and what the oscillators will in fact generate
+- A piano UI element that can be controlled via mouse or keyboard to play notes
+- Save and load presets so you can reuse sounds you have created
+- A set of built-in presets, including the "chirp" preset
+
+---
+
+## Architecture
+- Audio is routed through a graph, where each node processes or generates audio. The result from the root node is what is written to the audio buffer provided by PortAudio library (played to the default audio device).
+- Supports arbitrarily complex audio DAGs (directly acyclic graphs) which makes the audio engine completely modular. The synth is just a specific layout of an audio graph (a chain in this case: the audio is routed from top to bottom in the preset control window) but essentially supports any configuration by deriving from the `AudioLayout` class.
+- GUI and audio engine runs on separate threads, allowing for responsive UI while also allowing the audio engine to generate audio in real-time without interruption.
+- A third thread is responsible for consuming the generated signal from the audio thread and computing the FFT of it. Then it passes the result to the GUI thread. I have implemented my own custom version of a bounded buffer (producer-consumer) synchronization construct for passing the audio signal between the audio and FFT threads. I'm not sure how much extra time it frees up for the audio thread in practice compared to computing the FFT directly, so it's mostly just an exercise in concurrency.
+- A modulation matrix is used for storing the connections between audio modulation sources and destinations. This allows for LFOs/envelopes to control audio parameters as explained previously, but in general supports any number of connections and in theory even nested modulations (though not supported in the UI yet).
+- Audio processing effects such as filters, feedback delay and reverb. These are implemented as nodes in the audio processing graph, which means they derive from `AudioProcessorNode`.
+- Oscillators derive from generators, which also derive from `AudioProcessorNode`. Generators represent `AudioProcessorNode's` that generate sound, rather than modify incoming sound. Currently, no other classes derive from `Generator`, but it's built this way to support for example sample players or microphone input in the future.
+- The way the user can change the preset and hear the difference in real-time is by using a set of `std::atomic's`. These atomics lie in a `AudioPreset` object, shared by both the GUI and audio threads. The GUI thread writes to these values on every frame and the audio thread reads them on every audio buffer callback.
+- The `AudioPreset` object is serialized to json in order to save presets. Likewise, a json file is deserialized to load a preset from disk.
+
+There are tons of other details I could go over but these are some of the ones I find the most interesting/important.
+
+---
 
 ## Build Instructions
 
