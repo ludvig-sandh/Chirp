@@ -43,5 +43,5 @@ jobs:
         with:
           name: chirp-${{ matrix.os }}
           path: |
-            build/Release/chirp.exe   # Windows (MSVC)
-            build/chirp               # Linux / macOS
+            build/Release/chirp.exe
+            build/chirp
