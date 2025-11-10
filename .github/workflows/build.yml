@@ -42,5 +42,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chirp-${{ matrix.os }}
-          path: build/chirp*
-          
+          path: |
+            build/Release/chirp.exe   # Windows (MSVC)
+            build/chirp               # Linux / macOS
