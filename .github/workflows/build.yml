@@ -24,7 +24,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y xorg-dev libglu1-mesa-dev wayland-protocols
+          sudo apt-get install -y xorg-dev libglu1-mesa-dev wayland-protocols libwayland-dev
 
       - name: Configure CMake
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
