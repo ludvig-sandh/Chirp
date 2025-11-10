@@ -137,7 +137,7 @@ target_link_libraries(chirp PRIVATE ${PORTAUDIO_TGT})
 # Platform-specific OpenGL & system libs
 # ===========================
 #
-if (WIN32 AND MINGW)
+if (WIN32)
     target_link_libraries(chirp PRIVATE
         opengl32
         gdi32
