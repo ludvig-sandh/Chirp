@@ -24,7 +24,7 @@ if (TARGET portaudio_static)
 endif()
 
 # Suppress ALSA deprecation warnings inside PortAudio only
-if (NOT MSVC)
+if (TARGET ${PORTAUDIO_TGT} AND NOT MSVC)
     # safe on GCC/Clang only
     target_compile_options(${PORTAUDIO_TGT} PRIVATE
         -Wno-deprecated-declarations
@@ -83,6 +83,20 @@ set(SRC_FILES
 # Create executable *before* linking or adding include dirs
 #
 add_executable(chirp ${SRC_FILES})
+
+# Define the absolute path to the presets directory
+target_compile_definitions(chirp PRIVATE
+    PRESETS_DIR_PATH="${CMAKE_SOURCE_DIR}/presets"
+)
+
+message(STATUS "Chirp preset directory: ${CMAKE_SOURCE_DIR}/presets")
+
+# Copy presets directory to the executable output folder after build
+add_custom_command(TARGET chirp POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/presets"
+    "$<TARGET_FILE_DIR:chirp>/presets"
+)
 
 #
 # PortAudio include paths (suppress warnings)

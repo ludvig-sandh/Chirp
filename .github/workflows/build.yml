@@ -38,10 +38,12 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --parallel
 
-      - name: Upload executable
+      - name: Upload executable and presets
         uses: actions/upload-artifact@v4
         with:
           name: chirp-${{ matrix.os }}
           path: |
             build/Release/chirp.exe
+            build/Release/presets
             build/chirp
+            build/presets
