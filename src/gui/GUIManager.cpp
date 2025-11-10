@@ -108,7 +108,7 @@ void GUIManager::RunMainLoop() {
 }
 
 void GUIManager::glfw_error_callback(int error, const char* description) {
-    std::cerr << std::format("GLFW Error {}: {}\n", error, description);
+    std::cerr << "GLFW Error " << error << ": " << description << "\n";
 }
 
 GLFWwindow *GUIManager::InitAux() {

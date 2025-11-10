@@ -26,7 +26,6 @@
 #include "gui/SpectrumWindow.hpp"
 
 #include <memory>
-#include <format>
 #include <set>
 
 // Responsible for managing the GLFW window and running the main loop

@@ -5,7 +5,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <format>
 
 enum class Key {
     C = 0,
@@ -30,7 +29,7 @@ struct Note {
 
     Note(Key key, int octave = 5) : key(key), octave(octave) {
         if (octave > 13 || octave < 0) {
-            throw std::invalid_argument(std::format("Cannot create a note from octave {}. Octave must be in range [0, 13].", octave));
+            throw std::invalid_argument("Cannot create a note from octave " + std::to_string(octave) + ". Octave must be in range [0, 13].");
         }
     }
 
