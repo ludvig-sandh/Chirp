@@ -146,7 +146,7 @@ GLFWwindow *GUIManager::InitAux() {
 #endif
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow((int)(SCREEN_WIDTH), (int)(SCREEN_HEIGHT), "Chirp Realtime Audio Synthesis", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow((int)(SCREEN_WIDTH), (int)(SCREEN_HEIGHT), "Chirp", nullptr, nullptr);
     if (window == nullptr) {
         return nullptr;
     }
