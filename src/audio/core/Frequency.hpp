@@ -5,6 +5,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
+#include <string>
 
 enum class Key {
     C = 0,
