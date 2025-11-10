@@ -95,6 +95,6 @@ BuiltInPresetsLoader::BuiltInPresetsLoader()
 std::filesystem::path BuiltInPresetsLoader::GetPresetsFolder() {
     // Always relative to executable
     std::filesystem::path exeDir = GetExecutableDir();
-    std::filesystem::path presetDir = exeDir / PRESETS_DIR;
+    std::filesystem::path presetDir = exeDir / PATH_FROM_EXE_TO_PRESETS;
     return presetDir;
 }

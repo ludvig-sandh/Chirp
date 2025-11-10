@@ -35,7 +35,8 @@ private:
 
     // Return preset folder path (cross-platform safe)
     static std::filesystem::path GetPresetsFolder();
-    static inline const std::filesystem::path PRESETS_DIR = PRESETS_DIR_PATH; // Provided by CML
+    static inline const std::filesystem::path PATH_FROM_EXE_TO_PRESETS =
+        std::filesystem::path("presets");
     static inline const std::string DEFAULT_PRESET_NAME = "chirp";
 
     std::vector<std::string> m_presetNames;

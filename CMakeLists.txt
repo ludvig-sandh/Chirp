@@ -84,13 +84,6 @@ set(SRC_FILES
 #
 add_executable(chirp ${SRC_FILES})
 
-# Define the absolute path to the presets directory
-target_compile_definitions(chirp PRIVATE
-    PRESETS_DIR_PATH="${CMAKE_SOURCE_DIR}/presets"
-)
-
-message(STATUS "Chirp preset directory: ${CMAKE_SOURCE_DIR}/presets")
-
 # Copy presets directory to the executable output folder after build
 add_custom_command(TARGET chirp POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
