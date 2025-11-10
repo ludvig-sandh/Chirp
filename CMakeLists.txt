@@ -17,6 +17,17 @@ set(PA_BUILD_STATIC ON  CACHE BOOL "" FORCE)
 
 add_subdirectory(${PA_SRC_DIR} ${PA_BUILD_DIR})
 
+# Detect actual PortAudio target name (static vs shared)
+set(PORTAUDIO_TGT portaudio)
+if (TARGET portaudio_static)
+    set(PORTAUDIO_TGT portaudio_static)
+endif()
+
+# Suppress ALSA deprecation warnings inside PortAudio only
+target_compile_options(${PORTAUDIO_TGT} PRIVATE
+    -Wno-deprecated-declarations
+)
+
 #
 # Collect only the core sources (not src/external)
 #
@@ -71,18 +82,12 @@ set(SRC_FILES
 add_executable(chirp ${SRC_FILES})
 
 #
-# PortAudio include paths
+# PortAudio include paths (suppress warnings)
 #
-target_include_directories(chirp PRIVATE
+target_include_directories(chirp SYSTEM PRIVATE
     ${PA_SRC_DIR}/include
     ${PA_BUILD_DIR}
 )
-
-# portaudio target name differs by version
-set(PORTAUDIO_TGT portaudio)
-if (TARGET portaudio_static)
-    set(PORTAUDIO_TGT portaudio_static)
-endif()
 
 #
 # User include directories
