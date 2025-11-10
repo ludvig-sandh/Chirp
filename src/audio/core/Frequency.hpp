@@ -29,15 +29,15 @@ struct Note {
 
     static const int KEYS_PER_OCTAVE = 12;
 
-    Note(Key key, int octave = 5) : key(key), octave(octave) {
-        if (octave > 13 || octave < 0) {
-            throw std::invalid_argument("Cannot create a note from octave " + std::to_string(octave) + ". Octave must be in range [0, 13].");
-        }
-    }
+    Note(Key key, int octave = 5) : key(key), octave(octave) {}
 
     // Order notes first by octave, then by key
     bool operator<(const Note& other) const {
         return (octave < other.octave) || (octave == other.octave && key < other.key);
+    }
+
+    bool operator>(const Note& other) const {
+        return (octave > other.octave) || (octave == other.octave && key > other.key);
     }
 
     // Order notes first by octave, then by key

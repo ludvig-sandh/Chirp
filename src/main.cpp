@@ -3,8 +3,7 @@
 
 #include "MainApplication.hpp"
 
-int main(int, char**)
-{
+int main(int, char**) {
     MainApplication app;
     app.Start();
     return 0;

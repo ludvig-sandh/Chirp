@@ -18,7 +18,7 @@ GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTC
     m_window = InitAux();
     if (m_window == nullptr) {
         std::cerr << "Couldn't initialize window\n";
-        exit(0);
+        exit(1);
     }
 
     // Now that the GL context and window has been initialized
@@ -26,6 +26,9 @@ GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTC
     m_levelsDisplay.InitTexture();
     m_oscAWaveformWindow.InitTexture();
     m_oscBWaveformWindow.InitTexture();
+
+    // Find a default midi input device
+    m_midiInput.OpenDefaultPort();
 }
 
 GUIManager::~GUIManager() {
@@ -48,7 +51,7 @@ void GUIManager::RunMainLoop() {
         }
 
         // Handle key input BEFORE starting new ImGui frame. Will pass this along to the keyboard class
-        std::set<Note> pressedQwertyNotes = GetQwertyNotesPressed();
+        std::set<Note> allPressedNotes = GetAllPressedNotes();
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -85,12 +88,12 @@ void GUIManager::RunMainLoop() {
             m_oscBWaveformWindow.Render(m_preset->synthOscBWaveform.load(), false, isOscBOn);
 
             // Provide keyboard with the Qwerty input since it cannot access it itself.
-            std::set<Note> pressedNotes = m_keyboard.Render(pressedQwertyNotes);
+            allPressedNotes = m_keyboard.Render(allPressedNotes);
 
             // Store keyboard state (all pressed notes returned) via the shared preset
             for (Note note = Keyboard::FIRST_NOTE; note <= Keyboard::LAST_NOTE; ++note) {
                 size_t noteIdx = static_cast<size_t>(note - Keyboard::FIRST_NOTE);
-                bool isPressed = pressedNotes.find(note) != pressedNotes.end();
+                bool isPressed = allPressedNotes.find(note) != allPressedNotes.end();
                 m_preset->noteStates[noteIdx].store(isPressed);
             }
         }
@@ -240,4 +243,15 @@ std::set<Note> GUIManager::GetQwertyNotesPressed() const {
     }
 
     return pressedKeys;
+}
+
+std::set<Note> GUIManager::GetAllPressedNotes() {
+    std::set<Note> allPressedNotes = GetQwertyNotesPressed();
+
+    // Get pressed notes from MIDI input
+    auto midiNotes = m_midiInput.GetPressedNotes();
+
+    // Merge them
+    allPressedNotes.insert(midiNotes.begin(), midiNotes.end());
+    return allPressedNotes;
 }

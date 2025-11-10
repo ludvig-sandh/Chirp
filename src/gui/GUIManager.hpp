@@ -23,6 +23,7 @@
 #include "gui/PresetLoaderWindow.hpp"
 #include "gui/WaveformWindow.hpp"
 #include "gui/SpectrumWindow.hpp"
+#include "midi/MidiInput.hpp"
 
 #include <memory>
 #include <set>
@@ -42,8 +43,9 @@ private:
     GLFWwindow *InitAux();
     void DeinitAux();
 
-    // Returns
     std::set<Note> GetQwertyNotesPressed() const;
+
+    std::set<Note> GetAllPressedNotes();
 
     std::shared_ptr<AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
@@ -59,7 +61,7 @@ private:
     LevelsDisplay m_levelsDisplay;
     GlobalSettingsWindow m_globalSettingsWindow;
     PresetLoaderWindow m_presetLoaderWindow;
-
+    MidiInput m_midiInput;
 
     // Background color
     static inline const ImVec4 CLEAR_COLOR = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);
