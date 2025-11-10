@@ -8,6 +8,9 @@
 #include <optional>
 #include <cassert>
 #include <exception>
+#include <array>
+#include <vector>
+#include <utility>
 
 #include "audio/core/Waveform.hpp"
 
