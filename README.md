@@ -1,4 +1,4 @@
-# Chirp 🎵
+# Chirp 🎵🐦
 A cross-platform real-time modular synthesizer written in modern C++ with ImGui and PortAudio.
 
 ![Build](https://github.com/ludvig-sandh/Chirp/actions/workflows/build.yml/badge.svg)
@@ -146,6 +146,20 @@ CMakeLists.txt               # Build configuration
 README.md                    # Project overview and documentation
 
 ```
+
+---
+
+## Improvements & Possible Future plans
+
+Chirp is a complete synth, but there are many exciting features missing.
+Some of them are:
+
+- MIDI keyboard support: play and control the synthesizer directly from external MIDI devices  
+- Recording to WAV: export audio output to `.wav` files for use in other DAWs or projects  
+- Dynamic effects chain: add and remove audio effects in real time within the processing graph  
+- New audio effects: implement distortion and other effects modules  
+- Samplers and sequencers: introduce sample-based playback and basic MIDI sequencing capabilities  
+- Unison and detune for oscillators: create wider, richer sounds through oscillator layering and detuning
 
 ---
 
