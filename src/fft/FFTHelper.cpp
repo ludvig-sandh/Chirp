@@ -10,6 +10,7 @@
 #include <cmath>
 #include <numbers>
 #include <limits>
+#include <numeric>
 
 namespace FFTHelper {
 
