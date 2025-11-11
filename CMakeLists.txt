@@ -48,6 +48,7 @@ file(GLOB CHIRP_CORE_SRCS
     src/fft/*.cpp
     src/gui/*.cpp
     src/synchronization/*.cpp
+    src/midi/*.cpp
 )
 
 #
@@ -133,6 +134,23 @@ set(GLFW_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(glfw)
 
 target_link_libraries(chirp PRIVATE glfw)
+
+#
+# ===========================
+# RtMidi (for cross-platform MIDI input)
+# ===========================
+#
+FetchContent_Declare(
+    rtmidi
+    GIT_REPOSITORY https://github.com/thestk/rtmidi.git
+    GIT_TAG 88de822e8ffcba28167e30d287671ccb64f88637
+)
+
+set(RTMIDI_BUILD_STATIC ON CACHE BOOL "" FORCE)
+set(RTMIDI_BUILD_SHARED OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(rtmidi)
+target_link_libraries(chirp PRIVATE rtmidi)
 
 #
 # Link PortAudio

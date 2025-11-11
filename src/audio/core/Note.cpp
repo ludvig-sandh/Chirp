@@ -6,15 +6,15 @@
 #include <stdexcept>
 #include <string>
 
-Note::Note(Key key, int octave) : key(key), octave(octave) {
-    if (octave > 13 || octave < 0) {
-        throw std::invalid_argument("Cannot create a note from octave " + std::to_string(octave) + ". Octave must be in range [0, 13].");
-    }
-}
+Note::Note(Key key, int octave) : key(key), octave(octave) {}
 
 // Order notes first by octave, then by key
 bool Note::operator<(const Note& other) const {
     return (octave < other.octave) || (octave == other.octave && key < other.key);
+}
+
+bool Note::operator>(const Note& other) const {
+    return (octave > other.octave) || (octave == other.octave && key > other.key);
 }
 
 // Order notes first by octave, then by key
