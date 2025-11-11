@@ -149,6 +149,15 @@ FetchContent_Declare(
 set(RTMIDI_BUILD_STATIC ON CACHE BOOL "" FORCE)
 set(RTMIDI_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 
+# Only apply defaults on Linux (UNIX but not macOS)
+if(UNIX AND NOT APPLE)
+    # Default to ALSA ON and JACK OFF, but allow user override
+    set(RTMIDI_API_ALSA ON CACHE BOOL "Enable ALSA backend")
+    set(RTMIDI_API_JACK OFF CACHE BOOL "Enable JACK backend")
+else()
+    # Let RtMidi choose defaults on other systems
+endif()
+
 FetchContent_MakeAvailable(rtmidi)
 target_link_libraries(chirp PRIVATE rtmidi)
 

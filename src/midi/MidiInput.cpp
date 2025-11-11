@@ -13,32 +13,84 @@ MidiInput::~MidiInput() {
 }
 
 void MidiInput::OpenDefaultPort() {
-    unsigned int ports = m_midiIn.getPortCount();
+    int ports = static_cast<int>(m_midiIn.getPortCount());
+
+    // No ports available
     if (ports == 0) {
         if (m_hadDevice) {
             std::cout << "[MIDI] Device disconnected.\n";
-            m_hadDevice = false;
         }
+        m_hadDevice = false;
         m_portOpen = false;
+        m_currentPort = -1;
         return;
     }
 
-    try {
-        m_midiIn.openPort(0);
-        std::cout << "[MIDI] Connected to input port: " << m_midiIn.getPortName(0) << "\n";
-        m_portOpen = true;
-        m_hadDevice = true;
-    } catch (RtMidiError& e) {
-        std::cerr << "[MIDI] Failed to open input port: " << e.getMessage() << "\n";
-        m_portOpen = false;
+    // If already connected and the same port still exists, do nothing
+    if (m_portOpen && m_currentPort >= 0 && m_currentPort < ports) {
+        std::string currentName;
+        try {
+            currentName = m_midiIn.getPortName(m_currentPort);
+        }catch (...) {
+            // The port index is no longer valid → treat as disconnected.
+            std::cout << "[MIDI] Device disconnected.\n";
+            m_midiIn.closePort();
+            m_portOpen = false;
+            m_hadDevice = false;
+            m_currentPort = -1;
+            return;
+        }
+
+        if (currentName.find("Midi Through") == std::string::npos) {
+            // Still valid => nothing to do
+            return;
+        }
     }
+
+    // Try to find a hardware device (skip Midi Through since it doesn't provide any input. Exists on linux sometimes)
+    for (int i = 0; i < ports; ++i) {
+        std::string name = m_midiIn.getPortName(i);
+
+        if (name.find("Midi Through") != std::string::npos) {
+            continue;
+        }
+
+        try {
+            // Close old port before opening a new one
+            if (m_portOpen) {
+                m_midiIn.closePort();
+            }
+
+            m_midiIn.openPort(i);
+            std::cout << "[MIDI] Connected to input port: " << name << "\n";
+
+            m_portOpen = true;
+            m_hadDevice = true;
+            m_currentPort = i;
+            return;
+        }catch (RtMidiError& e) {
+            std::cerr << "[MIDI] Failed to open port " << i << " (" << name << "): "
+                      << e.getMessage() << "\n";
+        }
+    }
+
+    // No usable device found
+    if (m_hadDevice) {
+        std::cout << "[MIDI] Device disconnected.\n";
+    }
+
+    m_midiIn.closePort();
+    m_portOpen = false;
+    m_hadDevice = false;
+    m_currentPort = -1;
 }
 
 std::set<Note> MidiInput::GetPressedNotes() {
-    // If no port yet, attempt to open automatically
+    OpenDefaultPort();
+
     if (!m_portOpen) {
-        OpenDefaultPort();
-        if (!m_portOpen) return m_pressedNotes;
+        m_pressedNotes.clear();
+        return m_pressedNotes;
     }
 
     std::vector<unsigned char> msg;

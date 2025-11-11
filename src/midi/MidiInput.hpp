@@ -16,7 +16,7 @@ public:
     MidiInput();
     ~MidiInput();
 
-    // Explicitly try to open the first available MIDI input port
+    // Explicitly try to open the first available MIDI input port, unless a port is already in use
     void OpenDefaultPort();
 
     // Polls MIDI messages, auto-opens ports if needed, and returns pressed notes
@@ -29,4 +29,5 @@ private:
     std::set<Note> m_pressedNotes;
     bool m_portOpen = false;
     bool m_hadDevice = false;
+    int m_currentPort = -1;
 };
