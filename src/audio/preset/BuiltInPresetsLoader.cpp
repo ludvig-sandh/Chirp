@@ -54,7 +54,7 @@ std::optional<int> BuiltInPresetsLoader::GetIndexOfDefaultPreset() {
         return std::nullopt;
     }
 
-    return std::distance(names.begin(), it);
+    return static_cast<int>(std::distance(names.begin(), it));
 }
 
 bool BuiltInPresetsLoader::LoadBuiltInPreset(AudioPreset& preset, const std::string& name) const {
