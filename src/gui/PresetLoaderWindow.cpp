@@ -119,7 +119,7 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
         return;
     }
 
-    int selectedPresetIndex = loader.GetIndexOfDefaultPreset().value_or(0);
+    static int selectedPresetIndex = loader.GetIndexOfDefaultPreset().value_or(0);
     assert(selectedPresetIndex < std::ssize(presetNames) && "PROGRAMMING ERROR: GetIndexOfDefaultPreset() returned index larger than list of presets itself.");
 
     // Current label: show the selected preset name, or placeholder
