@@ -40,6 +40,7 @@ Since 2020, I've been spending as much time on coding as I have on creating musi
 - A piano UI element that can be controlled via mouse or keyboard to play notes  
 - Save and load presets so you can reuse sounds you have created  
 - A set of built-in presets, including the "chirp" preset  
+- MIDI keyboard support: play and control the synthesizer directly from external MIDI devices  
 
 ---
 
@@ -139,6 +140,7 @@ src/                         # Source code
 ├── fft/                     # FFT utilities and spectral analysis
 ├── gui/                     # ImGui-based user interface components
 ├── synchronization/         # Thread synchronization utilities
+├── midi/                    # External midi keyboard support
 ├── external/                # Third-party libraries
 │
 presets/                     # Default preset files bundled with the app
@@ -154,7 +156,6 @@ README.md                    # Project overview and documentation
 Chirp is a complete synth, but there are many exciting features missing.
 Some of them are:
 
-- MIDI keyboard support: play and control the synthesizer directly from external MIDI devices  
 - Recording to WAV: export audio output to `.wav` files for use in other DAWs or projects  
 - Dynamic effects chain: add and remove audio effects in real time within the processing graph  
 - New audio effects: implement distortion and other effects modules  
