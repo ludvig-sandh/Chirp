@@ -22,7 +22,7 @@ struct Note {
     Key key;
     int octave;
 
-    static const int KEYS_PER_OCTAVE = 12;
+    static const int NOTES_PER_OCTAVE = 12;
 
     Note(Key key, int octave = 5);
 

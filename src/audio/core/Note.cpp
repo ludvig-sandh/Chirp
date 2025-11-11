@@ -29,7 +29,7 @@ bool Note::operator==(const Note& other) const {
 // Returns the number of notes from this to the other.
 // If other is higher in pitch than this, returns a negative value.
 int Note::operator-(const Note& other) const {
-    return KEYS_PER_OCTAVE * (octave - other.octave) + static_cast<int>(key) - static_cast<int>(other.key);
+    return NOTES_PER_OCTAVE * (octave - other.octave) + static_cast<int>(key) - static_cast<int>(other.key);
 }
 
 // Returns the next key
