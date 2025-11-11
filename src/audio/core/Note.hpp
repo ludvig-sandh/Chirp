@@ -29,6 +29,8 @@ struct Note {
     // Order notes first by octave, then by key
     bool operator<(const Note& other) const;
 
+    bool operator>(const Note& other) const;
+
     // Order notes first by octave, then by key
     bool operator<=(const Note& other) const;
 

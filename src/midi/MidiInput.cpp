@@ -87,7 +87,7 @@ std::set<Note> MidiInput::GetPressedNotes() {
 
 // Converts a MIDI note number (0–127) to a Chirp Note object
 Note MidiInput::MidiNoteToNote(int midiNumber) {
-    int octave = midiNumber / Note::KEYS_PER_OCTAVE - 1;
-    int keyIndex = midiNumber % Note::KEYS_PER_OCTAVE;
+    int octave = midiNumber / Note::NOTES_PER_OCTAVE - 1;
+    int keyIndex = midiNumber % Note::NOTES_PER_OCTAVE;
     return Note(static_cast<Key>(keyIndex), octave);
 }
