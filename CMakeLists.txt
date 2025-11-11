@@ -143,7 +143,7 @@ target_link_libraries(chirp PRIVATE glfw)
 FetchContent_Declare(
     rtmidi
     GIT_REPOSITORY https://github.com/thestk/rtmidi.git
-    GIT_TAG master
+    GIT_TAG 88de822e8ffcba28167e30d287671ccb64f88637
 )
 
 set(RTMIDI_BUILD_STATIC ON CACHE BOOL "" FORCE)
