@@ -102,6 +102,28 @@ cmake --build build --config Release --parallel
 > Most Linux and macOS environments detect a compiler automatically,  
 > but on Windows, CMake may default to **NMake**, which requires a Visual Studio Developer Prompt.
 
+> #### Running on Wayland (Linux Desktop)
+>
+> Chirp uses GLFW for windowing. It works on both **X11** and **Wayland**, but some Linux distributions
+> do not install Wayland development headers by default.
+>
+> If you get errors related to wayland, install the Wayland + OpenGL development packages using:
+>
+> ```bash
+> sudo apt-get update
+> sudo apt-get install -y \
+>   xorg-dev \
+>   libglu1-mesa-dev \
+>   libegl1-mesa-dev \
+>   wayland-protocols \
+>   libwayland-dev \
+>   libxkbcommon-dev
+> ```
+>
+> After installing those packages, re-run CMake.
+
+---
+
 ### Run without building
 
 If you don’t want to compile Chirp yourself, you can also download a **prebuilt binary** directly from GitHub:
