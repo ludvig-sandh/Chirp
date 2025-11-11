@@ -9,6 +9,9 @@
 #include "audio/preset/AudioPresetSerialization.hpp"
 #include "audio/preset/BuiltInPresetsLoader.hpp"
 
+#include <optional>
+#include <cassert>
+
 void PresetLoaderWindow::Render(AudioPreset& preset) const {
     ConfigureWindow();
     DrawPresetLoader(preset);
@@ -110,32 +113,32 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
     // --- Select and load built-in preset ---
     auto& loader = BuiltInPresetsLoader::GetShared();
     auto& presetNames = loader.GetPresetNames();
-    static int currentPresetIndex = loader.GetIndexOfDefaultPreset(); // index of the selected preset
-
+    
     if (presetNames.empty()) {
         ImGui::TextDisabled("No built-in presets found.");
         return;
     }
 
+    int selectedPresetIndex = loader.GetIndexOfDefaultPreset().value_or(0);
+    assert(selectedPresetIndex < std::ssize(presetNames) && "PROGRAMMING ERROR: GetIndexOfDefaultPreset() returned index larger than list of presets itself.");
+
     // Current label: show the selected preset name, or placeholder
-    const char* currentLabel =
-        (currentPresetIndex >= 0 && currentPresetIndex < (int)presetNames.size())
-        ? presetNames[currentPresetIndex].c_str()
-        : "Select preset...";
+    const char* currentLabel = presetNames[selectedPresetIndex].c_str();
 
     if (ImGui::BeginCombo("Built-in Presets", currentLabel)) {
-        for (int i = 0; i < (int)presetNames.size(); i++) {
-            bool isSelected = (currentPresetIndex == i);
+        for (int i = 0; i < std::ssize(presetNames); i++) {
+            bool isSelected = (selectedPresetIndex == i);
             if (ImGui::Selectable(presetNames[i].c_str(), isSelected)) {
-                currentPresetIndex = i;
+                selectedPresetIndex = i;
 
                 // Load the selected preset
                 loader.LoadBuiltInPreset(preset, presetNames[i]);
 
                 ImGui::OpenPopup("audio/presetLoadedPopup");
             }
-            if (isSelected)
+            if (isSelected) {
                 ImGui::SetItemDefaultFocus();
+            }
         }
         ImGui::EndCombo();
     }
@@ -144,7 +147,7 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
     if (ImGui::BeginPopup("audio/presetLoadedPopup")) {
         ImGui::TextColored(ImVec4(0.3f, 1.0f, 0.3f, 1.0f),
                            "audio/preset '%s' loaded successfully!",
-                           presetNames[currentPresetIndex].c_str());
+                           presetNames[selectedPresetIndex].c_str());
         ImGui::EndPopup();
     }
 }

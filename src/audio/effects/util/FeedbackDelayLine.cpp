@@ -15,7 +15,7 @@ void FeedbackDelayLine::Init() {
     // Safety clamp
     const float safeMaxDelay = std::max(MAX_DELAY_SEC, MIN_DELAY_SEC);
 
-    m_bufferSize = static_cast<size_t>(std::ceil(safeMaxDelay * SAMPLE_RATE)) + 1;
+    m_bufferSize = static_cast<int>(std::ceil(safeMaxDelay * SAMPLE_RATE)) + 1;
 
     m_buffer.assign(m_bufferSize, 0.0f);
     m_writeIndex = 0;
@@ -26,7 +26,7 @@ void FeedbackDelayLine::Init() {
 void FeedbackDelayLine::SetDelayTime(float seconds) noexcept{
     // Clamp to available buffer size
     float clamped = std::clamp(seconds, MIN_DELAY_SEC, static_cast<float>(m_bufferSize - 1) / SAMPLE_RATE);
-    m_delaySamples = static_cast<size_t>(clamped * SAMPLE_RATE);
+    m_delaySamples = static_cast<int>(clamped * SAMPLE_RATE);
 }
 
 void FeedbackDelayLine::SetFeedback(float fb) noexcept {
@@ -38,9 +38,7 @@ float FeedbackDelayLine::Process(float input) noexcept {
         return input; // not initialized yet, pass-through
     }
 
-    const size_t readIndex =
-        (m_writeIndex + m_bufferSize - m_delaySamples) % m_bufferSize;
-
+    const int readIndex = (m_writeIndex + m_bufferSize - m_delaySamples) % m_bufferSize;
     const float delayed = m_buffer[readIndex];
 
     // Write new sample (input + delayed * feedback)

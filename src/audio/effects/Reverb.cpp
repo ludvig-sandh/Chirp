@@ -26,8 +26,7 @@ void Reverb::ProcessFrame(AudioFrame& output) {
 
     // --- Parallel comb filters ---
     AudioFrame combOut;
-    for (size_t i = 0; i < combBuffers.size(); ++i)
-    {
+    for (int i = 0; i < std::ssize(combBuffers); ++i) {
         std::vector<AudioFrame>& buf = combBuffers[i];
         int delay = combDelays[i];
         AudioFrame& filterState = combFilterState[i];
@@ -41,13 +40,12 @@ void Reverb::ProcessFrame(AudioFrame& output) {
     }
 
     // --- Normalize wet level ---
-    combOut /= static_cast<float>(combBuffers.size());
+    combOut /= static_cast<float>(std::ssize(combBuffers));
     combOut *= 1.5f;  // restore energy after averaging
 
     // --- Series allpass filters for diffusion ---
     AudioFrame apOut = combOut;
-    for (size_t i = 0; i < allpassBuffers.size(); ++i)
-    {
+    for (int i = 0; i < std::ssize(allpassBuffers); ++i) {
         std::vector<AudioFrame>& buf = allpassBuffers[i];
         int delay = allpassDelays[i];
         AudioFrame bufOut = buf[posAllpass[i]];

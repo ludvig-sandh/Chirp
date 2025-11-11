@@ -12,8 +12,8 @@ Delay::Delay(float delaySeconds)
 // Set delay in seconds
 void Delay::SetDelay(float delaySeconds) {
     m_delayInSeconds = delaySeconds;
-    size_t newDelaySamples = static_cast<size_t>(std::round(m_delayInSeconds * SAMPLE_RATE)) + 1; // +1 for safety margin
-    if (m_buffer.size() != newDelaySamples) {
+    int newDelaySamples = static_cast<int>(std::round(m_delayInSeconds * SAMPLE_RATE)) + 1; // +1 for safety margin
+    if (std::ssize(m_buffer) != newDelaySamples) {
         m_buffer.resize(newDelaySamples, 0.0f);
         m_writeIndex = 0;
     }
@@ -28,13 +28,13 @@ float Delay::Process(float input) {
     int delaySamples = static_cast<int>(std::round(m_delayInSeconds * SAMPLE_RATE));
     int readIndex = m_writeIndex - delaySamples;
     if (readIndex < 0) {
-        readIndex += static_cast<int>(m_buffer.size());
+        readIndex += std::ssize(m_buffer);
     }
 
     float delayedSample = m_buffer[readIndex];
 
-    m_buffer[m_writeIndex] = input;  // store current input in delay buffer
-    m_writeIndex = (m_writeIndex + 1) % m_buffer.size();  // wrap around
+    m_buffer[m_writeIndex] = input; // store current input in delay buffer
+    m_writeIndex = (m_writeIndex + 1) % std::ssize(m_buffer); // wrap around
 
     return delayedSample;
 }

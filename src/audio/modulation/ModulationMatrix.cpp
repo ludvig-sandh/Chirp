@@ -15,7 +15,7 @@ void ModulationMatrix::AddRoute(ModulationRoute route) {
 void ModulationMatrix::ApplyModulations() {
     // Cache for one audio sample frame
     std::unordered_map<LFO*, float> cachedValues;
-    cachedValues.reserve(m_routes.size());
+    cachedValues.reserve(std::ssize(m_routes));
 
     for (auto& route : m_routes) {
         LFO* src = route.source.get();

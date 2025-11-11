@@ -5,19 +5,18 @@
 
 #include <memory>
 #include <vector>
+#include <cstdint>
 
 constexpr double MIN_DB = -100.0; // floor value for normalization
 constexpr double MAX_DB = 0.0;    // top of range
 
-class FFTHelper {
-public:
-    static std::shared_ptr<std::vector<float>> ComputeFFTMagnitudeDB(const std::vector<float>& window);
-
-    // Disallow creating an instance of this class
-    FFTHelper() = delete;
-
-private:
-    static size_t next_pow2(size_t v);
-    // static vector<complex<double>> rfft_helper(vector<double> data_in);
-    // static vector<double> compute_rfft_and_get_magnitudes(vector<double> data_in);
+namespace FFTHelper {
+    // Computes the magnitude spectrum of the input signal and returns it in decibels.
+    // The input vector is interpreted as a time-domain signal. An FFT is performed,
+    // the magnitude of each frequency bin is taken, and then converted to dB.
+    // Returns a shared_ptr to a vector of magnitudes in decibels.
+    std::shared_ptr<std::vector<float>> ComputeFFTMagnitudeInDecibels(const std::vector<float>& window);
+    
+    // Helper: next power of 2
+    size_t NextPow2(size_t v);
 };

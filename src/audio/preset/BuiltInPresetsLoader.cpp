@@ -46,13 +46,15 @@ std::vector<std::string>& BuiltInPresetsLoader::GetPresetNames() {
     return m_presetNames;
 }
 
-int BuiltInPresetsLoader::GetIndexOfDefaultPreset() {
-    for (size_t idx = 0; idx < GetPresetNames().size(); idx++) {
-        if (GetPresetNames()[idx] == DEFAULT_PRESET_NAME) {
-            return idx;
-        }
+std::optional<int> BuiltInPresetsLoader::GetIndexOfDefaultPreset() {
+    const auto& names = GetPresetNames();
+    auto it = std::ranges::find(names, DEFAULT_PRESET_NAME);
+
+    if (it == names.end()) {
+        return std::nullopt;
     }
-    return -1;
+
+    return std::distance(names.begin(), it);
 }
 
 bool BuiltInPresetsLoader::LoadBuiltInPreset(AudioPreset& preset, const std::string& name) const {

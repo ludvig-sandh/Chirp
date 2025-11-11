@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <filesystem>
+#include <optional>
 #include "audio/preset/AudioPreset.hpp"
 
 
@@ -20,8 +21,8 @@ public:
     std::vector<std::string>& GetPresetNames();
     
     // Returns the index of the name in the list of preset names that corresponds to the default preset.
-    // Returns -1 if it wasn't found.
-    int GetIndexOfDefaultPreset();
+    // Returns std::nullopt if it wasn't found.
+    std::optional<int> GetIndexOfDefaultPreset();
 
     // Load a preset by name (adds ".json" automatically)
     bool LoadBuiltInPreset(AudioPreset& preset, const std::string& name) const;

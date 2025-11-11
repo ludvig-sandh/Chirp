@@ -92,7 +92,7 @@ void GUIManager::RunMainLoop() {
 
             // Store keyboard state (all pressed notes returned) via the shared preset
             for (Note note = Keyboard::FIRST_NOTE; note <= Keyboard::LAST_NOTE; ++note) {
-                size_t noteIdx = static_cast<size_t>(note - Keyboard::FIRST_NOTE);
+                int noteIdx = note - Keyboard::FIRST_NOTE;
                 bool isPressed = allPressedNotes.find(note) != allPressedNotes.end();
                 m_preset->noteStates[noteIdx].store(isPressed);
             }

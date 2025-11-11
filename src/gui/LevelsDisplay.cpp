@@ -9,7 +9,7 @@
 #include <algorithm>
 
 void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 4>& rgba) {
-    size_t pixelIndex = 4 * ((TEXTURE_HEIGHT - y - 1) * TEXTURE_WIDTH + x);
+    int pixelIndex = 4 * ((TEXTURE_HEIGHT - y - 1) * TEXTURE_WIDTH + x);
     pixels[pixelIndex] = rgba[0];
     pixels[pixelIndex + 1] = rgba[1];
     pixels[pixelIndex + 2] = rgba[2];
@@ -32,14 +32,14 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
     std::vector<unsigned char> pixels(TEXTURE_WIDTH * TEXTURE_HEIGHT * 4, 0);
 
     // Find out how tall the bars should be in the texture
-    size_t numVolumeBarsLeft = static_cast<size_t>(normL * maxVolumeBars);
-    size_t numVolumeBarsRight = static_cast<size_t>(normR * maxVolumeBars);
-    size_t numRecentMaxVolumeBarsLeft = static_cast<size_t>(m_leftHistory.GetMaxWithDecay() * maxVolumeBars);
-    size_t numRecentMaxVolumeBarsRight = static_cast<size_t>(m_rightHistory.GetMaxWithDecay() * maxVolumeBars);
+    int numVolumeBarsLeft = static_cast<int>(normL * maxVolumeBars);
+    int numVolumeBarsRight = static_cast<int>(normR * maxVolumeBars);
+    int numRecentMaxVolumeBarsLeft = static_cast<int>(m_leftHistory.GetMaxWithDecay() * maxVolumeBars);
+    int numRecentMaxVolumeBarsRight = static_cast<int>(m_rightHistory.GetMaxWithDecay() * maxVolumeBars);
 
     // Left channel
-    for (size_t bar = 0; bar < numRecentMaxVolumeBarsLeft; bar++) {
-        size_t y = bar + 1;
+    for (int bar = 0; bar < numRecentMaxVolumeBarsLeft; bar++) {
+        int y = bar + 1;
         if (bar < numVolumeBarsLeft) {
             // Current vol
             SetPixelHelper(pixels, 1, y, GUIConstants::Colors::HIGHLIGHT);
@@ -52,8 +52,8 @@ void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
     }
 
     // Right channel
-    for (size_t bar = 0; bar < numRecentMaxVolumeBarsRight; bar++) {
-        size_t y = bar + 1;
+    for (int bar = 0; bar < numRecentMaxVolumeBarsRight; bar++) {
+        int y = bar + 1;
         if (bar < numVolumeBarsRight) {
             // Current vol
             SetPixelHelper(pixels, 4, y, GUIConstants::Colors::HIGHLIGHT);

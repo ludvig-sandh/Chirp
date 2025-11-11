@@ -40,7 +40,7 @@ private:
     static const int IMAGE_WIDTH = 32;
     static inline const float IMAGE_START_X = 16.0f; // Offset in x from left window border
 
-    static const size_t maxVolumeBars = TEXTURE_HEIGHT - 2; // Leave 1 pixel gap on top and bottom
+    static const int maxVolumeBars = TEXTURE_HEIGHT - 2; // Leave 1 pixel gap on top and bottom
 
     LevelsHistory m_leftHistory;
     LevelsHistory m_rightHistory;

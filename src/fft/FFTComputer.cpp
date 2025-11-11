@@ -28,10 +28,10 @@ void FFTComputer::StoreNewAudioLevels(AudioFrame result) {
 void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
     // Copy over the output buffer into a vector we can "produce"
     std::unique_ptr<std::vector<float>> output = std::make_unique<std::vector<float>>();
-    output->reserve(buffer.numFrames);
+    output->reserve(std::ssize(buffer));
 
     AudioFrame rms{0.0f, 0.0f};
-    for (const AudioFrame& frame : buffer.outputBuffer) {
+    for (const auto& frame : buffer) {
         // Sum of squares (RMS)
         rms.left += frame.left * frame.left;
         rms.right += frame.right * frame.right;
@@ -40,8 +40,8 @@ void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
     }
 
     // Mean and root (RMS)
-    rms.left /= static_cast<float>(buffer.numFrames);
-    rms.right /= static_cast<float>(buffer.numFrames);
+    rms.left /= static_cast<float>(std::ssize(buffer));
+    rms.right /= static_cast<float>(std::ssize(buffer));
     rms.left = std::sqrt(rms.left);
     rms.right = std::sqrt(rms.right);
 
@@ -60,11 +60,11 @@ void FFTComputer::Start(std::atomic<bool>& running) {
         }
 
         // Extend fft buffer with the new audio chunk
-        m_fftBuffer.reserve(m_fftBuffer.size() + distance(audioToExtend->begin(), audioToExtend->end()));
+        m_fftBuffer.reserve(std::ssize(m_fftBuffer) + distance(audioToExtend->begin(), audioToExtend->end()));
         m_fftBuffer.insert(m_fftBuffer.end(), audioToExtend->begin(), audioToExtend->end());
 
-        if (m_fftBuffer.size() > 1024) {
-            std::shared_ptr<std::vector<float>> fft_magnitude = FFTHelper::ComputeFFTMagnitudeDB(m_fftBuffer);
+        if (std::ssize(m_fftBuffer) > 1024) {
+            std::shared_ptr<std::vector<float>> fft_magnitude = FFTHelper::ComputeFFTMagnitudeInDecibels(m_fftBuffer);
 
             // Pop oldest audio chunk from the fft buffer
             m_fftBuffer.erase(m_fftBuffer.begin(), m_fftBuffer.begin() + audioToExtend->size());

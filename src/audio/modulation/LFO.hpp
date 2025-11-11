@@ -82,7 +82,7 @@ struct LFOConfig {
 
     static std::vector<std::string> GetDestinationNames() {
         std::vector<std::string> names;
-        names.reserve(DESTINATION_INFOS.size());
+        names.reserve(std::ssize(DESTINATION_INFOS));
 
         for (const auto& entry : DESTINATION_INFOS) {
             names.push_back(std::string(entry.second.name));

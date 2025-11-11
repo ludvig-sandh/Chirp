@@ -51,8 +51,8 @@ std::set<Note> MidiInput::GetPressedNotes() {
             if (msg.empty()) break;
 
             const unsigned char status = msg[0];
-            const unsigned char data1  = msg.size() > 1 ? msg[1] : 0; // note number
-            const unsigned char data2  = msg.size() > 2 ? msg[2] : 0; // velocity
+            const unsigned char data1  = std::ssize(msg) > 1 ? msg[1] : 0; // note number
+            const unsigned char data2  = std::ssize(msg) > 2 ? msg[2] : 0; // velocity
             const int command = status & 0xF0;
 
             Note note = MidiNoteToNote(static_cast<int>(data1));

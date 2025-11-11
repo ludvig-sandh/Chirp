@@ -19,5 +19,5 @@ private:
     std::deque<float> m_history;
 
     float s_decay = 0.02;
-    size_t s_historySize = 30;
+    int s_historySize = 30;
 };

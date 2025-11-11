@@ -7,7 +7,7 @@
 
 void LevelsHistory::Add(float db) {
     m_history.push_back(db);
-    if (m_history.size() > s_historySize) {
+    if (std::ssize(m_history) > s_historySize) {
         m_history.pop_front();
     }
 

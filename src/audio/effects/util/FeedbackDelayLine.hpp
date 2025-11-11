@@ -34,9 +34,9 @@ private:
     void Init();
 
     std::vector<float> m_buffer;
-    size_t m_bufferSize   = 0;
-    size_t m_writeIndex   = 0;
-    size_t m_delaySamples = 0;
+    int m_bufferSize   = 0;
+    int m_writeIndex   = 0;
+    int m_delaySamples = 0;
     
     float m_feedback   = 0.5f;
 };

@@ -22,7 +22,7 @@ void UIKey::Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) con
     drawList->AddRect(rectMin, rectMax, IM_COL32(0, 0, 0, 255), 2.0f);
 }
 
-Keyboard::Keyboard(size_t keyboardWidth)
+Keyboard::Keyboard(int keyboardWidth)
     : m_numKeys(std::abs(FIRST_NOTE - LAST_NOTE) + 1) // Inclusive ends
     , m_keys(HelpCreateKeys(keyboardWidth))
     , m_windowWidth(keyboardWidth)
@@ -74,11 +74,11 @@ void Keyboard::ConfigureWindow() const {
     ImGui::SeparatorText("Piano");
 }
 
-std::vector<UIKey> Keyboard::HelpCreateKeys(size_t keyboardWidth) {
+std::vector<UIKey> Keyboard::HelpCreateKeys(int keyboardWidth) {
     std::vector<UIKey> result;
     result.reserve(std::abs(FIRST_NOTE - LAST_NOTE));
 
-    size_t numWhiteKeys = HelpCountWhiteKeys();
+    int numWhiteKeys = HelpCountWhiteKeys();
     float whiteKeyWidth = static_cast<float>(keyboardWidth - KEYBOARD_PADDING) / numWhiteKeys;
     float blackKeyWidth = whiteKeyWidth / WHITE_TO_BLACK_KEY_WIDTH_RATIO;
     float x = 0.0f;
@@ -98,8 +98,8 @@ std::vector<UIKey> Keyboard::HelpCreateKeys(size_t keyboardWidth) {
     return result;
 }
 
-size_t Keyboard::HelpCountWhiteKeys() {
-    size_t count = 0;
+int Keyboard::HelpCountWhiteKeys() {
+    int count = 0;
     for (Note note = FIRST_NOTE; note <= LAST_NOTE; ++note) {
         if (!note.IsBlackKey()) {
             count++;

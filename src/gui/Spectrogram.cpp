@@ -11,8 +11,8 @@
 // update per audio block
 void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
     // Detect size change and reallocate magnitude history if needed
-    if (m_specHeight != (int)magnitudes.size()) {
-        m_specHeight = (int)magnitudes.size();
+    if (m_specHeight != std::ssize(magnitudes)) {
+        m_specHeight = std::ssize(magnitudes);
         // Reallocate magnitude history buffer
         m_magnitudeHistory.assign(m_specWidth, std::vector<float>(m_specHeight, 0.0f));
         ReallocateTexture();

@@ -66,6 +66,6 @@ private:
     // Background color
     static inline const ImVec4 CLEAR_COLOR = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);
 
-    static inline const size_t SCREEN_WIDTH = 1280;
-    static inline const size_t SCREEN_HEIGHT = 800;
+    static inline const int SCREEN_WIDTH = 1280;
+    static inline const int SCREEN_HEIGHT = 800;
 }; 

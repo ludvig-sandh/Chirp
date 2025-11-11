@@ -110,7 +110,7 @@ int AudioBackend::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
 
     // Copy result back to output buffer
     float *out = (float*)outputBuffer;
-    for (const AudioFrame& frame : buffer.outputBuffer) {
+    for (const auto& frame : buffer) {
         *out++ = frame.left;
         *out++ = frame.right;
     }

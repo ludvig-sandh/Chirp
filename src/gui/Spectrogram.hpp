@@ -37,7 +37,7 @@ private:
 
     GLuint m_spectrogramTex = 0;
     int m_currentColumn = 0;
-    int m_specHeight = 0; // dynamically set from magnitudes.size()
+    int m_specHeight = 0; // dynamically set from magnitudes size
     const int m_specWidth = 256; // number of time slices visible
     std::vector<std::vector<float>> m_magnitudeHistory;
 };

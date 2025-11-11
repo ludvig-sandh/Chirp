@@ -11,13 +11,13 @@
 #include <algorithm>
 
 void SpectrumWindow::PushMagnitudes(const std::vector<float>& magnitudes) {
-    if (m_magnitudes.size() != magnitudes.size()) {
+    if (std::ssize(m_magnitudes) != std::ssize(magnitudes)) {
         m_magnitudes = magnitudes;
-        m_smoothed.assign(magnitudes.size(), 0.0f);
+        m_smoothed.assign(std::ssize(magnitudes), 0.0f);
     }
 
     // Smoothing so bars don't jitter too hard
-    for (size_t i = 0; i < magnitudes.size(); i++) {
+    for (int i = 0; i < std::ssize(magnitudes); i++) {
         float clamped = std::clamp(magnitudes[i], 0.0f, 1.0f);
         m_smoothed[i] = SMOOTHING_FACTOR * m_smoothed[i] + (1.0f - SMOOTHING_FACTOR) * clamped;
     }
@@ -33,7 +33,7 @@ void SpectrumWindow::Render() {
 
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
-    const int n = (int)m_smoothed.size();
+    const int n = std::ssize(m_smoothed);
     float barWidth = size.x / (float)n;
 
     for (int i = 0; i < n; i++) {

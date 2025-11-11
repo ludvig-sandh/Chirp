@@ -33,7 +33,7 @@ public:
     static inline const Note FIRST_NOTE{Key::A, 0};
     static inline const Note LAST_NOTE{Key::C, 8};
 
-    Keyboard(size_t windowWidth);
+    Keyboard(int windowWidth);
 
     // Renders the keyboard and all pressed notes. The set of pressed notes
     // from QWERTY keyboard (rather than midi keyboard) is provided via parameter "pressedQwertyNotes".
@@ -43,10 +43,10 @@ public:
 private:
     void ConfigureWindow() const;
 
-    static std::vector<UIKey> HelpCreateKeys(size_t keyboardWidth);
+    static std::vector<UIKey> HelpCreateKeys(int keyboardWidth);
 
     // Counts the number of white keys between 
-    static size_t HelpCountWhiteKeys();
+    static int HelpCountWhiteKeys();
 
     // Returns a pointer to the key in m_keys that is currently pressed via mouse click, or if none is pressed, nullptr
     std::optional<Note> GetMouseKeyboardInput(const ImVec2& mousePosRelative) const;
@@ -54,9 +54,9 @@ private:
     // Draws the keys one by one, making sure any pressed key is highlighted
     void DrawAllKeys(const ImVec2& offset, std::set<Note> pressedNotes) const;
 
-    size_t m_numKeys;
+    int m_numKeys;
     std::vector<UIKey> m_keys;
-    size_t m_windowWidth;
+    int m_windowWidth;
 
     static inline const float WHITE_KEY_HEIGHT = 120.0f;
     static inline const float BLACK_KEY_HEIGHT = 70.0f;

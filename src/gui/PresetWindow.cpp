@@ -283,8 +283,8 @@ void PresetWindow::DrawLFO1() const {
     LFOConfig::Mode lfo1ModeTemp = m_preset->synthLFO1Mode.load();
 
     if (ImGui::BeginCombo("Mode##LFO1", LFOConfig::ModeNames[static_cast<int>(lfo1ModeTemp)])) {
-        for (size_t n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
-            bool isSelected = (static_cast<size_t>(lfo1ModeTemp) == n);
+        for (int n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
+            bool isSelected = (static_cast<int>(lfo1ModeTemp) == n);
             if (ImGui::Selectable(LFOConfig::ModeNames[n], isSelected)) {
                 lfo1ModeTemp = static_cast<LFOConfig::Mode>(n);
             }
@@ -301,8 +301,8 @@ void PresetWindow::DrawLFO1() const {
     std::vector<std::string> destinationNames = LFOConfig::GetDestinationNames();
 
     if (ImGui::BeginCombo("Destination##LFO1", destinationNames[static_cast<int>(lfo1DestinationTemp)].c_str())) {
-        for (size_t n = 0; n < LFOConfig::DESTINATION_INFOS.size(); n++) {
-            bool isSelected = (static_cast<size_t>(lfo1DestinationTemp) == n);
+        for (int n = 0; n < std::ssize(LFOConfig::DESTINATION_INFOS); n++) {
+            bool isSelected = (static_cast<int>(lfo1DestinationTemp) == n);
             if (ImGui::Selectable(destinationNames[n].c_str(), isSelected)) {
                 lfo1DestinationTemp = static_cast<LFOConfig::Destination>(n);
             }
@@ -392,8 +392,8 @@ void PresetWindow::DrawLFO2() const {
     LFOConfig::Mode lfo2ModeTemp = m_preset->synthLFO2Mode.load();
 
     if (ImGui::BeginCombo("Mode##LFO2", LFOConfig::ModeNames[static_cast<int>(lfo2ModeTemp)])) {
-        for (size_t n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
-            bool isSelected = (static_cast<size_t>(lfo2ModeTemp) == n);
+        for (int n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
+            bool isSelected = (static_cast<int>(lfo2ModeTemp) == n);
             if (ImGui::Selectable(LFOConfig::ModeNames[n], isSelected)) {
                 lfo2ModeTemp = static_cast<LFOConfig::Mode>(n);
             }
@@ -410,8 +410,8 @@ void PresetWindow::DrawLFO2() const {
     std::vector<std::string> destinationNames = LFOConfig::GetDestinationNames();
 
     if (ImGui::BeginCombo("Destination##LFO2", destinationNames[static_cast<int>(lfo2DestinationTemp)].c_str())) {
-        for (size_t n = 0; n < LFOConfig::DESTINATION_INFOS.size(); n++) {
-            bool isSelected = (static_cast<size_t>(lfo2DestinationTemp) == n);
+        for (int n = 0; n < std::ssize(LFOConfig::DESTINATION_INFOS); n++) {
+            bool isSelected = (static_cast<int>(lfo2DestinationTemp) == n);
             if (ImGui::Selectable(destinationNames[n].c_str(), isSelected)) {
                 lfo2DestinationTemp = static_cast<LFOConfig::Destination>(n);
             }

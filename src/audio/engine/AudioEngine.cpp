@@ -31,7 +31,7 @@ AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FF
 {}
 
 // Recurse from the root of the graph
-AudioBuffer AudioEngine::ProcessBuffer(size_t numFrames) {
+AudioBuffer AudioEngine::ProcessBuffer(int numFrames) {
     std::shared_ptr<AudioProcessorNode> rootNode = m_synthLayout.GetRootNode();
     if (!rootNode) {
         // Empty processing graph, so provide empty audio
@@ -41,11 +41,11 @@ AudioBuffer AudioEngine::ProcessBuffer(size_t numFrames) {
     m_synthLayout.LoadPreset(*m_preset);
 
     AudioBuffer result(numFrames);
-    for (size_t i = 0; i < numFrames; i++) {
+    for (auto& frame : result) {
         rootNode->ClearVisited();
         rootNode->ClearModulations();
         m_synthLayout.ApplyAllModulations();
-        result.outputBuffer[i] = rootNode->GenerateFrame(*m_preset);
+        frame = rootNode->GenerateFrame(*m_preset);
     }
 
     // Send buffer to FFT thread
