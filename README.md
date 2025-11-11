@@ -174,6 +174,7 @@ Chirp makes use of the following open-source projects:
 - [Dear ImGui](https://github.com/ocornut/imgui)
 - [GLFW](https://github.com/glfw/glfw)
 - [PortAudio](http://www.portaudio.com/)
+- [RtMidi](https://github.com/thestk/rtmidi)
 - [ImGuiFileDialog](https://github.com/aiekick/ImGuiFileDialog)
 - [PocketFFT](https://gitlab.mpcdf.mpg.de/mtr/pocketfft)
 
