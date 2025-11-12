@@ -29,6 +29,8 @@ At the same time, I wanted to challenge myself to create a **complete, cross-pla
 My goal has been to create something personal that combines my interests in music and programming.
 Since 2020, I've been spending as much time on coding as I have on creating music, so a great deal of inspiration for this project has come from that part of my life.
 
+No samples are used whatsoever in this application. The audio you hear is generated purely from code and first principles. No third-party digital signal processing libraries are used.
+
 ---
 
 ## Features
