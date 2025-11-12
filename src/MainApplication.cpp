@@ -25,7 +25,7 @@ void MainApplication::Start() {
     });
 
     // Start gui on main thread, blocks until application closes
-    m_gui.RunMainLoop();
+    m_gui.Run();
 
     // Signal the audio engine to stop when the GUI is closed by the user
     m_isRunning.store(false);

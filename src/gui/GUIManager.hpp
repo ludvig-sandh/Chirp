@@ -31,20 +31,29 @@
 // Responsible for managing the GLFW window and running the main loop
 class GUIManager {
 public:
+    // Constructs the GUI manager with the given audio preset and FFT processor
     GUIManager(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
 
+    // Cleans up GUI resources and shuts down the window system
     ~GUIManager();
 
-    void RunMainLoop();
+    // Runs the main application loop, processing input and rendering all windows
+    void Run();
     
-    static void glfw_error_callback(int error, const char* description);
+    // GLFW error callback for reporting initialization or runtime errors
+    static void GFLWErrorCallback(int error, const char* description);
     
 private:
+    // Initializes GLFW, ImGui, and window resources; returns the created window handle
     GLFWwindow *InitAux();
+    
+    // Releases GLFW, ImGui, and related GUI resources
     void DeinitAux();
 
+    // Returns a set of notes currently pressed using the keyboard (not midi keyboard, QWERTY keyboard)
     std::set<Audio::Core::Note> GetQwertyNotesPressed() const;
 
+    // Returns a set of all notes pressed (QWERTY + MIDI input)
     std::set<Audio::Core::Note> GetAllPressedNotes();
 
     std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
@@ -62,9 +71,6 @@ private:
     GlobalSettingsWindow m_globalSettingsWindow;
     PresetLoaderWindow m_presetLoaderWindow;
     MidiInput m_midiInput;
-
-    // Background color
-    static inline const ImVec4 CLEAR_COLOR = ImVec4(17.0 / 255.0, 38.0 / 255.0, 92.0 / 255.0, 0.5f);
 
     static inline const int SCREEN_WIDTH = 1280;
     static inline const int SCREEN_HEIGHT = 800;

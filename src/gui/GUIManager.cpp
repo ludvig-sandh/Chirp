@@ -35,7 +35,7 @@ GUIManager::~GUIManager() {
     DeinitAux();
 }
 
-void GUIManager::RunMainLoop() {
+void GUIManager::Run() {
     while (!glfwWindowShouldClose(m_window))
     {
         // Poll and handle events (inputs, window resize, etc.)
@@ -110,12 +110,12 @@ void GUIManager::RunMainLoop() {
     }
 }
 
-void GUIManager::glfw_error_callback(int error, const char* description) {
+void GUIManager::GFLWErrorCallback(int error, const char* description) {
     std::cerr << "GLFW Error " << error << ": " << description << "\n";
 }
 
 GLFWwindow *GUIManager::InitAux() {
-    glfwSetErrorCallback(glfw_error_callback);
+    glfwSetErrorCallback(GFLWErrorCallback);
     if (!glfwInit())
         return nullptr;
 
@@ -171,7 +171,8 @@ GLFWwindow *GUIManager::InitAux() {
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Set background color
-    glClearColor(CLEAR_COLOR.x * CLEAR_COLOR.w, CLEAR_COLOR.y * CLEAR_COLOR.w, CLEAR_COLOR.z * CLEAR_COLOR.w, CLEAR_COLOR.w);
+    ImVec4 bgColor = GUIConstants::Colors::ToImVec(GUIConstants::Colors::BG);
+    glClearColor(bgColor.x * bgColor.w, bgColor.y * bgColor.w, bgColor.z * bgColor.w, bgColor.w);
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
