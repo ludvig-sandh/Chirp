@@ -1,28 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include <stdio.h>
-#include <cmath>
 #include <iostream>
 #include <memory>
-#include <vector>
-#include <cassert>
-#include <thread>
-#include <unordered_set>
 
-#include "portaudio.h"
 #include "audio/engine/AudioEngine.hpp"
-#include "audio/core/Frequency.hpp"
-#include "audio/preset/AudioPreset.hpp"
-#include "audio/generator/Oscillator.hpp"
-#include "audio/core/Waveform.hpp"
-#include "audio/modulation/RandomLFO.hpp"
-#include "audio/effects/Mixer.hpp"
-#include "audio/effects/BaseFilter.hpp"
-#include "audio/effects/LowPassFilter.hpp"
-#include "audio/effects/HighPassFilter.hpp"
-#include "audio/effects/FeedbackDelay.hpp"
-#include "audio/effects/Reverb.hpp"
 
 AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
@@ -59,7 +41,7 @@ void AudioEngine::Start(std::atomic<bool>& running) {
     if (paInit.Result() != paNoError) {
         std::cerr << "An error occurred while using the portaudio stream\n";
         std::cerr << "Error number: %d\n" << paInit.Result();
-        std::cerr << "Error message: %s\n" << Pa_GetErrorText( paInit.Result() );
+        std::cerr << "Error message: %s\n" << Pa_GetErrorText(paInit.Result());
     }
 
     if (m_backend.Open(Pa_GetDefaultOutputDevice())) {
@@ -72,5 +54,7 @@ void AudioEngine::Start(std::atomic<bool>& running) {
         
         m_backend.Close();
     }
+
+    // Signal the FFT thread that no more audio is coming.
     m_fftComputer->FinishedProducing();
 }

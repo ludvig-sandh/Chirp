@@ -23,13 +23,20 @@ class AudioBackend {
 public:
     AudioBackend(AudioEngine *engine);
 
+    // Opens a stream for the audio device for playback
     bool Open(PaDeviceIndex index);
+
+    // Closes the stream
     bool Close();
+    
+    // Starts the stream
     bool Start();
+
+    // Stops the stream
     bool Stop();
 
 private:
-    // The instance callback
+    // The instance callback for providing the audio buffer
     int PaCallbackMethod(const void *inputBuffer, void *outputBuffer,
         unsigned long framesPerBuffer,
         const PaStreamCallbackTimeInfo* timeInfo,
@@ -41,7 +48,8 @@ private:
         const PaStreamCallbackTimeInfo* timeInfo,
         PaStreamCallbackFlags statusFlags,
         void *userData);
-
+    
+    // The instance callback when playback is done
     void PaStreamFinishedMethod();
 
     // This routine is called by portaudio when playback is done

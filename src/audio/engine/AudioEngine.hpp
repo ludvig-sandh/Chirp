@@ -6,12 +6,11 @@
 #include <memory>
 #include <unordered_set>
 
-#include "audio/engine/AudioBackend.hpp"
+#include "portaudio.h"
 #include "audio/preset/AudioPreset.hpp"
-#include "audio/engine/AudioBuffer.hpp"
-#include "audio/engine/AudioProcessorNode.hpp"
 #include "fft/FFTComputer.hpp"
-#include "audio/layout/AudioLayout.hpp"
+#include "audio/engine/AudioBuffer.hpp"
+#include "audio/engine/AudioBackend.hpp"
 #include "audio/layout/SynthLayout.hpp"
 
 #define SAMPLE_RATE (44100)
@@ -23,8 +22,11 @@ public:
     // Recurse from the root of the tree
     AudioBuffer ProcessBuffer(int numFrames);
 
+    // Starts the audio engine
     void Start(std::atomic<bool>& running);
+
 private:
+    // RAII class for taking care of portaudio init/deinit
     class ScopedPaHandler {
     public:
         ScopedPaHandler() : m_result(Pa_Initialize()) {}
