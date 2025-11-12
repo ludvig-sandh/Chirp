@@ -17,7 +17,7 @@
 #include "gui/Spectrogram.hpp"
 #include "fft/FFTComputer.hpp"
 #include "gui/LevelsWindow.hpp"
-#include "gui/Keyboard.hpp"
+#include "gui/KeyboardWindow.hpp"
 #include "gui/PresetWindow.hpp"
 #include "gui/GlobalSettingsWindow.hpp"
 #include "gui/PresetLoaderWindow.hpp"
@@ -49,7 +49,7 @@ private:
 
     std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
-    Keyboard m_keyboard;
+    KeyboardWindow m_keyboard;
     PresetWindow m_presetWindow;
     WaveformWindow m_oscAWaveformWindow;
     WaveformWindow m_oscBWaveformWindow;

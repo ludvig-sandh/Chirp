@@ -91,8 +91,8 @@ void GUIManager::RunMainLoop() {
             allPressedNotes = m_keyboard.Render(allPressedNotes);
 
             // Store keyboard state (all pressed notes returned) via the shared preset
-            for (Audio::Core::Note note = Keyboard::FIRST_NOTE; note <= Keyboard::LAST_NOTE; ++note) {
-                int noteIdx = note - Keyboard::FIRST_NOTE;
+            for (Audio::Core::Note note = KeyboardWindow::FIRST_NOTE; note <= KeyboardWindow::LAST_NOTE; ++note) {
+                int noteIdx = note - KeyboardWindow::FIRST_NOTE;
                 bool isPressed = allPressedNotes.find(note) != allPressedNotes.end();
                 m_preset->noteStates[noteIdx].store(isPressed);
             }

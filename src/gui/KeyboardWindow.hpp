@@ -25,7 +25,7 @@ struct UIKey {
 };
 
 // Represents the keyboard UI element
-class Keyboard {
+class KeyboardWindow {
 public:
     static inline const float WINDOW_HEIGHT = 160.0f;
     
@@ -33,7 +33,7 @@ public:
     static inline const Audio::Core::Note FIRST_NOTE{Audio::Core::Key::A, 0};
     static inline const Audio::Core::Note LAST_NOTE{Audio::Core::Key::C, 8};
 
-    Keyboard(int windowWidth);
+    KeyboardWindow(int windowWidth);
 
     // Renders the keyboard and all pressed notes. The set of pressed notes
     // from QWERTY keyboard (rather than midi keyboard) is provided via parameter "pressedQwertyNotes".

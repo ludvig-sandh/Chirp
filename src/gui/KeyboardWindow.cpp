@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "gui/Keyboard.hpp"
+#include "gui/KeyboardWindow.hpp"
 
 void UIKey::Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) const {
     static const ImU32 pressedKeyColor = IM_COL32(
@@ -22,13 +22,13 @@ void UIKey::Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) con
     drawList->AddRect(rectMin, rectMax, IM_COL32(0, 0, 0, 255), 2.0f);
 }
 
-Keyboard::Keyboard(int keyboardWidth)
+KeyboardWindow::KeyboardWindow(int keyboardWidth)
     : m_numKeys(std::abs(FIRST_NOTE - LAST_NOTE) + 1) // Inclusive ends
     , m_keys(HelpCreateKeys(keyboardWidth))
     , m_windowWidth(keyboardWidth)
 {}
 
-std::set<Audio::Core::Note> Keyboard::Render(const std::set<Audio::Core::Note>& pressedQwertyNotes) const {
+std::set<Audio::Core::Note> KeyboardWindow::Render(const std::set<Audio::Core::Note>& pressedQwertyNotes) const {
     ConfigureWindow();
 
     const ImVec2 offset = ImGui::GetCursorScreenPos();
@@ -51,7 +51,7 @@ std::set<Audio::Core::Note> Keyboard::Render(const std::set<Audio::Core::Note>& 
 }
 
 
-void Keyboard::ConfigureWindow() const {
+void KeyboardWindow::ConfigureWindow() const {
     // Get viewport (the main window area)
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
@@ -74,7 +74,7 @@ void Keyboard::ConfigureWindow() const {
     ImGui::SeparatorText("Piano");
 }
 
-std::vector<UIKey> Keyboard::HelpCreateKeys(int keyboardWidth) {
+std::vector<UIKey> KeyboardWindow::HelpCreateKeys(int keyboardWidth) {
     std::vector<UIKey> result;
     result.reserve(std::abs(FIRST_NOTE - LAST_NOTE));
 
@@ -98,7 +98,7 @@ std::vector<UIKey> Keyboard::HelpCreateKeys(int keyboardWidth) {
     return result;
 }
 
-int Keyboard::HelpCountWhiteKeys() {
+int KeyboardWindow::HelpCountWhiteKeys() {
     int count = 0;
     for (Audio::Core::Note note = FIRST_NOTE; note <= LAST_NOTE; ++note) {
         if (!note.IsBlackKey()) {
@@ -108,7 +108,7 @@ int Keyboard::HelpCountWhiteKeys() {
     return count;
 }
 
-std::optional<Audio::Core::Note> Keyboard::GetMouseKeyboardInput(const ImVec2& mousePosRelative) const {
+std::optional<Audio::Core::Note> KeyboardWindow::GetMouseKeyboardInput(const ImVec2& mousePosRelative) const {
     bool isMouseDown = ImGui::IsMouseDown(ImGuiMouseButton_Left);
     auto findInFiltered = [&](auto filter) -> std::optional<Audio::Core::Note> {
         for (auto const& key : m_keys | std::views::filter(filter)) {
@@ -127,7 +127,7 @@ std::optional<Audio::Core::Note> Keyboard::GetMouseKeyboardInput(const ImVec2& m
     return findInFiltered(WHITE_FILTER);
 }
 
-void Keyboard::DrawAllKeys(const ImVec2& offset, std::set<Audio::Core::Note> pressedNotes) const {
+void KeyboardWindow::DrawAllKeys(const ImVec2& offset, std::set<Audio::Core::Note> pressedNotes) const {
     ImDrawList* drawList = ImGui::GetWindowDrawList();
 
     auto drawFilteredKeys = [&](auto&& filter) {

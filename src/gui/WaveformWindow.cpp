@@ -2,7 +2,7 @@
 
 #include "gui/Spectrogram.hpp"
 #include "gui/LevelsWindow.hpp"
-#include "gui/Keyboard.hpp"
+#include "gui/KeyboardWindow.hpp"
 #include "gui/GUIConstants.hpp"
 
 WaveformWindow::WaveformWindow(Audio::Core::WaveformInfo::Type waveformType, const std::string& windowName)
@@ -43,7 +43,7 @@ ImVec2 WaveformWindow::ConfigureWindow(bool comesFirst) const {
     const float xFirstSlot = viewport->Pos.x + viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsWindow::WINDOW_WIDTH;
     const float y = viewport->Pos.y + Spectrogram::WINDOW_HEIGHT;
     const float w = (viewport->Size.x - xFirstSlot) / 2.0f; // Fit two waveform windows in this space
-    const float h = (viewport->Size.y - Spectrogram::WINDOW_HEIGHT - Keyboard::WINDOW_HEIGHT) / 2.0f;
+    const float h = (viewport->Size.y - Spectrogram::WINDOW_HEIGHT - KeyboardWindow::WINDOW_HEIGHT) / 2.0f;
     const float xSecondSlot = xFirstSlot + w;
 
     ImVec2 windowSize(w, h);

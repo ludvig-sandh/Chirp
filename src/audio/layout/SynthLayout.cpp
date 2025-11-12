@@ -3,7 +3,7 @@
 
 #include "audio/layout/SynthLayout.hpp"
 #include "audio/effects/dsp/Time.hpp"
-#include "gui/Keyboard.hpp"
+#include "gui/KeyboardWindow.hpp"
 #include "util/NormalizedFloat.hpp"
 #include <cassert>
 
@@ -44,7 +44,7 @@ std::shared_ptr<Audio::Engine::AudioProcessorNode> SynthLayout::GetRootNode() {
 }
 
 void SynthLayout::LoadPreset(Audio::Preset::AudioPreset& preset) {
-    Audio::Core::Note note = Keyboard::FIRST_NOTE;
+    Audio::Core::Note note = KeyboardWindow::FIRST_NOTE;
     for (auto& isPressed : preset.noteStates) {
         if (isPressed.load()) {
             if (m_pressedNotes.find(note) == m_pressedNotes.end()) {

@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "MidiInput.hpp"
-#include "gui/Keyboard.hpp"
+#include "gui/KeyboardWindow.hpp"
 
 MidiInput::MidiInput() {
     m_midiIn.ignoreTypes(false, false, false);
@@ -110,7 +110,7 @@ std::set<Audio::Core::Note> MidiInput::GetPressedNotes() {
             Audio::Core::Note note = MidiNoteToNote(static_cast<int>(data1));
 
             // Don't allow playing notes outside the keyboard range
-            if (note < Keyboard::FIRST_NOTE || note > Keyboard::LAST_NOTE) {
+            if (note < KeyboardWindow::FIRST_NOTE || note > KeyboardWindow::LAST_NOTE) {
                 continue;
             }
 
