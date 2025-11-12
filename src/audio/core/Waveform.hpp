@@ -24,7 +24,7 @@ namespace WaveformInfo {
 // Base class for representing waveforms, such as sine waves or more complex waves  
 class Waveform {
 public:
-    virtual ~Waveform() noexcept {}
+    virtual ~Waveform() noexcept = default;
 
     // Returns the sample value at a specific phase in the waveform in the range [-1.0f, 0.0f]
     virtual float GetSampleAt(NormalizedFloat phase) noexcept = 0;

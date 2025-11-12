@@ -14,7 +14,7 @@
 class BaseFilter : public AudioProcessorNode {
 public:
     BaseFilter(Frequency cutoff, float Q) noexcept;
-    virtual ~BaseFilter() noexcept {}
+    virtual ~BaseFilter() noexcept = default;
 
     void ProcessFrame(AudioFrame& output) noexcept override;
 

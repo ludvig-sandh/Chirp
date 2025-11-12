@@ -104,8 +104,9 @@ struct LFOConfig {
     int lfoNum = 0; // Identifies the LFO
 };
 
+// Base class for respresenting modulation sources
 class LFO {
 public:
-    virtual ~LFO() = default;
+    virtual ~LFO() noexcept = default;
     virtual float GetNextSample() = 0;
 };
