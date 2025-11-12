@@ -16,41 +16,41 @@ Reverb::Reverb()
 }
 
 void Reverb::SetParams(float feedback, float damping, float wet) {
-    feedback = feedback; // 0.5–0.9 typical
-    damp = damping;      // 0–1 lowpass factor inside combs
-    wetMix = wet;        // 0–1 dry/wet
+    feedback = feedback;
+    damp = damping;
+    wetMix = wet;
 }
 
 void Reverb::ProcessFrame(AudioFrame& output) {
     AudioFrame in = output;
 
-    // --- Parallel comb filters ---
+    // Parallel comb filters
     AudioFrame combOut;
     for (int i = 0; i < std::ssize(combBuffers); ++i) {
         std::vector<AudioFrame>& buf = combBuffers[i];
         int delay = combDelays[i];
         AudioFrame& filterState = combFilterState[i];
 
-        AudioFrame y = buf[posComb[i]];                           // delayed sample
+        AudioFrame y = buf[posComb[i]]; // delayed sample
         filterState = y * (1.0f - damp) + filterState * damp; // damping
-        buf[posComb[i]] = in + filterState * feedback;        // feedback write
+        buf[posComb[i]] = in + filterState * feedback; // feedback write
 
         combOut += y;
         posComb[i] = (posComb[i] + 1) % delay;
     }
 
-    // --- Normalize wet level ---
+    // Normalize wet level
     combOut /= static_cast<float>(std::ssize(combBuffers));
-    combOut *= 1.5f;  // restore energy after averaging
+    combOut *= 1.5f; // Restore energy after averaging
 
-    // --- Series allpass filters for diffusion ---
+    // Series allpass filters for diffusion
     AudioFrame apOut = combOut;
     for (int i = 0; i < std::ssize(allpassBuffers); ++i) {
         std::vector<AudioFrame>& buf = allpassBuffers[i];
         int delay = allpassDelays[i];
         AudioFrame bufOut = buf[posAllpass[i]];
 
-        // allpass filter structure
+        // Allpass filter structure
         AudioFrame x = apOut + (-0.5f) * bufOut;
         buf[posAllpass[i]] = x;
         apOut = bufOut + x * 0.5f;
@@ -58,13 +58,13 @@ void Reverb::ProcessFrame(AudioFrame& output) {
         posAllpass[i] = (posAllpass[i] + 1) % delay;
     }
 
-    // --- Equal-power dry/wet mixing ---
+    // Equal-power dry/wet mixing
     wetMix = std::clamp(wetMix, 0.0f, 1.0f);
     float dryGain = std::cos(wetMix * static_cast<float>(std::numbers::pi / 2.0));
     float wetGain = std::sin(wetMix * static_cast<float>(std::numbers::pi / 2.0));
     AudioFrame out = in * dryGain + apOut * wetGain;
 
-    // --- Soft clip for safety (prevents runaway feedback) ---
+    // Soft clip for safety (prevents runaway feedback)
     out.left = std::tanh(out.left); // keeps output in [-1, 1] smoothly
     out.right = std::tanh(out.right);
 

@@ -10,7 +10,7 @@
 // HP IIR filter using biquad transfer function
 class HighPassFilter final : public BaseFilter {
 public:
-    HighPassFilter(Frequency cutoff = Frequency(1000.0f), float Q = 0.70710678);
+    HighPassFilter(Frequency cutoff = Frequency(1000.0f), float Q = BaseFilter::DEFAULT_Q);
     
 private:
     void ComputeAndApplyCoefficients() override;

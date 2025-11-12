@@ -39,8 +39,9 @@ protected:
     BiquadFilter m_leftFilter;
     BiquadFilter m_rightFilter;
 
-    static inline const float s_minCutoff = 5.0f;
-    static inline const float s_maxCutoff = 20000.0f;
-    static inline const float MIN_Q = 0.1f; // To avoid division-by-zero
-    static inline const float MAX_Q = 5.0f;
+    static constexpr float DEFAULT_Q = std::sqrt(2.0) / 2.0f; // Half sqrt(2) used as default q value
+    static constexpr float MIN_CUTOFF = 5.0f;
+    static constexpr float MAX_CUTOFF = 20000.0f;
+    static constexpr float MIN_Q = 0.1f; // To avoid division-by-zero
+    static constexpr float MAX_Q = 5.0f;
 };

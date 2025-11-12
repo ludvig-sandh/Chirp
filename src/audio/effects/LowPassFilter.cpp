@@ -10,7 +10,7 @@ LowPassFilter::LowPassFilter(Frequency cutoff, float Q) : BaseFilter(cutoff, Q) 
 }
 
 void LowPassFilter::ComputeAndApplyCoefficients() {
-    float cutoffHz = std::clamp(m_cutoff.GetAbsolute(), s_minCutoff, s_maxCutoff);
+    float cutoffHz = std::clamp(m_cutoff.GetAbsolute(), MIN_CUTOFF, MAX_CUTOFF);
     float omega0 = 2.0f * std::numbers::pi * cutoffHz / SAMPLE_RATE;
     float Q = std::clamp(m_Q + m_modulationQ, MIN_Q, MAX_Q);
     float alpha = std::sin(omega0) / (2.0f * Q);

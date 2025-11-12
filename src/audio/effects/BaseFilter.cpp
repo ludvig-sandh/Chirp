@@ -16,18 +16,18 @@ void BaseFilter::ProcessFrame(AudioFrame& output) {
 }
 
 void BaseFilter::SetCutoff(Frequency cutoff) {
-    m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), s_minCutoff, s_maxCutoff));
+    m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), MIN_CUTOFF, MAX_CUTOFF));
     ComputeAndApplyCoefficients();
 }
 
 void BaseFilter::SetPeaking(float Q) {
-    m_Q = std::max(Q, MIN_Q);
+    m_Q = std::clamp(Q, MIN_Q, MAX_Q);
     ComputeAndApplyCoefficients();
 }
 
 void BaseFilter::SetCutoffAndPeaking(Frequency cutoff, float Q) {
-    m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), s_minCutoff, s_maxCutoff));
-    m_Q = std::max(Q, MIN_Q);
+    m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), MIN_CUTOFF, MAX_CUTOFF));
+    m_Q = std::clamp(Q, MIN_Q, MAX_Q);
     ComputeAndApplyCoefficients();
 }
 
