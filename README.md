@@ -10,6 +10,12 @@ A cross-platform real-time modular synthesizer written in modern C++ with ImGui 
 
 ---
 
+## Demo Video
+
+[![Chirp Demo](https://img.youtube.com/vi/lMZ7cWw4Ajo/0.jpg)](https://youtu.be/lMZ7cWw4Ajo)
+
+---
+
 ## About
 
 **Chirp** started out as a small personal experiment. I wanted to see if I could synthesize bird sounds entirely from code.  
