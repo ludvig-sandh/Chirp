@@ -2,9 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "audio/engine/AudioProcessorNode.hpp"
-#include "audio/engine/AudioEngine.hpp"
 #include "audio/engine/AudioBackend.hpp"
-#include "audio/modulation/LFO.hpp"
 #include <iostream>
 
 void AudioProcessorNode::AddChild(std::shared_ptr<AudioProcessorNode> child) {
@@ -41,7 +39,7 @@ AudioFrame AudioProcessorNode::GenerateFrame(const AudioPreset& preset) {
 
     if (isOn) {
         ProcessFrame(processedFrame);
-        ApplyGainAndPan(processedFrame);
+        processedFrame = ApplyGainAndPan(processedFrame);
         frame = AudioFrame::Blend(processedFrame, bypassedFrame, mix);
     }else {
         frame = bypassedFrame;
@@ -54,14 +52,13 @@ AudioFrame AudioProcessorNode::GenerateFrame(const AudioPreset& preset) {
     return m_cachedResult;
 }
 
-void AudioProcessorNode::ClearVisited() {
+void AudioProcessorNode::ClearVisited() noexcept {
     m_visited = false;
     for (const std::shared_ptr<AudioProcessorNode>& child : m_children) {
         child->ClearVisited();
     }
 }
 
-void AudioProcessorNode::ApplyGainAndPan(AudioFrame& output) {
-    output = gain.Apply(output);
-    output = pan.Apply(output);
+AudioFrame AudioProcessorNode::ApplyGainAndPan(const AudioFrame& output) noexcept {
+    return pan.Apply(gain.Apply(output));
 }

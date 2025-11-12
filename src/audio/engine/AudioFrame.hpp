@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "util/NormalizedFloat.hpp"
+
 struct AudioFrame {
     float left = 0.0f;
     float right = 0.0f;
@@ -13,7 +15,7 @@ struct AudioFrame {
     // Blend between processed and unprocessed signals.
     // mix = 0 -> fully unprocessed
     // mix = 1 -> fully processed
-    static AudioFrame Blend(const AudioFrame& processed, const AudioFrame& unprocessed, float mix) noexcept;
+    static AudioFrame Blend(const AudioFrame& processed, const AudioFrame& unprocessed, NormalizedFloat mix) noexcept;
 
     constexpr AudioFrame operator+(const AudioFrame& other) const noexcept {
         return { left + other.left, right + other.right };
@@ -58,7 +60,7 @@ struct AudioFrame {
     }
 };
 
-// --- Global operators (for commutativity) ---
+// Global operators (for commutativity)
 constexpr inline AudioFrame operator*(float scalar, const AudioFrame& frame) noexcept {
     return frame * scalar;
 }
