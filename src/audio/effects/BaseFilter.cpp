@@ -36,10 +36,10 @@ void BaseFilter::ClearModulationsImpl() noexcept {
     m_modulationQ = 0.0f;
 }
 
-void BaseFilter::ApplyModulation(float amount, ModulationType modType) noexcept {
-    if (modType == ModulationType::Cutoff) {
+void BaseFilter::ApplyModulation(float amount, Modulation::Type modType) noexcept {
+    if (modType == Modulation::Type::Cutoff) {
         m_cutoff.AddPitchModulation(amount);
-    }else if (modType == ModulationType::Peaking) {
+    }else if (modType == Modulation::Type::Peaking) {
         m_modulationQ += amount;
     }
     ComputeAndApplyCoefficients();

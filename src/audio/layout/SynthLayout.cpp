@@ -119,7 +119,7 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
 
     m_filterEnv->attack = DSP::Seconds(preset.synthOscLpCutoffAttack.load());
     m_filterEnv->decay = DSP::Seconds(preset.synthOscLpCutoffDec.load());
-    m_modMatrix.AddRoute(ModulationRoute(m_filterEnv, m_lpFilter, ModulationType::Cutoff, preset.synthOscLpCutoffAmount.load()));
+    m_modMatrix.AddRoute(Modulation::Route(m_filterEnv, m_lpFilter, Modulation::Type::Cutoff, preset.synthOscLpCutoffAmount.load()));
 
     // Lfo1
     Frequency lfo1Freq = Frequency(preset.synthLFO1Frequency.load());
@@ -208,46 +208,46 @@ void SynthLayout::AddModulationRoutesForLfoConfig(const LFOConfig& config) {
     // All selectable routes in GUI and add the corresponding route
     switch (config.destination) {
         case LFOConfig::Destination::OscAVolume:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscA, ModulationType::Volume, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscA, Modulation::Type::Volume, config.amount));
             break;
         case LFOConfig::Destination::OscAPan:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscA, ModulationType::Pan, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscA, Modulation::Type::Pan, config.amount));
             break;
         case LFOConfig::Destination::OscAPitch:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscA, ModulationType::Pitch, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscA, Modulation::Type::Pitch, config.amount));
             break;
         case LFOConfig::Destination::OscBVolume:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscB, ModulationType::Volume, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscB, Modulation::Type::Volume, config.amount));
             break;
         case LFOConfig::Destination::OscBPan:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscB, ModulationType::Pan, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscB, Modulation::Type::Pan, config.amount));
             break;
         case LFOConfig::Destination::OscBPitch:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscB, ModulationType::Pitch, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscB, Modulation::Type::Pitch, config.amount));
             break;
         case LFOConfig::Destination::OscABVolume:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscA, ModulationType::Volume, config.amount));
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscB, ModulationType::Volume, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscA, Modulation::Type::Volume, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscB, Modulation::Type::Volume, config.amount));
             break;
         case LFOConfig::Destination::OscABPan:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscA, ModulationType::Pan, config.amount));
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscB, ModulationType::Pan, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscA, Modulation::Type::Pan, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscB, Modulation::Type::Pan, config.amount));
             break;
         case LFOConfig::Destination::OscABPitch:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscA, ModulationType::Pitch, config.amount));
-            m_modMatrix.AddRoute(ModulationRoute(source, m_oscB, ModulationType::Pitch, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscA, Modulation::Type::Pitch, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_oscB, Modulation::Type::Pitch, config.amount));
             break;
         case LFOConfig::Destination::LPCutoff:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_lpFilter, ModulationType::Cutoff, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_lpFilter, Modulation::Type::Cutoff, config.amount));
             break;
         case LFOConfig::Destination::LPPeaking:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_lpFilter, ModulationType::Peaking, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_lpFilter, Modulation::Type::Peaking, config.amount));
             break;
         case LFOConfig::Destination::HPCutoff:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_hpFilter, ModulationType::Cutoff, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_hpFilter, Modulation::Type::Cutoff, config.amount));
             break;
         case LFOConfig::Destination::HPPeaking:
-            m_modMatrix.AddRoute(ModulationRoute(source, m_lpFilter, ModulationType::Peaking, config.amount));
+            m_modMatrix.AddRoute(Modulation::Route(source, m_lpFilter, Modulation::Type::Peaking, config.amount));
             break;
         default:
             assert(false && "Unknown LFO destination");

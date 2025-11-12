@@ -53,7 +53,7 @@ private:
 
     std::shared_ptr<Envelope> m_filterEnv;
 
-    ModulationMatrix m_modMatrix;
+    Modulation::Matrix m_modMatrix;
 
     std::set<Note> m_pressedNotes;
 };

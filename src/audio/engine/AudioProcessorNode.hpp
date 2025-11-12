@@ -27,7 +27,7 @@ public:
     virtual void ClearModulationsImpl() noexcept {};
 
     // Apply modulation to this node
-    virtual void ApplyModulation(float amount, ModulationType modType) noexcept;
+    virtual void ApplyModulation(float amount, Modulation::Type modType) noexcept;
 
     // Process this node's audio (taking the childrens output as input to this node). Marks every visited node to avoid processing any node twice.
     AudioFrame GenerateFrame(const AudioPreset& preset);

@@ -31,7 +31,7 @@ public:
     // Updates the octave used for the root note A5 at 440Hz (5 is default, per definition)
     void SetOctave(int octave);
 
-    void ApplyModulation(float amount, ModulationType modType) noexcept override;
+    void ApplyModulation(float amount, Modulation::Type modType) noexcept override;
 
     // Clears all modulations accumulated from LFOs in the last frame so they can modulate the next one
     virtual void ClearModulationsImpl() noexcept override;

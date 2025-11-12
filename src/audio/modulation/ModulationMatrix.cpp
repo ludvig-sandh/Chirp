@@ -4,15 +4,17 @@
 #include "audio/modulation/ModulationMatrix.hpp"
 #include "audio/engine/AudioProcessorNode.hpp"
 
-void ModulationMatrix::ClearRoutes() {
+namespace Modulation {
+
+void Matrix::ClearRoutes() {
     m_routes.clear();
 }
 
-void ModulationMatrix::AddRoute(ModulationRoute route) {
+void Matrix::AddRoute(Route route) {
     m_routes.push_back(route);
 }
 
-void ModulationMatrix::ApplyModulations() {
+void Matrix::ApplyModulations() {
     // Cache for one audio sample frame
     std::unordered_map<LFO*, float> cachedValues;
     cachedValues.reserve(std::ssize(m_routes));
@@ -32,3 +34,5 @@ void ModulationMatrix::ApplyModulations() {
         route.destination->ApplyModulation(amount, route.modType);
     }
 }
+
+} // namespace Modulation

@@ -26,7 +26,7 @@ public:
     void SetCutoffAndPeaking(Frequency cutoff, float Q) noexcept;
 
     void ClearModulationsImpl() noexcept override;
-    void ApplyModulation(float amount, ModulationType modType) noexcept override;
+    void ApplyModulation(float amount, Modulation::Type modType) noexcept override;
 
 protected:
     // Is called every time cutoff or Q is modified, otherwise the changes won't take effect.

@@ -16,7 +16,7 @@ void AudioProcessorNode::ClearModulations() noexcept {
     }
 }
 
-void AudioProcessorNode::ApplyModulation(float amount, ModulationType modType) noexcept {
+void AudioProcessorNode::ApplyModulation(float amount, Modulation::Type modType) noexcept {
     (void)amount;
     (void)modType;
     std::cerr << "WARNING: Tried to apply modulation on a node that doesn't support it.\n";

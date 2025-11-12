@@ -11,7 +11,9 @@
 // Fwd dec.
 class AudioProcessorNode;
 
-enum class ModulationType {
+namespace Modulation {
+
+enum class Type {
     Pitch,
     Volume,
     Pan,
@@ -19,15 +21,15 @@ enum class ModulationType {
     Peaking
 };
 
-struct ModulationRoute {
+struct Route {
     std::shared_ptr<LFO> source;
     std::shared_ptr<AudioProcessorNode> destination;
-    ModulationType modType;
+    Type modType;
     float amount;
 
-    ModulationRoute(std::shared_ptr<LFO> source,
+    Route(std::shared_ptr<LFO> source,
                     std::shared_ptr<AudioProcessorNode> destination,
-                    ModulationType modType,
+                    Type modType,
                     float amount)
         : source(source)
         , destination(destination)
@@ -36,14 +38,16 @@ struct ModulationRoute {
     {}
 };
 
-class ModulationMatrix {
+class Matrix {
 public:
-    ModulationMatrix() = default;
+    Matrix() = default;
 
     void ClearRoutes();
-    void AddRoute(ModulationRoute route);
+    void AddRoute(Route route);
     void ApplyModulations();
 
 private:
-    std::vector<ModulationRoute> m_routes;
+    std::vector<Route> m_routes;
 };
+
+} // namespace Modulation

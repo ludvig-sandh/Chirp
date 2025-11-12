@@ -42,15 +42,15 @@ void Oscillator::SetOctave(int octave) {
     }
 }
 
-void Oscillator::ApplyModulation(float amount, ModulationType modType) noexcept {
-    if (modType == ModulationType::Pitch) {
+void Oscillator::ApplyModulation(float amount, Modulation::Type modType) noexcept {
+    if (modType == Modulation::Type::Pitch) {
         // Modulates the pitch of all voices
         for (auto& voice : m_voices) {
             voice.freq.AddPitchModulation(amount);
         }
-    }else if (modType == ModulationType::Volume) {
+    }else if (modType == Modulation::Type::Volume) {
         gain.AddModulationLinear(amount);
-    }else if (modType == ModulationType::Pan) {
+    }else if (modType == Modulation::Type::Pan) {
         pan.AddModulation(amount);
     }
 }
