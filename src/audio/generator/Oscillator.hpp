@@ -8,25 +8,9 @@
 #include "audio/core/Waveform.hpp"
 #include "audio/modulation/Envelope.hpp"
 #include "audio/modulation/LFO.hpp"
+#include "audio/generator/Voice.hpp"
 
 #include <vector>
-
-class Voice {
-public:
-    Voice(Note note, std::unique_ptr<Waveform> wf, const Envelope& env);
-    float GetNextSample();
-    void SetWaveformType(WaveformInfo::Type type);
-    void SetOctave(int octave);
-    void Release(); // Tells the envelope to go into "release" state to fade out the note
-    bool IsDead() const; // Returns true if the note is quiet indefinitely from this point and onward
-
-    Note note;
-    Frequency freq;
-private:
-    std::unique_ptr<Waveform> m_wf;
-    Envelope m_env;
-    float m_currentPhase = 0.0f;
-};
 
 class Oscillator final : public Generator {
 public:
