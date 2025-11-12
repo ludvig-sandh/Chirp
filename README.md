@@ -140,6 +140,8 @@ If you don’t want to compile Chirp yourself, you can also download a **prebuil
 > **Note:** 
 > These binaries are automatically built and tested on every commit using GitHub Actions,  
 > so they’re always up to date with the latest source.
+>
+> Also, take them with a grain of salt since they are compiled in specific environments and might not always work on all machines.
 
 ---
 
@@ -152,7 +154,7 @@ src/                         # Source code
 ├── audio/                   # Core audio synthesis and processing
 │   ├── core/                # Fundamental DSP classes (waveform, pan, gain, frequency, etc.)
 │   ├── effects/             # Audio effects (reverb, filters, etc.)
-│   │   └── dsp/            # Low-level DSP building blocks used by effects
+│   │   └── dsp/             # Low-level DSP building blocks used by effects
 │   ├── engine/              # Audio engine and buffer management (PortAudio backend)
 │   ├── generator/           # Sound generation nodes (oscillators, noise, etc.)
 │   ├── layout/              # Application-specific audio graph layout and node management
