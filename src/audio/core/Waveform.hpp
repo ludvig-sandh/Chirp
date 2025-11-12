@@ -4,6 +4,7 @@
 #pragma once
 
 #include "audio/core/Frequency.hpp"
+#include "util/NormalizedFloat.hpp"
 #include <random>
 #include <memory>
 
@@ -17,48 +18,57 @@ namespace WaveformInfo {
         Organ
     };
 
-    inline constexpr const char* Names[] = { "Saw", "Sine", "Square", "White noise", "Triangle", "Organ" };
+    constexpr const char* Names[] = { "Saw", "Sine", "Square", "White noise", "Triangle", "Organ" };
 }
 
 // Base class for representing waveforms, such as sine waves or more complex waves  
 class Waveform {
 public:
     virtual ~Waveform() {}
-    // Returns the sample value at a specific phase in the waveform in the range [0, 1]
-    virtual float GetSampleAt(float phase) = 0;
+
+    // Returns the sample value at a specific phase in the waveform in the range [-1.0f, 0.0f]
+    virtual float GetSampleAt(NormalizedFloat phase) = 0;
+
+    // Factory method for creating one of the waveforms
     static std::unique_ptr<Waveform> ConstructWaveform(WaveformInfo::Type type);
 };
 
+// Sharp sound
 class Saw final : public Waveform {
 public:
-    float GetSampleAt(float phase) override;
+    float GetSampleAt(NormalizedFloat phase) override;
 };
 
+// Softest possible sound
 class Sine final : public Waveform {
 public:
-    float GetSampleAt(float phase) override;
+    float GetSampleAt(NormalizedFloat phase) override;
 };
 
+// Not as sharp as a saw, but still a lot of overtones
 class Square final : public Waveform {
 public:
-    float GetSampleAt(float phase) override;
+    float GetSampleAt(NormalizedFloat phase) override;
 };
 
+// Just random values
 class WhiteNoise final : public Waveform {
 public:
     WhiteNoise() : m_gen(1337), m_dist(-1.0f, 1.0f) {}
-    float GetSampleAt(float phase) override;
+    float GetSampleAt(NormalizedFloat phase) override;
 private:
     std::mt19937 m_gen;
     std::uniform_real_distribution<float> m_dist;
 };
 
+// A mix between saw and sine
 class Triangle final : public Waveform {
 public:
-    float GetSampleAt(float phase) override;
+    float GetSampleAt(NormalizedFloat phase) override;
 };
 
+// Three sines stacked to recreate an organ sound
 class Organ final : public Waveform {
 public:
-    float GetSampleAt(float phase) override;
+    float GetSampleAt(NormalizedFloat phase) override;
 };

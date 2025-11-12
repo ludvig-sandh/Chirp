@@ -69,10 +69,12 @@ void PresetWindow::DrawOscillatorA() const {
     if (ImGui::BeginCombo("Waveform##A", WaveformInfo::Names[static_cast<int>(waveformATemp)])) {
         for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
             bool isSelected = (static_cast<int>(waveformATemp) == n);
-            if (ImGui::Selectable(WaveformInfo::Names[n], isSelected))
+            if (ImGui::Selectable(WaveformInfo::Names[n], isSelected)) {
                 waveformATemp = static_cast<WaveformInfo::Type>(n);
-            if (isSelected)
+            }
+            if (isSelected) {
                 ImGui::SetItemDefaultFocus();
+            }
         }
         ImGui::EndCombo();
     }

@@ -3,7 +3,6 @@
 
 #include "audio/core/Waveform.hpp"
 
-#include <random>
 #include <cmath>
 #include <numbers>
 
@@ -26,33 +25,33 @@ std::unique_ptr<Waveform> Waveform::ConstructWaveform(WaveformInfo::Type type) {
     return nullptr;
 }
 
-float Saw::GetSampleAt(float phase) {
-    return -1.0f + 2.0f * phase;
+float Saw::GetSampleAt(NormalizedFloat phase) {
+    return -1.0f + 2.0f * phase.get();
 }
 
-float Sine::GetSampleAt(float phase) {
-    return std::sin(phase * 2.0 * std::numbers::pi);
+float Sine::GetSampleAt(NormalizedFloat phase) {
+    return std::sin(phase.get() * 2.0f * std::numbers::pi);
 }
 
-float Square::GetSampleAt(float phase) {
-    return phase >= 0.5f ? 1.0f : -1.0f;
+float Square::GetSampleAt(NormalizedFloat phase) {
+    return phase.get() >= 0.5f ? 1.0f : -1.0f;
 }
 
-float WhiteNoise::GetSampleAt(float phase) {
+float WhiteNoise::GetSampleAt(NormalizedFloat phase) {
     (void)phase;
     
     // Generate a random sample in range [-1.0, 1.0]
     return m_dist(m_gen);
 }
 
-float Triangle::GetSampleAt(float phase) {
-    return -4.0f * std::fabs(phase - 0.5f) + 1.0f;
+float Triangle::GetSampleAt(NormalizedFloat phase) {
+    return -4.0f * std::fabs(phase.get() - 0.5f) + 1.0f;
 }
 
-float Organ::GetSampleAt(float phase) {
-    float fundamental = std::sin(phase * 2.0 * std::numbers::pi);
-    float third = 0.4f * std::sin(phase * 2.0 * std::numbers::pi * 3.0f);
-    float sixth = 0.2f * std::sin(phase * 2.0 * std::numbers::pi * 6.0f);
+float Organ::GetSampleAt(NormalizedFloat phase) {
+    float fundamental = std::sin(phase.get() * 2.0 * std::numbers::pi);
+    float third = 0.4f * std::sin(phase.get() * 2.0 * std::numbers::pi * 3.0f);
+    float sixth = 0.2f * std::sin(phase.get() * 2.0 * std::numbers::pi * 6.0f);
     static const float scale = 0.9; // To keep signal in range [-1, 1]
     return scale * (fundamental + third + sixth);
 }
