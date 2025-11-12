@@ -75,6 +75,7 @@ cd Chirp
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release --parallel
 ```
+The executable ends up in the build folder, or in build/Release, and it is ready to run.
 
 > **Note:**  
 > If CMake reports an error such as  
@@ -82,7 +83,7 @@ cmake --build build --config Release --parallel
 > or  
 > `CMAKE_CXX_COMPILER not set, after EnableLanguage`,  
 > it means no compiler toolchain was detected automatically.  
-> In that case, specify one explicitly when configuring:
+> In that case, you must remove the build folder (for example with ```rm -rf build```), then retry by specifying the compiler toolchain explicitly when configuring:
 >
 > - **MSVC (Visual Studio)**  
 >   ```bash
@@ -101,6 +102,9 @@ cmake --build build --config Release --parallel
 >
 > Most Linux and macOS environments detect a compiler automatically,  
 > but on Windows, CMake may default to **NMake**, which requires a Visual Studio Developer Prompt.
+>
+> After this, you can continue with the next command:
+> ```cmake --build build --config Release --parallel```
 
 > #### Running on Wayland (Linux Desktop)
 >
