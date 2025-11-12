@@ -6,7 +6,7 @@
 #include "gui/Spectrogram.hpp"
 #include "gui/LevelsDisplay.hpp"
 
-void GlobalSettingsWindow::Render(AudioPreset& preset) const {
+void GlobalSettingsWindow::Render(Audio::Preset::AudioPreset& preset) const {
     ConfigureWindow();
     DrawGlobalSettings(preset);
     ImGui::End();
@@ -32,7 +32,7 @@ void GlobalSettingsWindow::ConfigureWindow() const {
         | ImGuiWindowFlags_NoCollapse);
 }
 
-void GlobalSettingsWindow::DrawGlobalSettings(AudioPreset& preset) const {
+void GlobalSettingsWindow::DrawGlobalSettings(Audio::Preset::AudioPreset& preset) const {
     ImGui::SeparatorText("Global settings");
 
     float volumeTemp = preset.synthMasterVolume.load();

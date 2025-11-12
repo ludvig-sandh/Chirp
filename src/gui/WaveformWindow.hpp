@@ -11,10 +11,10 @@
 
 class WaveformWindow {
 public:
-    WaveformWindow(WaveformInfo::Type waveformType, const std::string& windowName);
+    WaveformWindow(Audio::Core::WaveformInfo::Type waveformType, const std::string& windowName);
 
     // render in imgui. comesFirst tells us if this should be rendered in the first or second slot
-    void Render(WaveformInfo::Type waveformType, bool comesFirst, bool isOn);
+    void Render(Audio::Core::WaveformInfo::Type waveformType, bool comesFirst, bool isOn);
 
     void InitTexture();
 
@@ -32,7 +32,7 @@ private:
     static const int IMAGE_PADDING_RIGHT = 16;
 
     GLuint m_waveformTex = 0;
-    WaveformInfo::Type m_waveformType;
+    Audio::Core::WaveformInfo::Type m_waveformType;
     std::string m_windowName;
 
     static inline const float ON_OPACITY = 1.0f;

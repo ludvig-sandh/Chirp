@@ -6,6 +6,8 @@
 #include <cmath>
 #include <algorithm>
 
+namespace Audio::Core {
+
 void Gain::SetLinear(float linear) noexcept {
     m_targetLinear = std::clamp(linear, MIN_LINEAR, MAX_LINEAR);
 }
@@ -30,8 +32,10 @@ float Gain::Apply(float sample) noexcept {
     return m_currentLinear * sample;
 }
 
-AudioFrame Gain::Apply(const AudioFrame& frame) noexcept {
+Audio::Engine::AudioFrame Gain::Apply(const Audio::Engine::AudioFrame& frame) noexcept {
     float target = std::clamp(m_targetLinear + m_modulation, MIN_LINEAR, MAX_LINEAR);
     m_currentLinear += (target - m_currentLinear) * ALPHA;
     return m_currentLinear * frame;
 }
+
+} // namespace Audio::Core

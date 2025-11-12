@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace FeedbackDelayInfo {
+namespace Audio::Effects::DSP::FeedbackDelayInfo {
     enum class Type {
         Mono,
         Stereo,

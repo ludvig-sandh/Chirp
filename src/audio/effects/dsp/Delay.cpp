@@ -6,6 +6,8 @@
 
 #include <stdexcept>
 
+namespace Audio::Effects::DSP {
+
 Delay::Delay(DSP::Seconds delayTime) {
     SetDelay(delayTime);
 }
@@ -17,7 +19,7 @@ void Delay::SetDelay(DSP::Seconds delayTime) {
     }
 
     m_delayTime = delayTime;
-    int newDelaySamples = static_cast<int>(std::round(m_delayTime.count() * SAMPLE_RATE)) + 1; // +1 for safety margin
+    int newDelaySamples = static_cast<int>(std::round(m_delayTime.count() * Audio::Engine::Constants::SAMPLE_RATE)) + 1; // +1 for safety margin
     if (std::ssize(m_buffer) != newDelaySamples) {
         m_buffer.resize(newDelaySamples, 0.0f);
         m_writeIndex = 0;
@@ -30,7 +32,7 @@ float Delay::Process(float input) noexcept {
         return input;
     }
 
-    int delaySamples = static_cast<int>(std::round(m_delayTime.count() * SAMPLE_RATE));
+    int delaySamples = static_cast<int>(std::round(m_delayTime.count() * Audio::Engine::Constants::SAMPLE_RATE));
     int readIndex = m_writeIndex - delaySamples;
     if (readIndex < 0) {
         readIndex += std::ssize(m_buffer);
@@ -43,3 +45,5 @@ float Delay::Process(float input) noexcept {
 
     return delayedSample;
 }
+
+} // namespace Audio::Effects::DSP

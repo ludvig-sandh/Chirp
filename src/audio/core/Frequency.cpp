@@ -6,6 +6,8 @@
 #include "audio/core/Frequency.hpp"
 #include "audio/engine/AudioEngine.hpp"
 
+namespace Audio::Core {
+
 Frequency::Frequency(float hertz) noexcept
     : m_hertz(hertz)
 {}
@@ -34,7 +36,7 @@ float Frequency::GetAbsolute() const noexcept {
     // The maximum pitch we should support is half the sample rate (Nyquist theorem)
     // Otherwise we'd get foldback aliasing.
     float actual = m_hertz * std::pow(2.0, (m_pitchBase + m_pitchModulation) / Note::NOTES_PER_OCTAVE);
-    return std::min(actual, static_cast<float>(SAMPLE_RATE / 2.0));
+    return std::min(actual, static_cast<float>(Audio::Engine::Constants::SAMPLE_RATE / 2.0));
 }
 
 float Frequency::ConvertNoteToHz(Note note) noexcept {
@@ -43,3 +45,5 @@ float Frequency::ConvertNoteToHz(Note note) noexcept {
     float hz = A5 * std::pow(twelvethSq2, static_cast<float>(note.key)) * std::pow(2.0f, static_cast<float>(note.octave - 5));
     return hz;
 }
+
+} // namespace Audio::Core

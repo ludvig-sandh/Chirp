@@ -12,9 +12,9 @@ class GlobalSettingsWindow {
 public:
     static inline const int WINDOW_HEIGHT = 60;
 
-    void Render(AudioPreset& preset) const;
+    void Render(Audio::Preset::AudioPreset& preset) const;
 
 private:
     void ConfigureWindow() const;
-    void DrawGlobalSettings(AudioPreset& preset) const;
+    void DrawGlobalSettings(Audio::Preset::AudioPreset& preset) const;
 };

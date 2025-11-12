@@ -14,23 +14,23 @@ void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
     if (m_specHeight != std::ssize(magnitudes)) {
         m_specHeight = std::ssize(magnitudes);
         // Reallocate magnitude history buffer
-        m_magnitudeHistory.assign(m_specWidth, std::vector<float>(m_specHeight, 0.0f));
+        m_magnitudeHistory.assign(SPEC_WIDTH, std::vector<float>(m_specHeight, 0.0f));
         ReallocateTexture();
     }
 
     // Store new magnitudes into the current column
     m_magnitudeHistory[m_currentColumn] = magnitudes;
-    m_currentColumn = (m_currentColumn + 1) % m_specWidth;
+    m_currentColumn = (m_currentColumn + 1) % SPEC_WIDTH;
 
     // Prepare pixels
-    std::vector<unsigned char> pixels(m_specWidth * m_specHeight * 4, 0);
-    for (int column_idx = 0; column_idx < m_specWidth; column_idx++) {
-        int x = (m_currentColumn + column_idx) % m_specWidth;
+    std::vector<unsigned char> pixels(SPEC_WIDTH * m_specHeight * 4, 0);
+    for (int column_idx = 0; column_idx < SPEC_WIDTH; column_idx++) {
+        int x = (m_currentColumn + column_idx) % SPEC_WIDTH;
         for (int y = 0; y < m_specHeight; y++) {
             float mag = std::clamp(m_magnitudeHistory[x][y], 0.0f, 1.0f);
             std::array<unsigned char, 4> rgba = Spectrogram::MagnitudeToRGBA(mag);
 
-            int pixel_idx = ((m_specHeight - y - 1) * m_specWidth + column_idx) * 4;
+            int pixel_idx = ((m_specHeight - y - 1) * SPEC_WIDTH + column_idx) * 4;
             pixels[pixel_idx + 0] = rgba[0];
             pixels[pixel_idx + 1] = rgba[1];
             pixels[pixel_idx + 2] = rgba[2];
@@ -40,7 +40,7 @@ void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
 
     // Upload to OpenGL texture
     glBindTexture(GL_TEXTURE_2D, m_spectrogramTex);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_specWidth, m_specHeight,
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SPEC_WIDTH, m_specHeight,
                     GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 }
 
@@ -88,7 +88,7 @@ void Spectrogram::ReallocateTexture() {
     glBindTexture(GL_TEXTURE_2D, m_spectrogramTex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-                 m_specWidth, m_specHeight, 0,
+                 SPEC_WIDTH, m_specHeight, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

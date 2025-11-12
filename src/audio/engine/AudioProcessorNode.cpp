@@ -5,6 +5,8 @@
 #include "audio/engine/AudioBackend.hpp"
 #include <iostream>
 
+namespace Audio::Engine {
+
 void AudioProcessorNode::AddChild(std::shared_ptr<AudioProcessorNode> child) {
     m_children.insert(child);
 }
@@ -22,7 +24,7 @@ void AudioProcessorNode::ApplyModulation(float amount, Modulation::Type modType)
     std::cerr << "WARNING: Tried to apply modulation on a node that doesn't support it.\n";
 }
 
-AudioFrame AudioProcessorNode::GenerateFrame(const AudioPreset& preset) {
+AudioFrame AudioProcessorNode::GenerateFrame(const Audio::Preset::AudioPreset& preset) {
     if (m_visited) {
         // Don't compute the result of this node twice
         return m_cachedResult;
@@ -62,3 +64,5 @@ void AudioProcessorNode::ClearVisited() noexcept {
 AudioFrame AudioProcessorNode::ApplyGainAndPan(const AudioFrame& output) noexcept {
     return pan.Apply(gain.Apply(output));
 }
+
+} // namespace Audio::Engine

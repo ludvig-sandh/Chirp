@@ -3,6 +3,8 @@
 #include "AudioFrame.hpp"
 #include <vector>
 
+namespace Audio::Engine {
+
 struct AudioBuffer {
     std::vector<AudioFrame> data;
 
@@ -26,3 +28,5 @@ struct AudioBuffer {
     AudioFrame& operator[](int i) { return data[i]; }
     const AudioFrame& operator[](int i) const { return data[i]; }
 };
+
+} // namespace Audio::Engine

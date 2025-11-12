@@ -85,7 +85,7 @@ void MidiInput::OpenDefaultPort() {
     m_currentPort = -1;
 }
 
-std::set<Note> MidiInput::GetPressedNotes() {
+std::set<Audio::Core::Note> MidiInput::GetPressedNotes() {
     OpenDefaultPort();
 
     if (!m_portOpen) {
@@ -107,7 +107,7 @@ std::set<Note> MidiInput::GetPressedNotes() {
             const unsigned char data2  = std::ssize(msg) > 2 ? msg[2] : 0; // velocity
             const int command = status & 0xF0;
 
-            Note note = MidiNoteToNote(static_cast<int>(data1));
+            Audio::Core::Note note = MidiNoteToNote(static_cast<int>(data1));
 
             // Don't allow playing notes outside the keyboard range
             if (note < Keyboard::FIRST_NOTE || note > Keyboard::LAST_NOTE) {
@@ -138,8 +138,8 @@ std::set<Note> MidiInput::GetPressedNotes() {
 }
 
 // Converts a MIDI note number (0–127) to a Chirp Note object
-Note MidiInput::MidiNoteToNote(int midiNumber) {
-    int octave = midiNumber / Note::NOTES_PER_OCTAVE - 1;
-    int keyIndex = midiNumber % Note::NOTES_PER_OCTAVE;
-    return Note(static_cast<Key>(keyIndex), octave);
+Audio::Core::Note MidiInput::MidiNoteToNote(int midiNumber) {
+    int octave = midiNumber / Audio::Core::Note::NOTES_PER_OCTAVE - 1;
+    int keyIndex = midiNumber % Audio::Core::Note::NOTES_PER_OCTAVE;
+    return Audio::Core::Note(static_cast<Audio::Core::Key>(keyIndex), octave);
 }

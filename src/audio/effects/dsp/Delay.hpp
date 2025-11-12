@@ -7,6 +7,8 @@
 #include <vector>
 #include <cmath>
 
+namespace Audio::Effects::DSP {
+
 // A DSP block that implements a delay (not to confuse with feedback delay).
 // It simply shifts the signal in time, so no feeding back to itself.
 // Used for example to shift one channel in the ping-pong feedback delay effect.
@@ -25,3 +27,5 @@ private:
     std::vector<float> m_buffer;
     int m_writeIndex = 0;
 };
+
+} // namespace Audio::Effects::DSP

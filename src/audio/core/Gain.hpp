@@ -5,6 +5,8 @@
 
 #include "audio/engine/AudioFrame.hpp"
 
+namespace Audio::Core {
+
 // Keeps track of gain values. When updating gain, it needs to change smoothly rather than jump in value.
 // The Gain class takes care of this.
 class Gain {
@@ -24,7 +26,7 @@ public:
     // Applies the current gain and updates it towards the target gain.
     // Should be called once for each sample.
     float Apply(float sample) noexcept;
-    AudioFrame Apply(const AudioFrame& frame) noexcept;
+    Audio::Engine::AudioFrame Apply(const Audio::Engine::AudioFrame& frame) noexcept;
 
 private:
     float m_currentLinear = 0.0;
@@ -40,3 +42,5 @@ private:
     // Eg. 0.01 would mean it closes in by 1% each sample.
     static constexpr float ALPHA = 0.01;
 };
+
+} // namespace Audio::Core

@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+namespace Util {
+
 // Represents a float in the range [0.0f, 1.0f]. Any other value gets clamped into that range.
 class NormalizedFloat {
 public:
@@ -70,3 +72,5 @@ public:
 private:
     float m_value;
 };
+
+} // namespace Util

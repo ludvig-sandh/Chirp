@@ -7,7 +7,7 @@
 #include <iostream>
 
 // RAII class for managing the GLFW window
-GUIManager::GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
+GUIManager::GUIManager(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
     , m_fftComputer(fftComputer)
     , m_keyboard(SCREEN_WIDTH)
@@ -51,7 +51,7 @@ void GUIManager::RunMainLoop() {
         }
 
         // Handle key input BEFORE starting new ImGui frame. Will pass this along to the keyboard class
-        std::set<Note> allPressedNotes = GetAllPressedNotes();
+        std::set<Audio::Core::Note> allPressedNotes = GetAllPressedNotes();
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -76,7 +76,7 @@ void GUIManager::RunMainLoop() {
                 m_spectrumWindow.Render();
             }
 
-            std::shared_ptr<AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
+            std::shared_ptr<Audio::Engine::AudioFrame> levels = m_fftComputer->GetLastAudioLevels();
             if (levels != nullptr) {
                 m_levelsDisplay.UpdateLevels(*levels.get());
                 m_levelsDisplay.Render();
@@ -91,7 +91,7 @@ void GUIManager::RunMainLoop() {
             allPressedNotes = m_keyboard.Render(allPressedNotes);
 
             // Store keyboard state (all pressed notes returned) via the shared preset
-            for (Note note = Keyboard::FIRST_NOTE; note <= Keyboard::LAST_NOTE; ++note) {
+            for (Audio::Core::Note note = Keyboard::FIRST_NOTE; note <= Keyboard::LAST_NOTE; ++note) {
                 int noteIdx = note - Keyboard::FIRST_NOTE;
                 bool isPressed = allPressedNotes.find(note) != allPressedNotes.end();
                 m_preset->noteStates[noteIdx].store(isPressed);
@@ -202,7 +202,10 @@ void GUIManager::DeinitAux() {
     glfwTerminate();
 }
 
-std::set<Note> GUIManager::GetQwertyNotesPressed() const {
+std::set<Audio::Core::Note> GUIManager::GetQwertyNotesPressed() const {
+    using Note = Audio::Core::Note;
+    using Key = Audio::Core::Key;
+
     // Map keys onto notes
     static const std::pair<int, Note> QWERTY_NOTE_MAP[] = {
         // Lower octave
@@ -245,8 +248,8 @@ std::set<Note> GUIManager::GetQwertyNotesPressed() const {
     return pressedKeys;
 }
 
-std::set<Note> GUIManager::GetAllPressedNotes() {
-    std::set<Note> allPressedNotes = GetQwertyNotesPressed();
+std::set<Audio::Core::Note> GUIManager::GetAllPressedNotes() {
+    std::set<Audio::Core::Note> allPressedNotes = GetQwertyNotesPressed();
 
     // Get pressed notes from MIDI input
     auto midiNotes = m_midiInput.GetPressedNotes();

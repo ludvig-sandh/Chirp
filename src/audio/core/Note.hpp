@@ -3,6 +3,8 @@
 
 #pragma once
 
+namespace Audio::Core {
+
 enum class Key {
     C = 0,
     Cs,
@@ -42,3 +44,5 @@ struct Note {
     // Returns true if the note would be a black key on a piano
     bool IsBlackKey() const noexcept;
 };
+
+} // namespace Audio::Core

@@ -6,11 +6,13 @@
 #include "audio/modulation/LFO.hpp"
 #include "audio/core/Frequency.hpp"
 
+namespace Audio::Modulation {
+
 class RandomLFO: public LFO {
 public:
-    RandomLFO(Frequency freq = Frequency(1.0f));
+    RandomLFO(Audio::Core::Frequency freq = Audio::Core::Frequency(1.0f));
 
-    void SetFrequency(Frequency freq);
+    void SetFrequency(Audio::Core::Frequency freq);
 
     float GetNextSample() override;
 
@@ -27,3 +29,5 @@ private:
     int m_sampleCount = 0;
     int m_numSamplesPerPeriod;
 };
+
+} // namespace Audio::Modulation

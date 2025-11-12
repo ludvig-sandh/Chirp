@@ -28,7 +28,7 @@ Keyboard::Keyboard(int keyboardWidth)
     , m_windowWidth(keyboardWidth)
 {}
 
-std::set<Note> Keyboard::Render(const std::set<Note>& pressedQwertyNotes) const {
+std::set<Audio::Core::Note> Keyboard::Render(const std::set<Audio::Core::Note>& pressedQwertyNotes) const {
     ConfigureWindow();
 
     const ImVec2 offset = ImGui::GetCursorScreenPos();
@@ -36,8 +36,8 @@ std::set<Note> Keyboard::Render(const std::set<Note>& pressedQwertyNotes) const 
     const ImVec2 mouseRel = ImVec2(mouseAbs.x - offset.x, mouseAbs.y - offset.y);
 
     // Collect currently pressed notes (from keyboard/mouse)
-    std::set<Note> pressedNotes = pressedQwertyNotes;
-    std::optional<Note> notePressedByMouse = GetMouseKeyboardInput(mouseRel);
+    std::set<Audio::Core::Note> pressedNotes = pressedQwertyNotes;
+    std::optional<Audio::Core::Note> notePressedByMouse = GetMouseKeyboardInput(mouseRel);
     if (notePressedByMouse.has_value()) {
         pressedNotes.insert(*notePressedByMouse);
     }
@@ -82,7 +82,7 @@ std::vector<UIKey> Keyboard::HelpCreateKeys(int keyboardWidth) {
     float whiteKeyWidth = static_cast<float>(keyboardWidth - KEYBOARD_PADDING) / numWhiteKeys;
     float blackKeyWidth = whiteKeyWidth / WHITE_TO_BLACK_KEY_WIDTH_RATIO;
     float x = 0.0f;
-    for (Note note = FIRST_NOTE; note <= LAST_NOTE; ++note) {
+    for (Audio::Core::Note note = FIRST_NOTE; note <= LAST_NOTE; ++note) {
         ImVec2 keyMin;
         ImVec2 keyMax;
         if (note.IsBlackKey()) {
@@ -100,7 +100,7 @@ std::vector<UIKey> Keyboard::HelpCreateKeys(int keyboardWidth) {
 
 int Keyboard::HelpCountWhiteKeys() {
     int count = 0;
-    for (Note note = FIRST_NOTE; note <= LAST_NOTE; ++note) {
+    for (Audio::Core::Note note = FIRST_NOTE; note <= LAST_NOTE; ++note) {
         if (!note.IsBlackKey()) {
             count++;
         }
@@ -108,9 +108,9 @@ int Keyboard::HelpCountWhiteKeys() {
     return count;
 }
 
-std::optional<Note> Keyboard::GetMouseKeyboardInput(const ImVec2& mousePosRelative) const {
+std::optional<Audio::Core::Note> Keyboard::GetMouseKeyboardInput(const ImVec2& mousePosRelative) const {
     bool isMouseDown = ImGui::IsMouseDown(ImGuiMouseButton_Left);
-    auto findInFiltered = [&](auto filter) -> std::optional<Note> {
+    auto findInFiltered = [&](auto filter) -> std::optional<Audio::Core::Note> {
         for (auto const& key : m_keys | std::views::filter(filter)) {
             if (key.rect.Contains(mousePosRelative) && isMouseDown)
                 return key.note;
@@ -127,7 +127,7 @@ std::optional<Note> Keyboard::GetMouseKeyboardInput(const ImVec2& mousePosRelati
     return findInFiltered(WHITE_FILTER);
 }
 
-void Keyboard::DrawAllKeys(const ImVec2& offset, std::set<Note> pressedNotes) const {
+void Keyboard::DrawAllKeys(const ImVec2& offset, std::set<Audio::Core::Note> pressedNotes) const {
     ImDrawList* drawList = ImGui::GetWindowDrawList();
 
     auto drawFilteredKeys = [&](auto&& filter) {

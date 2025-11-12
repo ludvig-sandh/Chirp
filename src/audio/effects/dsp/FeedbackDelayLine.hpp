@@ -8,6 +8,8 @@
 #include <cmath>
 #include <algorithm>
 
+namespace Audio::Effects::DSP {
+
 // A single-channel delay line building block for different types of delay effects
 class FeedbackDelayLine {
 public:
@@ -39,3 +41,5 @@ private:
     int m_delaySamples = 0;
     float m_feedback = 0.5f;
 };
+
+} // namespace Audio::Effects::DSP

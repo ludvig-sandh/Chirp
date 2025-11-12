@@ -4,14 +4,16 @@
 #include "audio/generator/Oscillator.hpp"
 #include "audio/engine/AudioEngine.hpp"
 
-void Oscillator::NoteOn(Note note) {
+namespace Audio::Generator {
+
+void Oscillator::NoteOn(Audio::Core::Note note) {
     CleanUpDeadNotes(); // Regularly remove notes that have gone silent
 
-    Voice v(note, Waveform::ConstructWaveform(m_waveformType), m_env);
+    Voice v(note, Audio::Core::Waveform::ConstructWaveform(m_waveformType), m_env);
     m_voices.push_back(std::move(v));
 }
 
-void Oscillator::NoteOff(Note note) {
+void Oscillator::NoteOff(Audio::Core::Note note) {
     for (auto& v : m_voices) {
         if (v.note == note) {
             v.Release(); // Simply release all notes with the same frequency
@@ -19,7 +21,7 @@ void Oscillator::NoteOff(Note note) {
     }
 }
 
-void Oscillator::SetWaveformType(WaveformInfo::Type type) {
+void Oscillator::SetWaveformType(Audio::Core::WaveformInfo::Type type) {
     if (type == m_waveformType) {
         return;
     }
@@ -32,7 +34,7 @@ void Oscillator::SetWaveformType(WaveformInfo::Type type) {
 }
 
 // Update the envelope used for note volume
-void Oscillator::SetEnvelope(Envelope envelope) {
+void Oscillator::SetEnvelope(Audio::Modulation::Envelope envelope) {
     m_env = envelope;
 }
 
@@ -42,15 +44,15 @@ void Oscillator::SetOctave(int octave) {
     }
 }
 
-void Oscillator::ApplyModulation(float amount, Modulation::Type modType) noexcept {
-    if (modType == Modulation::Type::Pitch) {
+void Oscillator::ApplyModulation(float amount, Audio::Modulation::Type modType) noexcept {
+    if (modType == Audio::Modulation::Type::Pitch) {
         // Modulates the pitch of all voices
         for (auto& voice : m_voices) {
             voice.freq.AddPitchModulation(amount);
         }
-    }else if (modType == Modulation::Type::Volume) {
+    }else if (modType == Audio::Modulation::Type::Volume) {
         gain.AddModulationLinear(amount);
-    }else if (modType == Modulation::Type::Pan) {
+    }else if (modType == Audio::Modulation::Type::Pan) {
         pan.AddModulation(amount);
     }
 }
@@ -76,3 +78,5 @@ void Oscillator::CleanUpDeadNotes() {
         return voice.IsDead(); 
     });
 }
+
+} // namespace Audio::Generator

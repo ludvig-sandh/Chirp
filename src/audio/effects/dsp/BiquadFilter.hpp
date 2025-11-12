@@ -5,6 +5,8 @@
 
 #include "audio/engine/AudioProcessorNode.hpp"
 
+namespace Audio::Effects::DSP {
+
 // A simple biquad filter for a single channel.
 // https://arachnoid.com/BiQuadDesigner/index.html
 // For an overview of how to compute the coefficients for different types of filters, I used
@@ -29,3 +31,5 @@ private:
     float m_x1 = 0.0f; // x[n-1]
     float m_x2 = 0.0f; // x[n-2]
 };
+
+} // namespace Audio::Effects::DSP

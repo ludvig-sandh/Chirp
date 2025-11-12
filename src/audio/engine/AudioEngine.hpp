@@ -13,11 +13,14 @@
 #include "audio/engine/AudioBackend.hpp"
 #include "audio/layout/SynthLayout.hpp"
 
-#define SAMPLE_RATE (44100)
+namespace Audio::Engine {
+    namespace Constants {
+        inline constexpr int SAMPLE_RATE = 44100;
+    }
 
 class AudioEngine {
 public:
-    AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
+    AudioEngine(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
 
     // Recurse from the root of the tree
     AudioBuffer ProcessBuffer(int numFrames);
@@ -42,8 +45,10 @@ private:
         PaError m_result;
     };
 
-    std::shared_ptr<AudioPreset> m_preset;
+    std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
     AudioBackend m_backend;
-    SynthLayout m_synthLayout;
+    Audio::Layout::SynthLayout m_synthLayout;
 };
+
+} // namespace Audio::Engine

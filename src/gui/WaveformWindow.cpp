@@ -5,14 +5,14 @@
 #include "gui/Keyboard.hpp"
 #include "gui/GUIConstants.hpp"
 
-WaveformWindow::WaveformWindow(WaveformInfo::Type waveformType, const std::string& windowName)
+WaveformWindow::WaveformWindow(Audio::Core::WaveformInfo::Type waveformType, const std::string& windowName)
     : m_waveformType(waveformType)
     , m_windowName(windowName)
 {
     UpdateTexture();
 }
 
-void WaveformWindow::Render(WaveformInfo::Type waveformType, bool comesFirst, bool isOn) {
+void WaveformWindow::Render(Audio::Core::WaveformInfo::Type waveformType, bool comesFirst, bool isOn) {
     ImVec2 windowSize = ConfigureWindow(comesFirst);
     ImVec2 imageSize = ImVec2(windowSize.x - IMAGE_PADDING_RIGHT, windowSize.y - IMAGE_PADDING_BOTTOM);
 
@@ -85,7 +85,7 @@ void WaveformWindow::UpdateTexture() {
     }
     
     // Prepare pixels
-    std::unique_ptr<Waveform> wf = Waveform::ConstructWaveform(m_waveformType);
+    std::unique_ptr<Audio::Core::Waveform> wf = Audio::Core::Waveform::ConstructWaveform(m_waveformType);
     std::vector<unsigned char> pixels(TEXTURE_HEIGHT * TEXTURE_WIDTH * 4, 0);
 
     // Convenient helper function to paint a pixel with a thick brush (a circle). With radius=0 paints only 1 pixel

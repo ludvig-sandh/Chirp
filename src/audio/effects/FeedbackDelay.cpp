@@ -3,6 +3,8 @@
 
 #include "audio/effects/FeedbackDelay.hpp"
 
+namespace Audio::Effects {
+
 FeedbackDelay::FeedbackDelay() 
     : m_leftLine(m_delayTime, m_feedback)
     , m_rightLine(m_delayTime, m_feedback)
@@ -11,7 +13,7 @@ FeedbackDelay::FeedbackDelay()
     UpdateDelayLines();
 }
 
-FeedbackDelay::FeedbackDelay(FeedbackDelayInfo::Type delayType, DSP::Seconds delayTime, float feedback)
+FeedbackDelay::FeedbackDelay(DSP::FeedbackDelayInfo::Type delayType, DSP::Seconds delayTime, float feedback)
     : m_leftLine(delayTime, feedback)
     , m_rightLine(delayTime, feedback)
     , m_monoLine(delayTime, feedback)
@@ -21,7 +23,7 @@ FeedbackDelay::FeedbackDelay(FeedbackDelayInfo::Type delayType, DSP::Seconds del
     SetFeedback(feedback);
 }
 
-void FeedbackDelay::SetDelayType(FeedbackDelayInfo::Type delayType) noexcept {
+void FeedbackDelay::SetDelayType(DSP::FeedbackDelayInfo::Type delayType) noexcept {
     if (m_delayType == delayType) {
         return;
     }
@@ -47,36 +49,36 @@ void FeedbackDelay::SetFeedback(float feedback) noexcept {
     m_monoLine.SetFeedback(feedback);
 }
 
-void FeedbackDelay::ProcessFrame(AudioFrame& output) noexcept {
+void FeedbackDelay::ProcessFrame(Audio::Engine::AudioFrame& output) noexcept {
     float dryL = output.left;
     float dryR = output.right;
     float avg = (dryL + dryR) / 2.0f;
     
     switch (m_delayType) {
-        case FeedbackDelayInfo::Type::Mono: {
+        case DSP::FeedbackDelayInfo::Type::Mono: {
             // Feed average of input into mono delay line
             float out = m_monoLine.Process(avg);
-            output += AudioFrame{ out, out };
+            output += Audio::Engine::AudioFrame{ out, out };
             break;
         }
-        case FeedbackDelayInfo::Type::Stereo: {
+        case DSP::FeedbackDelayInfo::Type::Stereo: {
             float wetL = m_leftLine.Process(dryL);
             float wetR = m_rightLine.Process(dryR);
-            output += AudioFrame{ wetL, wetR };
+            output += Audio::Engine::AudioFrame{ wetL, wetR };
             break;
         }
-        case FeedbackDelayInfo::Type::PingPong: {
+        case DSP::FeedbackDelayInfo::Type::PingPong: {
             float delayedL = m_preDelay.Process(avg); // Offset the left channel
             float wetL = delayedL + m_leftLine.Process(delayedL);
             float wetR = m_rightLine.Process(avg);
-            output = AudioFrame{ dryL + wetL, dryR + wetR };
+            output = Audio::Engine::AudioFrame{ dryL + wetL, dryR + wetR };
             break;
         }
     }
 }
 
 void FeedbackDelay::UpdateDelayLines() noexcept {
-    if (m_delayType == FeedbackDelayInfo::Type::PingPong) {
+    if (m_delayType == DSP::FeedbackDelayInfo::Type::PingPong) {
         // Since we want to offset one channel by half the delay time,
         // the delay time effectively halves. Doubling it makes the most
         // sense for the user.
@@ -89,3 +91,5 @@ void FeedbackDelay::UpdateDelayLines() noexcept {
         m_monoLine.SetDelayTime(m_delayTime);
     }
 }
+
+} // namespace Audio::Effects

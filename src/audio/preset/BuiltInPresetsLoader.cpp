@@ -15,6 +15,8 @@
     #include <unistd.h>
 #endif
 
+namespace Audio::Preset {
+
 // Cross platform code to find the path of the directory that directly contains the executable
 static std::filesystem::path GetExecutableDir() {
 #if defined(_WIN32)
@@ -67,7 +69,7 @@ bool BuiltInPresetsLoader::LoadBuiltInPreset(AudioPreset& preset, const std::str
         return false;
     }
 
-    return AudioPresetIO::LoadFromFile(preset, presetPath.string());
+    return IO::LoadFromFile(preset, presetPath.string());
 }
 
 bool BuiltInPresetsLoader::LoadDefaultPreset(AudioPreset& preset) const {
@@ -100,3 +102,5 @@ std::filesystem::path BuiltInPresetsLoader::GetPresetsFolder() {
     std::filesystem::path presetDir = exeDir / PATH_FROM_EXE_TO_PRESETS;
     return presetDir;
 }
+
+} // namespace AudioPreset

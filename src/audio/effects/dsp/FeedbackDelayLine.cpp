@@ -5,6 +5,8 @@
 #include "audio/effects/dsp/FeedbackDelayLine.hpp"
 #include <cmath>
 
+namespace Audio::Effects::DSP {
+
 FeedbackDelayLine::FeedbackDelayLine(DSP::Seconds delayTime, float feedback)
     : m_buffer(BUFFER_SIZE, 0.0f)
     , m_writeIndex(0)
@@ -17,8 +19,8 @@ FeedbackDelayLine::FeedbackDelayLine(DSP::Seconds delayTime, float feedback)
 
 void FeedbackDelayLine::SetDelayTime(DSP::Seconds delayTime) noexcept {
     // Clamp to available buffer size
-    float clamped = std::clamp(delayTime.count(), MIN_DELAY_SEC.count(), static_cast<float>(BUFFER_SIZE - 1) / SAMPLE_RATE);
-    m_delaySamples = static_cast<int>(clamped * SAMPLE_RATE);
+    float clamped = std::clamp(delayTime.count(), MIN_DELAY_SEC.count(), static_cast<float>(BUFFER_SIZE - 1) / Audio::Engine::Constants::SAMPLE_RATE);
+    m_delaySamples = static_cast<int>(clamped * Audio::Engine::Constants::SAMPLE_RATE);
 }
 
 void FeedbackDelayLine::SetFeedback(float feedback) noexcept {
@@ -42,3 +44,5 @@ void FeedbackDelayLine::Clear() {
     std::fill(m_buffer.begin(), m_buffer.end(), 0.0f);
     m_writeIndex = 0;
 }
+
+} // namespace Audio::Effects::DSP

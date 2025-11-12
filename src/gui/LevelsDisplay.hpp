@@ -18,7 +18,7 @@ public:
     static const int WINDOW_HEIGHT = 294;
     static const int WINDOW_WIDTH = 80;
 
-    void UpdateLevels(const AudioFrame& levels);
+    void UpdateLevels(const Audio::Engine::AudioFrame& levels);
 
     // Render in imgui
     void Render();

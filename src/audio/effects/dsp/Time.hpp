@@ -5,7 +5,7 @@
 
 #include <chrono>
 
-namespace DSP {
+namespace Audio::Effects::DSP {
 
 using Seconds = std::chrono::duration<float>;
 using Samples = int;
@@ -19,4 +19,4 @@ constexpr inline Seconds ToSeconds(Samples samples, float sampleRate) noexcept {
     return Seconds(static_cast<float>(samples) / sampleRate);
 }
 
-} // namespace DSP
+} // namespace Audio::Effects::DSP

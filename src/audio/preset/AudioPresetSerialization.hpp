@@ -9,7 +9,9 @@
 
 using json = nlohmann::json;
 
-namespace AudioPresetIO {
+namespace Audio::Preset {
+
+namespace IO {
 
 // Helper: converts preset to JSON
 inline json ToJson(const AudioPreset& p) {
@@ -85,22 +87,21 @@ inline json ToJson(const AudioPreset& p) {
 }
 
 // Helper: converts JSON to preset
-inline void FromJson(const json& j, AudioPreset& p)
-{
+inline void FromJson(const json& j, AudioPreset& p) {
     auto get = [&](auto& field, const char* key, auto def) {
         field.store(j.value(key, def));
     };
 
-    p.synthOscAWaveform.store(static_cast<WaveformInfo::Type>(
-        j.value("synthOscAWaveform", static_cast<int>(WaveformInfo::Type::Saw))
+    p.synthOscAWaveform.store(static_cast<Audio::Core::WaveformInfo::Type>(
+        j.value("synthOscAWaveform", static_cast<int>(Audio::Core::WaveformInfo::Type::Saw))
     ));
     get(p.synthOscAOn, "synthOscAOn", true);
     get(p.synthOscAVolume, "synthOscAVolume", 0.7f);
     get(p.synthOscAPan, "synthOscAPan", 0.5f);
     get(p.synthOscAOctave, "synthOscAOctave", 5);
 
-    p.synthOscBWaveform.store(static_cast<WaveformInfo::Type>(
-        j.value("synthOscBWaveform", static_cast<int>(WaveformInfo::Type::Saw))
+    p.synthOscBWaveform.store(static_cast<Audio::Core::WaveformInfo::Type>(
+        j.value("synthOscBWaveform", static_cast<int>(Audio::Core::WaveformInfo::Type::Saw))
     ));
     get(p.synthOscBOn, "synthOscBOn", false);
     get(p.synthOscBVolume, "synthOscBVolume", 0.7f);
@@ -128,8 +129,8 @@ inline void FromJson(const json& j, AudioPreset& p)
     get(p.synthHpFilterQ, "synthHpFilterQ", 0.707f);
 
     get(p.synthDelayOn, "synthDelayOn", false);
-    p.synthDelayType.store(static_cast<FeedbackDelayInfo::Type>(
-        j.value("synthDelayType", static_cast<int>(FeedbackDelayInfo::Type::Mono))
+    p.synthDelayType.store(static_cast<Audio::Effects::DSP::FeedbackDelayInfo::Type>(
+        j.value("synthDelayType", static_cast<int>(Audio::Effects::DSP::FeedbackDelayInfo::Type::Mono))
     ));
     get(p.synthDelayMix, "synthDelayMix", 1.0f);
     get(p.synthDelayTime, "synthDelayTime", 0.2f);
@@ -142,44 +143,43 @@ inline void FromJson(const json& j, AudioPreset& p)
 
     
     get(p.synthLFO1On, "synthLFO1On", false);
-    p.synthLFO1Mode.store(static_cast<LFOConfig::Mode>(
-        j.value("synthLFO1Mode", static_cast<int>(LFOConfig::Mode::Periodic))
+    p.synthLFO1Mode.store(static_cast<Audio::Modulation::LFOConfig::Mode>(
+        j.value("synthLFO1Mode", static_cast<int>(Audio::Modulation::LFOConfig::Mode::Periodic))
     ));
-    p.synthLFO1Destination.store(static_cast<LFOConfig::Destination>(
-        j.value("synthLFO1Destination", static_cast<int>(LFOConfig::Destination::OscAVolume))
+    p.synthLFO1Destination.store(static_cast<Audio::Modulation::LFOConfig::Destination>(
+        j.value("synthLFO1Destination", static_cast<int>(Audio::Modulation::LFOConfig::Destination::OscAVolume))
     ));
     get(p.synthLFO1Amount, "synthLFO1Amount", 0.0f);
     get(p.synthLFO1EnvAttack, "synthLFO1EnvAttack", 0.0f);
     get(p.synthLFO1EnvHold, "synthLFO1EnvHold", 0.0f);
     get(p.synthLFO1EnvDec, "synthLFO1EnvDec", 0.0f);
     get(p.synthLFO1EnvSus, "synthLFO1EnvSus", 1.0f);
-    p.synthLFO1Waveform.store(static_cast<WaveformInfo::Type>(
-        j.value("synthLFO1Waveform", static_cast<int>(WaveformInfo::Type::Saw))
+    p.synthLFO1Waveform.store(static_cast<Audio::Core::WaveformInfo::Type>(
+        j.value("synthLFO1Waveform", static_cast<int>(Audio::Core::WaveformInfo::Type::Saw))
     ));
     get(p.synthLFO1Frequency, "synthLFO1Frequency", 1.0f);
     
     
     get(p.synthLFO2On, "synthLFO2On", false);
-    p.synthLFO2Mode.store(static_cast<LFOConfig::Mode>(
-        j.value("synthLFO2Mode", static_cast<int>(LFOConfig::Mode::Periodic))
+    p.synthLFO2Mode.store(static_cast<Audio::Modulation::LFOConfig::Mode>(
+        j.value("synthLFO2Mode", static_cast<int>(Audio::Modulation::LFOConfig::Mode::Periodic))
     ));
-    p.synthLFO2Destination.store(static_cast<LFOConfig::Destination>(
-        j.value("synthLFO2Destination", static_cast<int>(LFOConfig::Destination::OscAVolume))
+    p.synthLFO2Destination.store(static_cast<Audio::Modulation::LFOConfig::Destination>(
+        j.value("synthLFO2Destination", static_cast<int>(Audio::Modulation::LFOConfig::Destination::OscAVolume))
     ));
     get(p.synthLFO2Amount, "synthLFO2Amount", 0.0f);
     get(p.synthLFO2EnvAttack, "synthLFO2EnvAttack", 0.0f);
     get(p.synthLFO2EnvHold, "synthLFO2EnvHold", 0.0f);
     get(p.synthLFO2EnvDec, "synthLFO2EnvDec", 0.0f);
     get(p.synthLFO2EnvSus, "synthLFO2EnvSus", 1.0f);
-    p.synthLFO2Waveform.store(static_cast<WaveformInfo::Type>(
-        j.value("synthLFO2Waveform", static_cast<int>(WaveformInfo::Type::Saw))
+    p.synthLFO2Waveform.store(static_cast<Audio::Core::WaveformInfo::Type>(
+        j.value("synthLFO2Waveform", static_cast<int>(Audio::Core::WaveformInfo::Type::Saw))
     ));
     get(p.synthLFO2Frequency, "synthLFO2Frequency", 1.0f);
 }
 
 // File I/O helpers
-inline bool SaveToFile(const AudioPreset& p, const std::string& filePath)
-{
+inline bool SaveToFile(const AudioPreset& p, const std::string& filePath) {
     std::ofstream file(filePath);
     if (!file.is_open()) {
         return false;
@@ -190,8 +190,7 @@ inline bool SaveToFile(const AudioPreset& p, const std::string& filePath)
     return true;
 }
 
-inline bool LoadFromFile(AudioPreset& p, const std::string& filePath)
-{
+inline bool LoadFromFile(AudioPreset& p, const std::string& filePath) {
     std::ifstream file(filePath);
     if (!file.is_open()) {
         return false;
@@ -208,4 +207,6 @@ inline bool LoadFromFile(AudioPreset& p, const std::string& filePath)
     return true;
 }
 
-} // namespace AudioPresetIO
+} // namespace IO
+
+} // namespace AudioPreset

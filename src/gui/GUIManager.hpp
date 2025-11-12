@@ -31,7 +31,7 @@
 // Responsible for managing the GLFW window and running the main loop
 class GUIManager {
 public:
-    GUIManager(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
+    GUIManager(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
 
     ~GUIManager();
 
@@ -43,11 +43,11 @@ private:
     GLFWwindow *InitAux();
     void DeinitAux();
 
-    std::set<Note> GetQwertyNotesPressed() const;
+    std::set<Audio::Core::Note> GetQwertyNotesPressed() const;
 
-    std::set<Note> GetAllPressedNotes();
+    std::set<Audio::Core::Note> GetAllPressedNotes();
 
-    std::shared_ptr<AudioPreset> m_preset;
+    std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
     Keyboard m_keyboard;
     PresetWindow m_presetWindow;

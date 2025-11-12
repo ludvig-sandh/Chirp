@@ -4,7 +4,7 @@
 #include "audio/modulation/ModulationMatrix.hpp"
 #include "audio/engine/AudioProcessorNode.hpp"
 
-namespace Modulation {
+namespace Audio::Modulation {
 
 void Matrix::ClearRoutes() {
     m_routes.clear();
@@ -35,4 +35,4 @@ void Matrix::ApplyModulations() {
     }
 }
 
-} // namespace Modulation
+} // namespace Audio::Modulation

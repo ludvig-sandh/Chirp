@@ -4,14 +4,16 @@
 #include "audio/modulation/RandomLFO.hpp"
 #include "audio/engine/AudioEngine.hpp"
 
-RandomLFO::RandomLFO(Frequency freq) {
-    m_numSamplesPerPeriod = SAMPLE_RATE / freq.GetAbsolute();
+namespace Audio::Modulation {
+
+RandomLFO::RandomLFO(Audio::Core::Frequency freq) {
+    m_numSamplesPerPeriod = Audio::Engine::Constants::SAMPLE_RATE / freq.GetAbsolute();
     m_lastRandValue = GenerateRandValueHelper();
     m_nextRandValue = GenerateRandValueHelper();
 }
 
-void RandomLFO::SetFrequency(Frequency freq) {
-    m_numSamplesPerPeriod = SAMPLE_RATE / freq.GetAbsolute();
+void RandomLFO::SetFrequency(Audio::Core::Frequency freq) {
+    m_numSamplesPerPeriod = Audio::Engine::Constants::SAMPLE_RATE / freq.GetAbsolute();
 }
 
 float RandomLFO::GetNextSample() {
@@ -43,3 +45,5 @@ float RandomLFO::CubicInterpolate(float y0, float y1, float t, float m0, float m
 
     return h00*y0 + h10*m0 + h01*y1 + h11*m1;
 }
+
+} // namespace Audio::Modulation

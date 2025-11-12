@@ -20,13 +20,13 @@ public:
     void OpenDefaultPort();
 
     // Polls MIDI messages, auto-opens ports if needed, and returns pressed notes
-    std::set<Note> GetPressedNotes();
+    std::set<Audio::Core::Note> GetPressedNotes();
 
 private:
-    static Note MidiNoteToNote(int midiNumber);
+    static Audio::Core::Note MidiNoteToNote(int midiNumber);
     
     RtMidiIn m_midiIn;
-    std::set<Note> m_pressedNotes;
+    std::set<Audio::Core::Note> m_pressedNotes;
     bool m_portOpen = false;
     bool m_hadDevice = false;
     int m_currentPort = -1;

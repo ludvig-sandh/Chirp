@@ -12,11 +12,11 @@ class PresetLoaderWindow {
 public:
     static inline const int WINDOW_HEIGHT = 84;
 
-    void Render(AudioPreset& preset) const;
+    void Render(Audio::Preset::AudioPreset& preset) const;
 
 private:
     void ConfigureWindow() const;
 
     // Display export/load preset buttons
-    void DrawPresetLoader(AudioPreset& preset) const;
+    void DrawPresetLoader(Audio::Preset::AudioPreset& preset) const;
 };

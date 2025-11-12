@@ -9,6 +9,7 @@
 #include <optional>
 #include "audio/preset/AudioPreset.hpp"
 
+namespace Audio::Preset {
 
 class BuiltInPresetsLoader {
 public:
@@ -43,3 +44,5 @@ private:
     std::vector<std::string> m_presetNames;
     std::filesystem::path m_builtInPresetsFolder;
 };
+
+} // namespace AudioPreset

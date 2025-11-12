@@ -12,7 +12,7 @@
 #include <optional>
 #include <cassert>
 
-void PresetLoaderWindow::Render(AudioPreset& preset) const {
+void PresetLoaderWindow::Render(Audio::Preset::AudioPreset& preset) const {
     ConfigureWindow();
     DrawPresetLoader(preset);
     ImGui::End();
@@ -38,7 +38,7 @@ void PresetLoaderWindow::ConfigureWindow() const {
         | ImGuiWindowFlags_NoCollapse);
 }
 
-void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
+void PresetLoaderWindow::DrawPresetLoader(Audio::Preset::AudioPreset& preset) const {
     ImGui::SeparatorText("audio/preset loader");
 
     // --- Browse and export preset file ---
@@ -57,7 +57,7 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
     )) {
         if (ImGuiFileDialog::Instance()->IsOk()) {
             std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
-            if (AudioPresetIO::SaveToFile(preset, filePath))
+            if (Audio::Preset::IO::SaveToFile(preset, filePath))
                 ImGui::OpenPopup("SaveSuccess");
             else
                 ImGui::OpenPopup("SaveFail");
@@ -92,7 +92,7 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
     )) {
         if (ImGuiFileDialog::Instance()->IsOk()) {
             std::string filePath = ImGuiFileDialog::Instance()->GetFilePathName();
-            if (AudioPresetIO::LoadFromFile(preset, filePath))
+            if (Audio::Preset::IO::LoadFromFile(preset, filePath))
                 ImGui::OpenPopup("LoadSuccess");
             else
                 ImGui::OpenPopup("LoadFail");
@@ -111,7 +111,7 @@ void PresetLoaderWindow::DrawPresetLoader(AudioPreset& preset) const {
 
 
     // --- Select and load built-in preset ---
-    auto& loader = BuiltInPresetsLoader::GetShared();
+    auto& loader = Audio::Preset::BuiltInPresetsLoader::GetShared();
     auto& presetNames = loader.GetPresetNames();
     
     if (presetNames.empty()) {

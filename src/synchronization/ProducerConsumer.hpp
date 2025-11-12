@@ -8,6 +8,8 @@
 #include <mutex>
 #include <condition_variable>
 
+namespace Synchronization {
+
 // A bounded buffer but for just one item rather than a buffer.
 template <typename T>
 class ProducerConsumer {
@@ -60,3 +62,5 @@ std::unique_ptr<T> ProducerConsumer<T>::Consume() {
     m_waitEmpty.notify_one();
     return temp;
 }
+
+} // namespace Synchronization

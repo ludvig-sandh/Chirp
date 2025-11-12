@@ -3,6 +3,8 @@
 
 #include "audio/effects/dsp/BiquadFilter.hpp"
 
+namespace Audio::Effects::DSP {
+
 void BiquadFilter::SetCoefficients(float b0, float b1, float b2, float a1, float a2) noexcept {
     m_b0 = b0;
     m_b1 = b1;
@@ -23,3 +25,5 @@ float BiquadFilter::Step(float x) noexcept {
 
     return y;
 }
+
+} // namespace Audio::Effects::DSP

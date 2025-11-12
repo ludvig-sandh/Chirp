@@ -10,7 +10,7 @@
 
 class PresetWindow {
 public:
-    PresetWindow(std::shared_ptr<AudioPreset> preset)
+    PresetWindow(std::shared_ptr<Audio::Preset::AudioPreset> preset)
         : m_preset(preset)
     {}
 
@@ -31,5 +31,5 @@ private:
     void DrawLFO1() const;
     void DrawLFO2() const;
 
-    std::shared_ptr<AudioPreset> m_preset;
+    std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
 };

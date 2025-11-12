@@ -5,14 +5,14 @@
 #include "audio/preset/BuiltInPresetsLoader.hpp"
 
 MainApplication::MainApplication()
-    : m_preset(std::make_shared<AudioPreset>())
+    : m_preset(std::make_shared<Audio::Preset::AudioPreset>())
     , m_fftComputer(std::make_shared<FFTComputer>())
     , m_gui(m_preset, m_fftComputer)
     , m_audioEngine(m_preset, m_fftComputer)
 {}
 
 void MainApplication::Start() {
-    BuiltInPresetsLoader::GetShared().LoadDefaultPreset(*m_preset);
+    Audio::Preset::BuiltInPresetsLoader::GetShared().LoadDefaultPreset(*m_preset);
 
     // Start the engine in its own thread
     std::thread audioThread([&]() {

@@ -4,21 +4,23 @@
 #include "audio/modulation/PeriodicLFO.hpp"
 #include "audio/engine/AudioEngine.hpp"
 
-PeriodicLFO::PeriodicLFO(WaveformInfo::Type type, Frequency frequency)
-    : m_waveform(Waveform::ConstructWaveform(type))
+namespace Audio::Modulation {
+
+PeriodicLFO::PeriodicLFO(Audio::Core::WaveformInfo::Type type, Audio::Core::Frequency frequency)
+    : m_waveform(Audio::Core::Waveform::ConstructWaveform(type))
     , m_frequency(frequency)
 {}
 
-void PeriodicLFO::SetWaveformType(WaveformInfo::Type type) {
-    m_waveform = Waveform::ConstructWaveform(type);
+void PeriodicLFO::SetWaveformType(Audio::Core::WaveformInfo::Type type) {
+    m_waveform = Audio::Core::Waveform::ConstructWaveform(type);
 }
     
-void PeriodicLFO::SetFrequency(Frequency frequency) {
+void PeriodicLFO::SetFrequency(Audio::Core::Frequency frequency) {
     m_frequency = frequency;
 }
 
 float PeriodicLFO::GetNextSample() {
-    float dt = 1.0 / SAMPLE_RATE;
+    float dt = 1.0 / Audio::Engine::Constants::SAMPLE_RATE;
     float dOffset = dt * m_frequency.GetAbsolute();
     m_currentPhase += dOffset;
 
@@ -27,3 +29,5 @@ float PeriodicLFO::GetNextSample() {
 
     return m_waveform->GetSampleAt(m_currentPhase) / 2.0f + 0.5f; // Shift to range [0, 1] for LFOs
 }
+
+} // namespace Audio::Modulation

@@ -7,13 +7,15 @@
 #include <cmath>
 #include <numbers>
 
+namespace Audio::Engine {
+
 // Clamp the amplitude to avoid the possibility of going deaf
 void AudioFrame::ClipToValidRange() {
     left = std::clamp(left, -1.0f, 1.0f);
     right = std::clamp(right, -1.0f, 1.0f);
 }
 
-AudioFrame AudioFrame::Blend(const AudioFrame& processed, const AudioFrame& unprocessed, NormalizedFloat mix) noexcept {
+AudioFrame AudioFrame::Blend(const AudioFrame& processed, const AudioFrame& unprocessed, Util::NormalizedFloat mix) noexcept {
     // Equal-power dry/wet mixing
     float dryGain = std::cos(mix.get() * static_cast<float>(std::numbers::pi / 2.0));
     float wetGain = std::sin(mix.get() * static_cast<float>(std::numbers::pi / 2.0));
@@ -21,3 +23,5 @@ AudioFrame AudioFrame::Blend(const AudioFrame& processed, const AudioFrame& unpr
     float rightBlended = processed.right * wetGain + unprocessed.right * dryGain;
     return AudioFrame{leftBlended, rightBlended};
 }
+
+} // namespace Audio::Engine

@@ -4,8 +4,15 @@
 #include "audio/modulation/Envelope.hpp"
 #include "audio/engine/AudioEngine.hpp"
 
-Envelope::Envelope(DSP::Seconds atk, DSP::Seconds hld, DSP::Seconds dec, NormalizedFloat sus, DSP::Seconds rel) noexcept
-    : attack(atk), hold(hld), decay(dec), sustain(sus), release(rel)
+namespace Audio::Modulation {
+
+Envelope::Envelope(
+    Audio::Effects::DSP::Seconds atk,
+    Audio::Effects::DSP::Seconds hld,
+    Audio::Effects::DSP::Seconds dec,
+    Util::NormalizedFloat sus,
+    Audio::Effects::DSP::Seconds rel) noexcept
+        : attack(atk), hold(hld), decay(dec), sustain(sus), release(rel)
 {}
 
 float Envelope::GetNextSample() noexcept {
@@ -18,7 +25,7 @@ float Envelope::GetNextSample() noexcept {
 
 float Envelope::GetNextSampleHelper() noexcept {
     // Progress time
-    m_timeSinceStart += DSP::Seconds(1.0f / SAMPLE_RATE);
+    m_timeSinceStart += Audio::Effects::DSP::Seconds(1.0f / Audio::Engine::Constants::SAMPLE_RATE);
 
     if (m_hasBeenReleased) {
         if (m_timeSinceStart < release) {
@@ -36,20 +43,20 @@ float Envelope::GetNextSampleHelper() noexcept {
         return 1.0f;
     }
     if (m_timeSinceStart < attack + hold + decay) {
-        DSP::Seconds timeSinceDecStart = m_timeSinceStart - attack - hold;
+        Audio::Effects::DSP::Seconds timeSinceDecStart = m_timeSinceStart - attack - hold;
         return 1.0f - (1.0f - sustain.get()) * timeSinceDecStart.count() / decay.count();
     }
     return sustain;
 }
 
 void Envelope::Restart() noexcept {
-    m_timeSinceStart = DSP::Seconds(0.0f);
+    m_timeSinceStart = Audio::Effects::DSP::Seconds(0.0f);
     m_hasBeenReleased = false;
 }
 
 void Envelope::Release() noexcept {
     if (!m_hasBeenReleased) {
-        m_timeSinceStart = DSP::Seconds(0.0f);
+        m_timeSinceStart = Audio::Effects::DSP::Seconds(0.0f);
         m_hasBeenReleased = true;
     }
 }
@@ -60,3 +67,5 @@ bool Envelope::IsComplete() const noexcept {
     }
     return false;
 }
+
+} // namespace Audio::Modulation

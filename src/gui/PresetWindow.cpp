@@ -63,14 +63,14 @@ void PresetWindow::DrawOscillatorA() const {
     m_preset->synthOscAOn.store(oscAOnTemp);
     
     // --- Waveform dropdown ---
-    WaveformInfo::Type waveformATemp = m_preset->synthOscAWaveform.load();
+    Audio::Core::WaveformInfo::Type waveformATemp = m_preset->synthOscAWaveform.load();
 
     // ImGui::Combo returns true if the selection changed
-    if (ImGui::BeginCombo("Waveform##A", WaveformInfo::Names[static_cast<int>(waveformATemp)])) {
-        for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
+    if (ImGui::BeginCombo("Waveform##A", Audio::Core::WaveformInfo::Names[static_cast<int>(waveformATemp)])) {
+        for (int n = 0; n < IM_ARRAYSIZE(Audio::Core::WaveformInfo::Names); n++) {
             bool isSelected = (static_cast<int>(waveformATemp) == n);
-            if (ImGui::Selectable(WaveformInfo::Names[n], isSelected)) {
-                waveformATemp = static_cast<WaveformInfo::Type>(n);
+            if (ImGui::Selectable(Audio::Core::WaveformInfo::Names[n], isSelected)) {
+                waveformATemp = static_cast<Audio::Core::WaveformInfo::Type>(n);
             }
             if (isSelected) {
                 ImGui::SetItemDefaultFocus();
@@ -101,23 +101,25 @@ void PresetWindow::DrawOscillatorB() const {
     ImGui::Checkbox("On##B", &oscBOnTemp);
     m_preset->synthOscBOn.store(oscBOnTemp);
     
-    // --- Waveform dropdown ---
-    WaveformInfo::Type waveformBTemp = m_preset->synthOscBWaveform.load();
+    // Waveform dropdown
+    Audio::Core::WaveformInfo::Type waveformBTemp = m_preset->synthOscBWaveform.load();
 
     // ImGui::Combo returns true if the selection changed
-    if (ImGui::BeginCombo("Waveform##B", WaveformInfo::Names[static_cast<int>(waveformBTemp)])) {
-        for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
+    if (ImGui::BeginCombo("Waveform##B", Audio::Core::WaveformInfo::Names[static_cast<int>(waveformBTemp)])) {
+        for (int n = 0; n < IM_ARRAYSIZE(Audio::Core::WaveformInfo::Names); n++) {
             bool isSelected = (static_cast<int>(waveformBTemp) == n);
-            if (ImGui::Selectable(WaveformInfo::Names[n], isSelected))
-                waveformBTemp = static_cast<WaveformInfo::Type>(n);
-            if (isSelected)
+            if (ImGui::Selectable(Audio::Core::WaveformInfo::Names[n], isSelected)) {
+                waveformBTemp = static_cast<Audio::Core::WaveformInfo::Type>(n);
+            }
+            if (isSelected) {
                 ImGui::SetItemDefaultFocus();
+            }
         }
         ImGui::EndCombo();
     }
     m_preset->synthOscBWaveform.store(waveformBTemp);
-    // ---
 
+    
     float oscBVolumeTemp = m_preset->synthOscBVolume.load();
     ImGui::SliderFloat("Volume##B", &oscBVolumeTemp, 0.0f, 1.0f);
     m_preset->synthOscBVolume.store(oscBVolumeTemp);
@@ -225,13 +227,13 @@ void PresetWindow::DrawFeedbackDelay() const {
     m_preset->synthDelayOn.store(delayOnTemp);
 
     // --- Delay type dropdown --- 
-    FeedbackDelayInfo::Type delayTypeTemp = m_preset->synthDelayType.load();
+    Audio::Effects::DSP::FeedbackDelayInfo::Type delayTypeTemp = m_preset->synthDelayType.load();
 
-    if (ImGui::BeginCombo("Delay mode", FeedbackDelayInfo::Names[static_cast<int>(delayTypeTemp)])) {
-        for (int n = 0; n < IM_ARRAYSIZE(FeedbackDelayInfo::Names); n++) {
+    if (ImGui::BeginCombo("Delay mode", Audio::Effects::DSP::FeedbackDelayInfo::Names[static_cast<int>(delayTypeTemp)])) {
+        for (int n = 0; n < IM_ARRAYSIZE(Audio::Effects::DSP::FeedbackDelayInfo::Names); n++) {
             bool isSelected = (static_cast<int>(delayTypeTemp) == n);
-            if (ImGui::Selectable(FeedbackDelayInfo::Names[n], isSelected)) {
-                delayTypeTemp = static_cast<FeedbackDelayInfo::Type>(n);
+            if (ImGui::Selectable(Audio::Effects::DSP::FeedbackDelayInfo::Names[n], isSelected)) {
+                delayTypeTemp = static_cast<Audio::Effects::DSP::FeedbackDelayInfo::Type>(n);
             }
             if (isSelected) {
                 ImGui::SetItemDefaultFocus();
@@ -246,11 +248,11 @@ void PresetWindow::DrawFeedbackDelay() const {
     m_preset->synthDelayMix.store(delayMixTemp);
 
     float delayTimeTemp = m_preset->synthDelayTime.load();
-    ImGui::SliderFloat("Delay time (s)##Delay", &delayTimeTemp, FeedbackDelayLine::MIN_DELAY_SEC.count(), FeedbackDelayLine::MAX_DELAY_SEC.count());
+    ImGui::SliderFloat("Delay time (s)##Delay", &delayTimeTemp, Audio::Effects::DSP::FeedbackDelayLine::MIN_DELAY_SEC.count(), Audio::Effects::DSP::FeedbackDelayLine::MAX_DELAY_SEC.count());
     m_preset->synthDelayTime.store(delayTimeTemp);
 
     float delayFeedbackTemp = m_preset->synthDelayFeedback.load();
-    ImGui::SliderFloat("Feedback level##Delay", &delayFeedbackTemp, FeedbackDelayLine::MIN_FEEDBACK, FeedbackDelayLine::MAX_FEEDBACK);
+    ImGui::SliderFloat("Feedback level##Delay", &delayFeedbackTemp, Audio::Effects::DSP::FeedbackDelayLine::MIN_FEEDBACK, Audio::Effects::DSP::FeedbackDelayLine::MAX_FEEDBACK);
     m_preset->synthDelayFeedback.store(delayFeedbackTemp);
 }
 
@@ -282,13 +284,13 @@ void PresetWindow::DrawLFO1() const {
     m_preset->synthLFO1On.store(LFO1OnTemp);
 
     // --- LFO 1 mode drop down --- 
-    LFOConfig::Mode lfo1ModeTemp = m_preset->synthLFO1Mode.load();
+    Audio::Modulation::LFOConfig::Mode lfo1ModeTemp = m_preset->synthLFO1Mode.load();
 
-    if (ImGui::BeginCombo("Mode##LFO1", LFOConfig::ModeNames[static_cast<int>(lfo1ModeTemp)])) {
-        for (int n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
+    if (ImGui::BeginCombo("Mode##LFO1", Audio::Modulation::LFOConfig::ModeNames[static_cast<int>(lfo1ModeTemp)])) {
+        for (int n = 0; n < IM_ARRAYSIZE(Audio::Modulation::LFOConfig::ModeNames); n++) {
             bool isSelected = (static_cast<int>(lfo1ModeTemp) == n);
-            if (ImGui::Selectable(LFOConfig::ModeNames[n], isSelected)) {
-                lfo1ModeTemp = static_cast<LFOConfig::Mode>(n);
+            if (ImGui::Selectable(Audio::Modulation::LFOConfig::ModeNames[n], isSelected)) {
+                lfo1ModeTemp = static_cast<Audio::Modulation::LFOConfig::Mode>(n);
             }
             if (isSelected) {
                 ImGui::SetItemDefaultFocus();
@@ -299,14 +301,14 @@ void PresetWindow::DrawLFO1() const {
     m_preset->synthLFO1Mode.store(lfo1ModeTemp);
 
     // --- LFO 1 destination drop down --- 
-    LFOConfig::Destination lfo1DestinationTemp = m_preset->synthLFO1Destination.load();
-    std::vector<std::string> destinationNames = LFOConfig::GetDestinationNames();
+    Audio::Modulation::LFOConfig::Destination lfo1DestinationTemp = m_preset->synthLFO1Destination.load();
+    std::vector<std::string> destinationNames = Audio::Modulation::LFOConfig::GetDestinationNames();
 
     if (ImGui::BeginCombo("Destination##LFO1", destinationNames[static_cast<int>(lfo1DestinationTemp)].c_str())) {
-        for (int n = 0; n < std::ssize(LFOConfig::DESTINATION_INFOS); n++) {
+        for (int n = 0; n < std::ssize(Audio::Modulation::LFOConfig::DESTINATION_INFOS); n++) {
             bool isSelected = (static_cast<int>(lfo1DestinationTemp) == n);
             if (ImGui::Selectable(destinationNames[n].c_str(), isSelected)) {
-                lfo1DestinationTemp = static_cast<LFOConfig::Destination>(n);
+                lfo1DestinationTemp = static_cast<Audio::Modulation::LFOConfig::Destination>(n);
             }
             if (isSelected) {
                 ImGui::SetItemDefaultFocus();
@@ -316,7 +318,7 @@ void PresetWindow::DrawLFO1() const {
     }
     m_preset->synthLFO1Destination.store(lfo1DestinationTemp);
 
-    LFOConfig::DestinationInfo destInfo = LFOConfig::GetDestinationInfo(lfo1DestinationTemp);
+    Audio::Modulation::LFOConfig::DestinationInfo destInfo = Audio::Modulation::LFOConfig::GetDestinationInfo(lfo1DestinationTemp);
     
     // Amount slider
     float lfo1AmountTemp = m_preset->synthLFO1Amount.load();
@@ -329,7 +331,7 @@ void PresetWindow::DrawLFO1() const {
 
 
     switch (lfo1ModeTemp) {
-        case LFOConfig::Mode::Envelope: {
+        case Audio::Modulation::LFOConfig::Mode::Envelope: {
             // --- Attack ---
             float attack = m_preset->synthLFO1EnvAttack.load();
             ImGui::SliderFloat("Attack (s)##LFO1", &attack, 0.0f, 2.0f);
@@ -351,14 +353,14 @@ void PresetWindow::DrawLFO1() const {
             m_preset->synthLFO1EnvSus.store(sus);
             break;
         }
-        case LFOConfig::Mode::Periodic: {
+        case Audio::Modulation::LFOConfig::Mode::Periodic: {
             // --- Waveform dropdown ---
-            WaveformInfo::Type waveformLFO1Temp = m_preset->synthLFO1Waveform.load();
-            if (ImGui::BeginCombo("Waveform##LFO1", WaveformInfo::Names[static_cast<int>(waveformLFO1Temp)])) {
-                for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
+            Audio::Core::WaveformInfo::Type waveformLFO1Temp = m_preset->synthLFO1Waveform.load();
+            if (ImGui::BeginCombo("Waveform##LFO1", Audio::Core::WaveformInfo::Names[static_cast<int>(waveformLFO1Temp)])) {
+                for (int n = 0; n < IM_ARRAYSIZE(Audio::Core::WaveformInfo::Names); n++) {
                     bool isSelected = (static_cast<int>(waveformLFO1Temp) == n);
-                    if (ImGui::Selectable(WaveformInfo::Names[n], isSelected)) {
-                        waveformLFO1Temp = static_cast<WaveformInfo::Type>(n);
+                    if (ImGui::Selectable(Audio::Core::WaveformInfo::Names[n], isSelected)) {
+                        waveformLFO1Temp = static_cast<Audio::Core::WaveformInfo::Type>(n);
                     }
                     if (isSelected) {
                         ImGui::SetItemDefaultFocus();
@@ -374,7 +376,7 @@ void PresetWindow::DrawLFO1() const {
             m_preset->synthLFO1Frequency.store(freq);
             break;
         }
-        case LFOConfig::Mode::Random: {
+        case Audio::Modulation::LFOConfig::Mode::Random: {
             float freq = m_preset->synthLFO1Frequency.load();
             ImGui::SliderFloat("Frequency (Hz)##LFO1", &freq, 0.1f, 100.0f);
             m_preset->synthLFO1Frequency.store(freq);
@@ -391,13 +393,13 @@ void PresetWindow::DrawLFO2() const {
     m_preset->synthLFO2On.store(LFO2OnTemp);
 
     // --- LFO 2 mode drop down --- 
-    LFOConfig::Mode lfo2ModeTemp = m_preset->synthLFO2Mode.load();
+    Audio::Modulation::LFOConfig::Mode lfo2ModeTemp = m_preset->synthLFO2Mode.load();
 
-    if (ImGui::BeginCombo("Mode##LFO2", LFOConfig::ModeNames[static_cast<int>(lfo2ModeTemp)])) {
-        for (int n = 0; n < IM_ARRAYSIZE(LFOConfig::ModeNames); n++) {
+    if (ImGui::BeginCombo("Mode##LFO2", Audio::Modulation::LFOConfig::ModeNames[static_cast<int>(lfo2ModeTemp)])) {
+        for (int n = 0; n < IM_ARRAYSIZE(Audio::Modulation::LFOConfig::ModeNames); n++) {
             bool isSelected = (static_cast<int>(lfo2ModeTemp) == n);
-            if (ImGui::Selectable(LFOConfig::ModeNames[n], isSelected)) {
-                lfo2ModeTemp = static_cast<LFOConfig::Mode>(n);
+            if (ImGui::Selectable(Audio::Modulation::LFOConfig::ModeNames[n], isSelected)) {
+                lfo2ModeTemp = static_cast<Audio::Modulation::LFOConfig::Mode>(n);
             }
             if (isSelected) {
                 ImGui::SetItemDefaultFocus();
@@ -408,14 +410,14 @@ void PresetWindow::DrawLFO2() const {
     m_preset->synthLFO2Mode.store(lfo2ModeTemp);
 
     // --- LFO 2 destination drop down --- 
-    LFOConfig::Destination lfo2DestinationTemp = m_preset->synthLFO2Destination.load();
-    std::vector<std::string> destinationNames = LFOConfig::GetDestinationNames();
+    Audio::Modulation::LFOConfig::Destination lfo2DestinationTemp = m_preset->synthLFO2Destination.load();
+    std::vector<std::string> destinationNames = Audio::Modulation::LFOConfig::GetDestinationNames();
 
     if (ImGui::BeginCombo("Destination##LFO2", destinationNames[static_cast<int>(lfo2DestinationTemp)].c_str())) {
-        for (int n = 0; n < std::ssize(LFOConfig::DESTINATION_INFOS); n++) {
+        for (int n = 0; n < std::ssize(Audio::Modulation::LFOConfig::DESTINATION_INFOS); n++) {
             bool isSelected = (static_cast<int>(lfo2DestinationTemp) == n);
             if (ImGui::Selectable(destinationNames[n].c_str(), isSelected)) {
-                lfo2DestinationTemp = static_cast<LFOConfig::Destination>(n);
+                lfo2DestinationTemp = static_cast<Audio::Modulation::LFOConfig::Destination>(n);
             }
             if (isSelected) {
                 ImGui::SetItemDefaultFocus();
@@ -425,7 +427,7 @@ void PresetWindow::DrawLFO2() const {
     }
     m_preset->synthLFO2Destination.store(lfo2DestinationTemp);
 
-    LFOConfig::DestinationInfo destInfo = LFOConfig::GetDestinationInfo(lfo2DestinationTemp);
+    Audio::Modulation::LFOConfig::DestinationInfo destInfo = Audio::Modulation::LFOConfig::GetDestinationInfo(lfo2DestinationTemp);
     
     // Amount slider
     float lfo2AmountTemp = m_preset->synthLFO2Amount.load();
@@ -437,7 +439,7 @@ void PresetWindow::DrawLFO2() const {
     m_preset->synthLFO2Amount.store(lfo2AmountTemp);
 
     switch (lfo2ModeTemp) {
-        case LFOConfig::Mode::Envelope: {
+        case Audio::Modulation::LFOConfig::Mode::Envelope: {
             // --- Attack ---
             float attack = m_preset->synthLFO2EnvAttack.load();
             ImGui::SliderFloat("Attack (s)##LFO2", &attack, 0.0f, 2.0f);
@@ -459,14 +461,14 @@ void PresetWindow::DrawLFO2() const {
             m_preset->synthLFO2EnvSus.store(sus);
             break;
         }
-        case LFOConfig::Mode::Periodic: {
+        case Audio::Modulation::LFOConfig::Mode::Periodic: {
             // --- Waveform dropdown ---
-            WaveformInfo::Type waveformLFO2Temp = m_preset->synthLFO2Waveform.load();
-            if (ImGui::BeginCombo("Waveform##LFO2", WaveformInfo::Names[static_cast<int>(waveformLFO2Temp)])) {
-                for (int n = 0; n < IM_ARRAYSIZE(WaveformInfo::Names); n++) {
+            Audio::Core::WaveformInfo::Type waveformLFO2Temp = m_preset->synthLFO2Waveform.load();
+            if (ImGui::BeginCombo("Waveform##LFO2", Audio::Core::WaveformInfo::Names[static_cast<int>(waveformLFO2Temp)])) {
+                for (int n = 0; n < IM_ARRAYSIZE(Audio::Core::WaveformInfo::Names); n++) {
                     bool isSelected = (static_cast<int>(waveformLFO2Temp) == n);
-                    if (ImGui::Selectable(WaveformInfo::Names[n], isSelected)) {
-                        waveformLFO2Temp = static_cast<WaveformInfo::Type>(n);
+                    if (ImGui::Selectable(Audio::Core::WaveformInfo::Names[n], isSelected)) {
+                        waveformLFO2Temp = static_cast<Audio::Core::WaveformInfo::Type>(n);
                     }
                     if (isSelected) {
                         ImGui::SetItemDefaultFocus();
@@ -482,7 +484,7 @@ void PresetWindow::DrawLFO2() const {
             m_preset->synthLFO2Frequency.store(freq);
             break;
         }
-        case LFOConfig::Mode::Random: {
+        case Audio::Modulation::LFOConfig::Mode::Random: {
             float freq = m_preset->synthLFO2Frequency.load();
             ImGui::SliderFloat("Frequency (Hz)##LFO2", &freq, 0.1f, 100.0f);
             m_preset->synthLFO2Frequency.store(freq);

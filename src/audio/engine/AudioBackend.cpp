@@ -8,6 +8,8 @@
 #include "audio/engine/AudioBackend.hpp"
 #include "audio/engine/AudioEngine.hpp"
 
+namespace Audio::Engine {
+
 AudioBackend::AudioBackend(AudioEngine *engine)
     : m_stream(0)
     , m_engine(engine)
@@ -35,7 +37,7 @@ bool AudioBackend::Open(PaDeviceIndex index) {
         &m_stream,
         NULL, // no input
         &outputParameters,
-        SAMPLE_RATE,
+        Audio::Engine::Constants::SAMPLE_RATE,
         paFramesPerBufferUnspecified,
         paClipOff, // we won't output out of range samples so don't bother clipping them
         &AudioBackend::PaCallback,
@@ -125,3 +127,5 @@ void AudioBackend::PaStreamFinishedMethod() {
 void AudioBackend::PaStreamFinished(void* userData) {
     return ((AudioBackend*)userData)->PaStreamFinishedMethod();
 }
+
+} // namespace Audio::Engine

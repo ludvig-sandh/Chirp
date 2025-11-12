@@ -11,6 +11,8 @@
 #include "audio/modulation/ModulationMatrix.hpp"
 #include "util/NormalizedFloat.hpp"
 
+namespace Audio::Engine {
+
 // Represents a node in the audio graph showing how audio is routed throughout the engine.
 class AudioProcessorNode {
 public:
@@ -30,7 +32,7 @@ public:
     virtual void ApplyModulation(float amount, Modulation::Type modType) noexcept;
 
     // Process this node's audio (taking the childrens output as input to this node). Marks every visited node to avoid processing any node twice.
-    AudioFrame GenerateFrame(const AudioPreset& preset);
+    AudioFrame GenerateFrame(const Audio::Preset::AudioPreset& preset);
     
     // Implementation specific node processing for the different effects/generators that derive from AudioProcessorNode
     virtual void ProcessFrame(AudioFrame& output) = 0;
@@ -38,10 +40,10 @@ public:
     // Clears the markings on all nodes reachable from this node, to allow processing the next frame
     void ClearVisited() noexcept;
 
-    Gain gain;
-    Pan pan;
+    Audio::Core::Gain gain;
+    Audio::Core::Pan pan;
     bool isOn = true;
-    NormalizedFloat mix = 1.0f;
+    Util::NormalizedFloat mix = 1.0f;
 
 private:
     // Helper method that applies the current gain and pan on a frame and returns the result
@@ -52,3 +54,5 @@ private:
 
     std::unordered_set<std::shared_ptr<AudioProcessorNode>> m_children;
 };
+
+} // namespace Audio::Engine

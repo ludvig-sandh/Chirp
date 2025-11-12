@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <cmath>
 
+namespace Audio::Core {
+
 class Frequency {
 public:
     explicit Frequency(float hertz) noexcept;
@@ -33,3 +35,5 @@ private:
     float m_pitchBase = 0.0; // In semitones (can be negative)
     float m_pitchModulation = 0.0; // In semitones 
 };
+
+} // namespace Audio::Core

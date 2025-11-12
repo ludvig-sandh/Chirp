@@ -5,13 +5,15 @@
 #include "audio/engine/AudioEngine.hpp"
 #include <numbers>
 
-LowPassFilter::LowPassFilter(Frequency cutoff, float Q) noexcept : BaseFilter(cutoff, Q) {
+namespace Audio::Effects {
+
+LowPassFilter::LowPassFilter(Audio::Core::Frequency cutoff, float Q) noexcept : BaseFilter(cutoff, Q) {
     ComputeAndApplyCoefficients();
 }
 
 void LowPassFilter::ComputeAndApplyCoefficients() noexcept {
     float cutoffHz = std::clamp(m_cutoff.GetAbsolute(), MIN_CUTOFF, MAX_CUTOFF);
-    float omega0 = 2.0f * std::numbers::pi * cutoffHz / SAMPLE_RATE;
+    float omega0 = 2.0f * std::numbers::pi * cutoffHz / Audio::Engine::Constants::SAMPLE_RATE;
     float Q = std::clamp(m_Q + m_modulationQ, MIN_Q, MAX_Q);
     float alpha = std::sin(omega0) / (2.0f * Q);
     float cosOmega0 = std::cos(omega0);
@@ -34,3 +36,5 @@ void LowPassFilter::ComputeAndApplyCoefficients() noexcept {
     m_leftFilter.SetCoefficients(b0, b1, b2, a1, a2);
     m_rightFilter.SetCoefficients(b0, b1, b2, a1, a2);
 }
+
+} // namespace Audio::Effects

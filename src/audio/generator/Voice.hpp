@@ -9,16 +9,18 @@
 #include "audio/modulation/Envelope.hpp"
 #include <memory>
 
+namespace Audio::Generator {
+
 // Represents one of the voices an oscillator generates. This is needed since we support polyphony (multiple notes playing simultaneously).
 class Voice {
 public:
-    Voice(Note note, std::unique_ptr<Waveform> wf, const Envelope& env);
+    Voice(Audio::Core::Note note, std::unique_ptr<Audio::Core::Waveform> wf, const Audio::Modulation::Envelope& env);
 
     // Returns the next sample of this voice
     float GetNextSample();
 
     // Updates the waveform
-    void SetWaveformType(WaveformInfo::Type type);
+    void SetWaveformType(Audio::Core::WaveformInfo::Type type);
 
     // Updates the octave number
     void SetOctave(int octave);
@@ -29,11 +31,13 @@ public:
     // Returns true if the note is quiet indefinitely from this point and onward, safe to delete
     bool IsDead() const;
 
-    Note note;
-    Frequency freq;
+    Audio::Core::Note note;
+    Audio::Core::Frequency freq;
 
 private:
-    std::unique_ptr<Waveform> m_wf;
-    Envelope m_env;
+    std::unique_ptr<Audio::Core::Waveform> m_wf;
+    Audio::Modulation::Envelope m_env;
     float m_currentPhase = 0.0f;
 };
+
+} // namespace Audio::Generator

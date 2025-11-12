@@ -16,6 +16,8 @@
 #include "audio/engine/AudioFrame.hpp"
 #include "portaudio.h"
 
+namespace Audio::Engine {
+
 // Forward declaration
 class AudioEngine;
 
@@ -58,3 +60,5 @@ private:
     PaStream *m_stream;
     AudioEngine *m_engine;
 };
+
+} // namespace Audio::Engine

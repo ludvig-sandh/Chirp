@@ -16,7 +16,7 @@ void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, in
     pixels[pixelIndex + 3] = rgba[3];
 }
 
-void LevelsDisplay::UpdateLevels(const AudioFrame& levels) {
+void LevelsDisplay::UpdateLevels(const Audio::Engine::AudioFrame& levels) {
     // Convert to dB normalized in range [0, 1]
     double dbL = 20.0 * std::log10(levels.left);
     double dbR = 20.0 * std::log10(levels.right);

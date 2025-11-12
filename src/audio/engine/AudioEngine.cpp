@@ -3,10 +3,11 @@
 
 #include <iostream>
 #include <memory>
-
 #include "audio/engine/AudioEngine.hpp"
 
-AudioEngine::AudioEngine(std::shared_ptr<AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
+namespace Audio::Engine {
+
+AudioEngine::AudioEngine(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
     , m_fftComputer(fftComputer)
     , m_backend(this)
@@ -58,3 +59,5 @@ void AudioEngine::Start(std::atomic<bool>& running) {
     // Signal the FFT thread that no more audio is coming.
     m_fftComputer->FinishedProducing();
 }
+
+} // namespace Audio::Engine

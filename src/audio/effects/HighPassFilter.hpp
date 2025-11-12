@@ -7,11 +7,15 @@
 #include "audio/engine/AudioProcessorNode.hpp"
 #include "audio/effects/dsp/BiquadFilter.hpp"
 
+namespace Audio::Effects {
+
 // HP IIR filter using biquad transfer function
 class HighPassFilter final : public BaseFilter {
 public:
-    HighPassFilter(Frequency cutoff = Frequency(1000.0f), float Q = BaseFilter::DEFAULT_Q) noexcept;
+    HighPassFilter(Audio::Core::Frequency cutoff = Audio::Core::Frequency(1000.0f), float Q = BaseFilter::DEFAULT_Q) noexcept;
     
 private:
     void ComputeAndApplyCoefficients() noexcept override;
 };
+
+} // namespace Audio::Effects

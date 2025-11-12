@@ -11,7 +11,7 @@ std::shared_ptr<std::vector<float>> FFTComputer::GetLastFFTResult() const {
     return std::atomic_load(&m_lastResult);
 }
 
-std::shared_ptr<AudioFrame> FFTComputer::GetLastAudioLevels() const {
+std::shared_ptr<Audio::Engine::AudioFrame> FFTComputer::GetLastAudioLevels() const {
     return std::atomic_load(&m_lastAudioLevels);
 }
 
@@ -21,16 +21,16 @@ void FFTComputer::StoreNewFFTResult(std::shared_ptr<std::vector<float>> result) 
     std::atomic_store(&m_lastResult, result);
 }
 
-void FFTComputer::StoreNewAudioLevels(AudioFrame result) {
-    std::atomic_store(&m_lastAudioLevels, std::make_shared<AudioFrame>(result));
+void FFTComputer::StoreNewAudioLevels(Audio::Engine::AudioFrame result) {
+    std::atomic_store(&m_lastAudioLevels, std::make_shared<Audio::Engine::AudioFrame>(result));
 }
 
-void FFTComputer::ProvideAudioBuffer(const AudioBuffer& buffer) {
+void FFTComputer::ProvideAudioBuffer(const Audio::Engine::AudioBuffer& buffer) {
     // Copy over the output buffer into a vector we can "produce"
     std::unique_ptr<std::vector<float>> output = std::make_unique<std::vector<float>>();
     output->reserve(std::ssize(buffer));
 
-    AudioFrame rms{0.0f, 0.0f};
+    Audio::Engine::AudioFrame rms{0.0f, 0.0f};
     for (const auto& frame : buffer) {
         // Sum of squares (RMS)
         rms.left += frame.left * frame.left;

@@ -14,6 +14,8 @@
 
 #include "audio/core/Waveform.hpp"
 
+namespace Audio::Modulation {
+
 // Fwd dec.
 class AudioProcessorNode;
 
@@ -104,3 +106,5 @@ public:
     virtual ~LFO() noexcept = default;
     virtual float GetNextSample() = 0;
 };
+
+} // namespace Audio::Modulation

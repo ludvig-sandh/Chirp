@@ -14,7 +14,7 @@
 #include <set>
 
 struct UIKey {
-    Note note; // Corresponding note
+    Audio::Core::Note note; // Corresponding note
     ImRect rect; // Relative coordinates to top left of keyboard
 
     // Adds the key to the drawlist
@@ -30,15 +30,15 @@ public:
     static inline const float WINDOW_HEIGHT = 160.0f;
     
     // First and last key of keyboard
-    static inline const Note FIRST_NOTE{Key::A, 0};
-    static inline const Note LAST_NOTE{Key::C, 8};
+    static inline const Audio::Core::Note FIRST_NOTE{Audio::Core::Key::A, 0};
+    static inline const Audio::Core::Note LAST_NOTE{Audio::Core::Key::C, 8};
 
     Keyboard(int windowWidth);
 
     // Renders the keyboard and all pressed notes. The set of pressed notes
     // from QWERTY keyboard (rather than midi keyboard) is provided via parameter "pressedQwertyNotes".
     // Returns all pressed notes (pressedQwertyNotes + possible extra due to mouse press)
-    std::set<Note> Render(const std::set<Note>& pressedQwertyNotes) const;
+    std::set<Audio::Core::Note> Render(const std::set<Audio::Core::Note>& pressedQwertyNotes) const;
 
 private:
     void ConfigureWindow() const;
@@ -49,10 +49,10 @@ private:
     static int HelpCountWhiteKeys();
 
     // Returns a pointer to the key in m_keys that is currently pressed via mouse click, or if none is pressed, nullptr
-    std::optional<Note> GetMouseKeyboardInput(const ImVec2& mousePosRelative) const;
+    std::optional<Audio::Core::Note> GetMouseKeyboardInput(const ImVec2& mousePosRelative) const;
 
     // Draws the keys one by one, making sure any pressed key is highlighted
-    void DrawAllKeys(const ImVec2& offset, std::set<Note> pressedNotes) const;
+    void DrawAllKeys(const ImVec2& offset, std::set<Audio::Core::Note> pressedNotes) const;
 
     int m_numKeys;
     std::vector<UIKey> m_keys;

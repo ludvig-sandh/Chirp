@@ -6,6 +6,8 @@
 #include <stdexcept>
 #include <string>
 
+namespace Audio::Core {
+
 Note::Note(Key key, int octave) noexcept : key(key), octave(octave) {}
 
 bool Note::operator<(const Note& other) const noexcept {
@@ -50,3 +52,5 @@ bool Note::IsBlackKey() const noexcept {
             return false;
     }
 }
+
+} // namespace Audio::Core

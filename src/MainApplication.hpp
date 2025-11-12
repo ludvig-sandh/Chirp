@@ -21,10 +21,10 @@ public:
     void Start();
 
 private:
-    std::shared_ptr<AudioPreset> m_preset;
+    std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
     GUIManager m_gui;
-    AudioEngine m_audioEngine;
+    Audio::Engine::AudioEngine m_audioEngine;
 
     std::atomic<bool> m_isRunning = true;
 };

@@ -2,13 +2,14 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "audio/effects/Reverb.hpp"
-
 #include <numbers>
+
+namespace Audio::Effects {
 
 Reverb::Reverb() {
     // Initialize buffers
-    for (auto d : combDelays) combBuffers.emplace_back(d, AudioFrame());
-    for (auto d : allpassDelays) allpassBuffers.emplace_back(d, AudioFrame());
+    for (auto d : combDelays) combBuffers.emplace_back(d);
+    for (auto d : allpassDelays) allpassBuffers.emplace_back(d);
 }
 
 void Reverb::SetParams(float feedback, float damping, float wet) noexcept {
@@ -17,7 +18,9 @@ void Reverb::SetParams(float feedback, float damping, float wet) noexcept {
     wetMix = wet;
 }
 
-void Reverb::ProcessFrame(AudioFrame& output) {
+void Reverb::ProcessFrame(Audio::Engine::AudioFrame& output) {
+    using AudioFrame = Audio::Engine::AudioFrame;
+
     AudioFrame in = output;
 
     // Parallel comb filters
@@ -66,3 +69,5 @@ void Reverb::ProcessFrame(AudioFrame& output) {
 
     output = out;
 }
+
+} // namespace Audio::Effects
