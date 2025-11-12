@@ -4,7 +4,7 @@
 #include "gui/PresetWindow.hpp"
 
 #include "gui/Spectrogram.hpp"
-#include "gui/LevelsDisplay.hpp"
+#include "gui/LevelsWindow.hpp"
 #include "gui/Keyboard.hpp"
 #include "gui/GlobalSettingsWindow.hpp"
 #include "gui/PresetLoaderWindow.hpp"
@@ -43,7 +43,7 @@ void PresetWindow::ConfigureWindow() const {
         ImGuiCond_Always
     );
 
-    const float windowWidth = viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsDisplay::WINDOW_WIDTH;
+    const float windowWidth = viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsWindow::WINDOW_WIDTH;
     const float windowHeight = viewport->Size.y - Keyboard::WINDOW_HEIGHT - GlobalSettingsWindow::WINDOW_HEIGHT - PresetLoaderWindow::WINDOW_HEIGHT;
     ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_Always);
 

@@ -4,7 +4,7 @@
 #include "gui/SpectrumWindow.hpp"
 #include "ImGuiDefinitions.hpp"
 #include "imgui.h"
-#include "gui/LevelsDisplay.hpp"
+#include "gui/LevelsWindow.hpp"
 #include "gui/Keyboard.hpp"
 #include "gui/Spectrogram.hpp"
 #include "gui/GUIConstants.hpp"
@@ -65,7 +65,7 @@ void SpectrumWindow::Render() {
 void SpectrumWindow::ConfigureWindow() const {
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    const float x = viewport->Pos.x + viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsDisplay::WINDOW_WIDTH;
+    const float x = viewport->Pos.x + viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsWindow::WINDOW_WIDTH;
     const float h = (viewport->Size.y - Spectrogram::WINDOW_HEIGHT - Keyboard::WINDOW_HEIGHT) / 2.0f;
     const float y = viewport->Pos.y + Spectrogram::WINDOW_HEIGHT + h;
     const float w = (viewport->Size.x - x);

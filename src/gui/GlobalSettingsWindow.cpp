@@ -4,7 +4,7 @@
 #include "gui/GlobalSettingsWindow.hpp"
 
 #include "gui/Spectrogram.hpp"
-#include "gui/LevelsDisplay.hpp"
+#include "gui/LevelsWindow.hpp"
 
 void GlobalSettingsWindow::Render(Audio::Preset::AudioPreset& preset) const {
     ConfigureWindow();
@@ -21,7 +21,7 @@ void GlobalSettingsWindow::ConfigureWindow() const {
         ImGuiCond_Always
     );
 
-    const float windowWidth = viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsDisplay::WINDOW_WIDTH;
+    const float windowWidth = viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsWindow::WINDOW_WIDTH;
     ImGui::SetNextWindowSize(ImVec2(windowWidth, WINDOW_HEIGHT), ImGuiCond_Always);
 
     // Create a non-movable, non-collapsible, non-resizable, no-title-bar panel

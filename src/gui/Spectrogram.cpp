@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "gui/Spectrogram.hpp"
-#include "gui/LevelsDisplay.hpp"
+#include "gui/LevelsWindow.hpp"
 #include "gui/GUIConstants.hpp"
 
 #include <cmath>
@@ -58,7 +58,7 @@ void Spectrogram::ConfigureWindow() const {
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
     ImGui::SetNextWindowPos(
-        ImVec2(viewport->Pos.x + viewport->Size.x - LevelsDisplay::WINDOW_WIDTH - WINDOW_WIDTH, viewport->Pos.y),
+        ImVec2(viewport->Pos.x + viewport->Size.x - LevelsWindow::WINDOW_WIDTH - WINDOW_WIDTH, viewport->Pos.y),
         ImGuiCond_Always
     );
     ImGui::SetNextWindowSize(ImVec2(WINDOW_WIDTH, WINDOW_HEIGHT), ImGuiCond_Always);

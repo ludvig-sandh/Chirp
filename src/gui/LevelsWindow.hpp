@@ -13,7 +13,7 @@
 #include <utility>
 #include <deque>
 
-class LevelsDisplay {
+class LevelsWindow {
 public:
     static const int WINDOW_HEIGHT = 294;
     static const int WINDOW_WIDTH = 80;

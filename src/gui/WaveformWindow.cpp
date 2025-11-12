@@ -1,7 +1,7 @@
 #include "gui/WaveformWindow.hpp"
 
 #include "gui/Spectrogram.hpp"
-#include "gui/LevelsDisplay.hpp"
+#include "gui/LevelsWindow.hpp"
 #include "gui/Keyboard.hpp"
 #include "gui/GUIConstants.hpp"
 
@@ -40,7 +40,7 @@ ImVec2 WaveformWindow::ConfigureWindow(bool comesFirst) const {
     // Get viewport (the main window area)
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    const float xFirstSlot = viewport->Pos.x + viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsDisplay::WINDOW_WIDTH;
+    const float xFirstSlot = viewport->Pos.x + viewport->Size.x - Spectrogram::WINDOW_WIDTH - LevelsWindow::WINDOW_WIDTH;
     const float y = viewport->Pos.y + Spectrogram::WINDOW_HEIGHT;
     const float w = (viewport->Size.x - xFirstSlot) / 2.0f; // Fit two waveform windows in this space
     const float h = (viewport->Size.y - Spectrogram::WINDOW_HEIGHT - Keyboard::WINDOW_HEIGHT) / 2.0f;

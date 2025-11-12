@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "gui/LevelsDisplay.hpp"
+#include "gui/LevelsWindow.hpp"
 #include "gui/GUIConstants.hpp"
 
 #include <cstring>
 #include <cmath>
 #include <algorithm>
 
-void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 4>& rgba) {
+void LevelsWindow::SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 4>& rgba) {
     int pixelIndex = 4 * ((TEXTURE_HEIGHT - y - 1) * TEXTURE_WIDTH + x);
     pixels[pixelIndex] = rgba[0];
     pixels[pixelIndex + 1] = rgba[1];
@@ -16,7 +16,7 @@ void LevelsDisplay::SetPixelHelper(std::vector<unsigned char>& pixels, int x, in
     pixels[pixelIndex + 3] = rgba[3];
 }
 
-void LevelsDisplay::UpdateLevels(const Audio::Engine::AudioFrame& levels) {
+void LevelsWindow::UpdateLevels(const Audio::Engine::AudioFrame& levels) {
     // Convert to dB normalized in range [0, 1]
     double dbL = 20.0 * std::log10(levels.left);
     double dbR = 20.0 * std::log10(levels.right);
@@ -71,7 +71,7 @@ void LevelsDisplay::UpdateLevels(const Audio::Engine::AudioFrame& levels) {
                     GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 }
 
-void LevelsDisplay::Render() {
+void LevelsWindow::Render() {
     ConfigureWindow();
 
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + IMAGE_START_X); // shift image slightly to the right
@@ -81,7 +81,7 @@ void LevelsDisplay::Render() {
     ImGui::End();
 }
 
-void LevelsDisplay::ConfigureWindow() const {
+void LevelsWindow::ConfigureWindow() const {
     // Get viewport (the main window area)
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
@@ -104,7 +104,7 @@ void LevelsDisplay::ConfigureWindow() const {
     ImGui::SeparatorText("Levels");
 }
 
-void LevelsDisplay::InitTexture() {
+void LevelsWindow::InitTexture() {
     glGenTextures(1, &m_levelsTex);
     glBindTexture(GL_TEXTURE_2D, m_levelsTex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
