@@ -18,7 +18,7 @@ namespace WaveformInfo {
         Organ
     };
 
-    constexpr const char* Names[] = { "Saw", "Sine", "Square", "White noise", "Triangle", "Organ" };
+    inline constexpr const char* Names[] = { "Saw", "Sine", "Square", "White noise", "Triangle", "Organ" };
 }
 
 // Base class for representing waveforms, such as sine waves or more complex waves  

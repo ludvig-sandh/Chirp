@@ -164,12 +164,6 @@ LFOConfig SynthLayout::ReadLFO1Config(AudioPreset& preset) const {
     lfo1Config.mode = preset.synthLFO1Mode.load();
     lfo1Config.destination = preset.synthLFO1Destination.load();
     lfo1Config.amount = preset.synthLFO1Amount.load();
-    lfo1Config.envAttack = preset.synthLFO1EnvAttack.load();
-    lfo1Config.envHold = preset.synthLFO1EnvHold.load();
-    lfo1Config.envDec = preset.synthLFO1EnvDec.load();
-    lfo1Config.envSus = preset.synthLFO1EnvSus.load();
-    lfo1Config.waveform = preset.synthLFO1Waveform.load();
-    lfo1Config.frequency = preset.synthLFO1Frequency.load();
     lfo1Config.lfoNum = 1;
     return lfo1Config;
 }
@@ -180,12 +174,6 @@ LFOConfig SynthLayout::ReadLFO2Config(AudioPreset& preset) const {
     lfo2Config.mode = preset.synthLFO2Mode.load();
     lfo2Config.destination = preset.synthLFO2Destination.load();
     lfo2Config.amount = preset.synthLFO2Amount.load();
-    lfo2Config.envAttack = preset.synthLFO2EnvAttack.load();
-    lfo2Config.envHold = preset.synthLFO2EnvHold.load();
-    lfo2Config.envDec = preset.synthLFO2EnvDec.load();
-    lfo2Config.envSus = preset.synthLFO2EnvSus.load();
-    lfo2Config.waveform = preset.synthLFO2Waveform.load();
-    lfo2Config.frequency = preset.synthLFO2Frequency.load();
     lfo2Config.lfoNum = 2;
     return lfo2Config;
 }

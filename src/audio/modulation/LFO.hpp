@@ -24,7 +24,7 @@ struct LFOConfig {
         Random
     };
 
-    static inline const char *ModeNames[] = { "Envelope (restart on every note)", "Periodic (repeat continuously)", "Random" };
+    static constexpr const char *ModeNames[] = { "Envelope (restart on every note)", "Periodic (repeat continuously)", "Random" };
 
     enum class Destination {
         OscAVolume,
@@ -95,12 +95,6 @@ struct LFOConfig {
     Mode mode { LFOConfig::Mode::Periodic };
     Destination destination { LFOConfig::Destination::OscAVolume };
     float amount { 0.0f };
-    float envAttack { 0.0f };
-    float envHold { 0.0f };
-    float envDec { 0.0f };
-    float envSus { 1.0f };
-    WaveformInfo::Type waveform { WaveformInfo::Type::Saw };
-    float frequency { 1.0f };
     int lfoNum = 0; // Identifies the LFO
 };
 
