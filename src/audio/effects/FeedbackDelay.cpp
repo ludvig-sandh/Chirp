@@ -11,7 +11,7 @@ FeedbackDelay::FeedbackDelay()
     UpdateDelayLines();
 }
 
-FeedbackDelay::FeedbackDelay(FeedbackDelayInfo::Type delayType, float delayTime, float feedback)
+FeedbackDelay::FeedbackDelay(FeedbackDelayInfo::Type delayType, DSP::Seconds delayTime, float feedback)
     : m_leftLine(delayTime, feedback)
     , m_rightLine(delayTime, feedback)
     , m_monoLine(delayTime, feedback)
@@ -29,7 +29,7 @@ void FeedbackDelay::SetDelayType(FeedbackDelayInfo::Type delayType) noexcept {
     UpdateDelayLines();
 }
 
-void FeedbackDelay::SetDelayTime(float delayTime) noexcept {
+void FeedbackDelay::SetDelayTime(DSP::Seconds delayTime) noexcept {
     if (m_delayTime == delayTime) {
         return; // Don't bother
     }

@@ -5,7 +5,7 @@
 
 #include "audio/effects/BaseFilter.hpp"
 #include "audio/engine/AudioProcessorNode.hpp"
-#include "audio/effects/util/BiquadFilter.hpp"
+#include "audio/effects/dsp/BiquadFilter.hpp"
 
 // LP IIR filter using biquad transfer function
 class LowPassFilter final : public BaseFilter {

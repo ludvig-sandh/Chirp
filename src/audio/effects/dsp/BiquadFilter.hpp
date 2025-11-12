@@ -13,11 +13,10 @@ class BiquadFilter {
 public:
     void SetCoefficients(float b0, float b1, float b2, float a1, float a2);
 
+    // Uses x as input to the filter and progresses to the next step, providing the output y
     float Step(float x);
 
 private:
-    bool m_hasSetCoeffs = false;
-
     // Just placeholder values
     float m_b0 = 1.0f;
     float m_b1 = 1.0f;

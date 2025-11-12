@@ -10,8 +10,8 @@
 #include "gui/PresetLoaderWindow.hpp"
 #include "audio/engine/AudioBackend.hpp"
 #include "audio/core/Waveform.hpp"
-#include "audio/effects/util/FeedbackDelayLine.hpp"
-#include "audio/effects/util/FeedbackDelayInfo.hpp"
+#include "audio/effects/dsp/FeedbackDelayLine.hpp"
+#include "audio/effects/dsp/FeedbackDelayInfo.hpp"
 #include "audio/modulation/LFO.hpp"
 #include "audio/core/Frequency.hpp"
 
@@ -246,7 +246,7 @@ void PresetWindow::DrawFeedbackDelay() const {
     m_preset->synthDelayMix.store(delayMixTemp);
 
     float delayTimeTemp = m_preset->synthDelayTime.load();
-    ImGui::SliderFloat("Delay time (s)##Delay", &delayTimeTemp, FeedbackDelayLine::MIN_DELAY_SEC, FeedbackDelayLine::MAX_DELAY_SEC);
+    ImGui::SliderFloat("Delay time (s)##Delay", &delayTimeTemp, FeedbackDelayLine::MIN_DELAY_SEC.count(), FeedbackDelayLine::MAX_DELAY_SEC.count());
     m_preset->synthDelayTime.store(delayTimeTemp);
 
     float delayFeedbackTemp = m_preset->synthDelayFeedback.load();

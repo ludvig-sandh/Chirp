@@ -10,5 +10,5 @@ namespace FeedbackDelayInfo {
         PingPong
     };
 
-    inline constexpr const char* Names[] = { "Mono", "Stereo", "Ping pong" };
+    constexpr const char* Names[] = { "Mono", "Stereo", "Ping pong" };
 }

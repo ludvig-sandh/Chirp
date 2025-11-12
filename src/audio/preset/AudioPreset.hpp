@@ -6,7 +6,7 @@
 #include <atomic>
 #include <array>
 #include "audio/core/Waveform.hpp"
-#include "audio/effects/util/FeedbackDelayInfo.hpp"
+#include "audio/effects/dsp/FeedbackDelayInfo.hpp"
 #include "audio/modulation/LFO.hpp"
 
 struct AudioPreset {

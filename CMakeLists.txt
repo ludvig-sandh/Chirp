@@ -39,7 +39,7 @@ file(GLOB CHIRP_CORE_SRCS
     src/audio/*.cpp
     src/audio/core/*.cpp
     src/audio/effects/*.cpp
-    src/audio/effects/util/*.cpp
+    src/audio/effects/dsp/*.cpp
     src/audio/engine/*.cpp
     src/audio/generator/*.cpp
     src/audio/layout/*.cpp

@@ -4,7 +4,7 @@
 #pragma once
 
 #include "audio/engine/AudioProcessorNode.hpp"
-#include "audio/effects/util/BiquadFilter.hpp"
+#include "audio/effects/dsp/BiquadFilter.hpp"
 #include "audio/core/Frequency.hpp"
 #include "audio/modulation/ModulationMatrix.hpp"
 

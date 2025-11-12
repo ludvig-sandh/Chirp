@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "audio/layout/SynthLayout.hpp"
+#include "audio/effects/dsp/Time.hpp"
 #include "gui/Keyboard.hpp"
 
 #include <cassert>
@@ -103,7 +104,7 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     m_delay->isOn = preset.synthDelayOn.load();
     m_delay->mix = preset.synthDelayMix.load();
     m_delay->SetDelayType(preset.synthDelayType.load());
-    m_delay->SetDelayTime(preset.synthDelayTime.load());
+    m_delay->SetDelayTime(DSP::Seconds(preset.synthDelayTime.load()));
     m_delay->SetFeedback(preset.synthDelayFeedback.load());
 
     m_reverb->isOn = preset.synthReverbOn.load();

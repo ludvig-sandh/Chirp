@@ -3,20 +3,21 @@
 
 #pragma once
 
-#include "audio/effects/util/FeedbackDelayInfo.hpp"
-#include "audio/effects/util/FeedbackDelayLine.hpp"
+#include "audio/effects/dsp/FeedbackDelayInfo.hpp"
+#include "audio/effects/dsp/FeedbackDelayLine.hpp"
+#include "audio/effects/dsp/Delay.hpp"
+#include "audio/effects/dsp/Time.hpp"
 #include "audio/engine/AudioProcessorNode.hpp"
-#include "audio/effects/util/Delay.hpp"
 
 // Adds a looping delay effect that repeats audio but with less volume (depending on feedback)
 // The processed audio contains both dry input signal and wet delay tail
 class FeedbackDelay : public AudioProcessorNode {
 public:
     FeedbackDelay();
-    FeedbackDelay(FeedbackDelayInfo::Type delayType, float delayTime, float feedback);
+    FeedbackDelay(FeedbackDelayInfo::Type delayType, DSP::Seconds delayTime, float feedback);
 
     void SetDelayType(FeedbackDelayInfo::Type delayType) noexcept;
-    void SetDelayTime(float delayTime) noexcept;
+    void SetDelayTime(DSP::Seconds delayTime) noexcept;
     void SetFeedback(float feedback) noexcept;
 
     void ProcessFrame(AudioFrame& output) override;
@@ -25,7 +26,7 @@ private:
     void UpdateDelayLines() noexcept;
 
     FeedbackDelayInfo::Type m_delayType = FeedbackDelayInfo::Type::Mono;
-    float m_delayTime = 0.2f;
+    DSP::Seconds m_delayTime = DSP::Seconds(0.2f);
     float m_feedback = 0.5;
 
     FeedbackDelayLine m_leftLine;

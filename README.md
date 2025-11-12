@@ -152,7 +152,7 @@ src/                         # Source code
 ├── audio/                   # Core audio synthesis and processing
 │   ├── core/                # Fundamental DSP classes (waveform, pan, gain, frequency, etc.)
 │   ├── effects/             # Audio effects (reverb, filters, etc.)
-│   │   └── util/            # Low-level DSP building blocks used by effects
+│   │   └── dsp/            # Low-level DSP building blocks used by effects
 │   ├── engine/              # Audio engine and buffer management (PortAudio backend)
 │   ├── generator/           # Sound generation nodes (oscillators, noise, etc.)
 │   ├── layout/              # Application-specific audio graph layout and node management
