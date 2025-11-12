@@ -56,21 +56,21 @@ AudioBuffer AudioEngine::ProcessBuffer(int numFrames) {
 
 void AudioEngine::Start(std::atomic<bool>& running) {
     ScopedPaHandler paInit;
-    if (paInit.result() != paNoError) {
+    if (paInit.Result() != paNoError) {
         std::cerr << "An error occurred while using the portaudio stream\n";
-        std::cerr << "Error number: %d\n" << paInit.result();
-        std::cerr << "Error message: %s\n" << Pa_GetErrorText( paInit.result() );
+        std::cerr << "Error number: %d\n" << paInit.Result();
+        std::cerr << "Error message: %s\n" << Pa_GetErrorText( paInit.Result() );
     }
 
-    if (m_backend.open(Pa_GetDefaultOutputDevice())) {
-        if (m_backend.start()) {
+    if (m_backend.Open(Pa_GetDefaultOutputDevice())) {
+        if (m_backend.Start()) {
             while (running.load()) {
                 Pa_Sleep(50); // Sleep 50ms
             }
-            m_backend.stop();
+            m_backend.Stop();
         }
         
-        m_backend.close();
+        m_backend.Close();
     }
     m_fftComputer->FinishedProducing();
 }

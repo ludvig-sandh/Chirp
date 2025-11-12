@@ -25,6 +25,21 @@ public:
 
     void Start(std::atomic<bool>& running);
 private:
+    class ScopedPaHandler {
+    public:
+        ScopedPaHandler() : m_result(Pa_Initialize()) {}
+        ~ScopedPaHandler() {
+            if (m_result == paNoError) {
+                Pa_Terminate();
+            }
+        }
+
+        PaError Result() const { return m_result; }
+
+    private:
+        PaError m_result;
+    };
+
     std::shared_ptr<AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
     AudioBackend m_backend;

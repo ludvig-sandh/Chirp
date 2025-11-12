@@ -9,14 +9,11 @@
 #include "audio/engine/AudioEngine.hpp"
 
 AudioBackend::AudioBackend(AudioEngine *engine)
-    : stream(0)
+    : m_stream(0)
     , m_engine(engine)
-{
-    // sprintf( message, "No Message" );
-}
+{}
 
-bool AudioBackend::open(PaDeviceIndex index)
-{
+bool AudioBackend::Open(PaDeviceIndex index) {
     PaStreamParameters outputParameters;
 
     outputParameters.device = index;
@@ -25,79 +22,72 @@ bool AudioBackend::open(PaDeviceIndex index)
     }
 
     const PaDeviceInfo* pInfo = Pa_GetDeviceInfo(index);
-    if (pInfo != 0)
-    {
-        // printf("Output device name: '%s'\r", pInfo->name);
+    if (pInfo != 0) {
+        printf("Output device name: '%s'\r", pInfo->name);
     }
 
-    outputParameters.channelCount = 2;       /* stereo output */
-    outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
-    outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
+    outputParameters.channelCount = 2; // stereo output
+    outputParameters.sampleFormat = paFloat32; // 32 bit floating point output
+    outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
     PaError err = Pa_OpenStream(
-        &stream,
-        NULL, /* no input */
+        &m_stream,
+        NULL, // no input
         &outputParameters,
         SAMPLE_RATE,
         paFramesPerBufferUnspecified,
-        paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-        &AudioBackend::paCallback,
-        this            /* Using 'this' for userData so we can cast to Sine* in paCallback method */
-        );
+        paClipOff, // we won't output out of range samples so don't bother clipping them
+        &AudioBackend::PaCallback,
+        this // Using 'this' for userData so we can cast to Sine* in paCallback method
+    );
 
-    if (err != paNoError)
-    {
-        /* Failed to open stream to device !!! */
+    if (err != paNoError) {
+        // Failed to open stream to device
         return false;
     }
 
-    err = Pa_SetStreamFinishedCallback( stream, &AudioBackend::paStreamFinished );
+    err = Pa_SetStreamFinishedCallback(m_stream, &AudioBackend::PaStreamFinished);
 
-    if (err != paNoError)
-    {
-        Pa_CloseStream( stream );
-        stream = 0;
-
+    if (err != paNoError) {
+        Pa_CloseStream(m_stream);
+        m_stream = 0;
         return false;
     }
 
     return true;
 }
 
-bool AudioBackend::close()
-{
-    if (stream == 0)
+bool AudioBackend::Close() {
+    if (m_stream == 0) {
         return false;
+    }
 
-    PaError err = Pa_CloseStream( stream );
-    stream = 0;
+    PaError err = Pa_CloseStream(m_stream);
+    m_stream = 0;
 
     return (err == paNoError);
 }
 
-
-bool AudioBackend::start()
-{
-    if (stream == 0)
+bool AudioBackend::Start() {
+    if (m_stream == 0)
         return false;
 
-    PaError err = Pa_StartStream( stream );
+    PaError err = Pa_StartStream(m_stream);
 
     return (err == paNoError);
 }
 
-bool AudioBackend::stop()
-{
-    if (stream == 0)
+bool AudioBackend::Stop() {
+    if (m_stream == 0)
         return false;
 
-    PaError err = Pa_StopStream( stream );
+    PaError err = Pa_StopStream(m_stream);
 
     return (err == paNoError);
 }
 
-int AudioBackend::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
+int AudioBackend::PaCallbackMethod(const void *inputBuffer, void *outputBuffer,
     unsigned long framesPerBuffer,
     const PaStreamCallbackTimeInfo* timeInfo,
     PaStreamCallbackFlags statusFlags) {
@@ -118,26 +108,20 @@ int AudioBackend::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
     return paContinue;
 }
 
-int AudioBackend::paCallback( const void *inputBuffer, void *outputBuffer,
+int AudioBackend::PaCallback( const void *inputBuffer, void *outputBuffer,
     unsigned long framesPerBuffer,
     const PaStreamCallbackTimeInfo* timeInfo,
     PaStreamCallbackFlags statusFlags,
-    void *userData )
-{
-    /* Here we cast userData to Sine* type so we can call the instance method paCallbackMethod, we can do that since
-        we called Pa_OpenStream with 'this' for userData */
-    return ((AudioBackend*)userData)->paCallbackMethod(inputBuffer, outputBuffer,
-        framesPerBuffer,
-        timeInfo,
-        statusFlags);
+    void *userData ) {
+    // Here we cast userData to AudioBackend* type so we can call the instance method PaCallbackMethod, we can do that since
+    // we called Pa_OpenStream with 'this' for userData
+    return ((AudioBackend*)userData)->PaCallbackMethod(inputBuffer, outputBuffer, framesPerBuffer, timeInfo, statusFlags);
 }
 
-void AudioBackend::paStreamFinishedMethod()
-{
-    // printf( "Stream Completed: %s\n", message );
+void AudioBackend::PaStreamFinishedMethod() {
+    // I currently don't need to do anything here so empty
 }
 
-void AudioBackend::paStreamFinished(void* userData)
-{
-    return ((AudioBackend*)userData)->paStreamFinishedMethod();
+void AudioBackend::PaStreamFinished(void* userData) {
+    return ((AudioBackend*)userData)->PaStreamFinishedMethod();
 }
