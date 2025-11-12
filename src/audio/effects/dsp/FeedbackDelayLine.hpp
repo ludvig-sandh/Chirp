@@ -32,7 +32,7 @@ public:
     void Clear() noexcept;
 
 private:
-    static constexpr int BUFFER_SIZE = static_cast<int>(std::ceil(MAX_DELAY_SEC.count() * 44100)) + 1; // TODO: Provide sample rate at runtime
+    static inline const int BUFFER_SIZE = static_cast<int>(std::ceil(MAX_DELAY_SEC.count() * 44100)) + 1; // TODO: Provide sample rate at runtime
 
     std::vector<float> m_buffer;
     int m_writeIndex = 0;
