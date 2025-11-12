@@ -5,11 +5,11 @@
 
 #include <algorithm>
 
-void Pan::Set(float pan) {
+void Pan::Set(NormalizedFloat pan) {
     m_pan = pan;
 }
 
-void Pan::AddModulation(float modulation) {
+void Pan::AddModulation(NormalizedFloat modulation) {
     m_modulation += modulation;
 }
 
@@ -18,9 +18,9 @@ void Pan::ClearModulations() {
 }
 
 AudioFrame Pan::Apply(const AudioFrame& frame) {
-    float pan = std::clamp(m_pan + m_modulation, 0.0f, 1.0f);
-    float rightGainVal = std::min(pan, 0.5f) * 2.0;
-    float leftGainVal = std::min(1.0f - pan, 0.5f) * 2.0;
+    NormalizedFloat pan = m_pan + m_modulation;
+    float rightGainVal = std::min(pan.get(), 0.5f) * 2.0;
+    float leftGainVal = std::min(1.0f - pan.get(), 0.5f) * 2.0;
     m_rightGain.SetLinear(rightGainVal);
     m_leftGain.SetLinear(leftGainVal);
 

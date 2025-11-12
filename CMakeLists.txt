@@ -49,6 +49,7 @@ file(GLOB CHIRP_CORE_SRCS
     src/gui/*.cpp
     src/synchronization/*.cpp
     src/midi/*.cpp
+    src/util/*.cpp
 )
 
 #

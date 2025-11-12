@@ -163,6 +163,7 @@ src/                         # Source code
 ├── gui/                     # ImGui-based user interface components
 ├── synchronization/         # Thread synchronization utilities
 ├── midi/                    # External midi keyboard support
+├── util/                    # Utility classes relevant for any part of the project
 ├── external/                # Third-party libraries
 │
 presets/                     # Default preset files bundled with the app
