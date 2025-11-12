@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include "ImGuiDefinitions.hpp"
+#include "gui/ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include <GLFW/glfw3.h>
-#include "gui/LevelsHistory.hpp"
+#include "gui/windows/helper/LevelsHistory.hpp"
 #include "audio/engine/AudioBackend.hpp"
 #include <vector>
 #include <array>

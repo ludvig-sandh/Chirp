@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "gui/KeyboardWindow.hpp"
+#include "gui/windows/KeyboardWindow.hpp"
 
 void UIKey::Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) const {
     static const ImU32 pressedKeyColor = IM_COL32(

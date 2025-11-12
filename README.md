@@ -161,6 +161,8 @@ src/                         # Source code
 │
 ├── fft/                     # FFT utilities and spectral analysis
 ├── gui/                     # ImGui-based user interface components
+│   └── windows/             # Classes corresponding to each window on screen
+│       └── helper/          # Helper classes used in the window classes
 ├── synchronization/         # Thread synchronization utilities
 ├── midi/                    # External midi keyboard support
 ├── util/                    # Utility classes relevant for any part of the project

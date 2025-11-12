@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "gui/GlobalSettingsWindow.hpp"
+#include "gui/windows/GlobalSettingsWindow.hpp"
 
-#include "gui/SpectrogramWindow.hpp"
-#include "gui/LevelsWindow.hpp"
+#include "gui/windows/SpectrogramWindow.hpp"
+#include "gui/windows/LevelsWindow.hpp"
 
 void GlobalSettingsWindow::Render(Audio::Preset::AudioPreset& preset) const {
     ConfigureWindow();

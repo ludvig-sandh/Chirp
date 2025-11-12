@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "gui/PresetLoaderWindow.hpp"
+#include "gui/windows/PresetLoaderWindow.hpp"
 
-#include "gui/SpectrogramWindow.hpp"
-#include "gui/LevelsWindow.hpp"
-#include "gui/GlobalSettingsWindow.hpp"
+#include "gui/windows/SpectrogramWindow.hpp"
+#include "gui/windows/LevelsWindow.hpp"
+#include "gui/windows/GlobalSettingsWindow.hpp"
 #include "audio/preset/AudioPresetSerialization.hpp"
 #include "audio/preset/BuiltInPresetsLoader.hpp"
 

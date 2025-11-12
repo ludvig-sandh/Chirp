@@ -47,6 +47,8 @@ file(GLOB CHIRP_CORE_SRCS
     src/audio/preset/*.cpp
     src/fft/*.cpp
     src/gui/*.cpp
+    src/gui/windows/*.cpp
+    src/gui/windows/helper/*.cpp
     src/synchronization/*.cpp
     src/midi/*.cpp
     src/util/*.cpp

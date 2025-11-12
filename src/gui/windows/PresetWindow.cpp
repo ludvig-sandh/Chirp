@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "gui/PresetWindow.hpp"
+#include "gui/windows/PresetWindow.hpp"
 
-#include "gui/SpectrogramWindow.hpp"
-#include "gui/LevelsWindow.hpp"
-#include "gui/KeyboardWindow.hpp"
-#include "gui/GlobalSettingsWindow.hpp"
-#include "gui/PresetLoaderWindow.hpp"
+#include "gui/windows/SpectrogramWindow.hpp"
+#include "gui/windows/LevelsWindow.hpp"
+#include "gui/windows/KeyboardWindow.hpp"
+#include "gui/windows/GlobalSettingsWindow.hpp"
+#include "gui/windows/PresetLoaderWindow.hpp"
 #include "audio/engine/AudioBackend.hpp"
 #include "audio/core/Waveform.hpp"
 #include "audio/effects/dsp/FeedbackDelayLine.hpp"

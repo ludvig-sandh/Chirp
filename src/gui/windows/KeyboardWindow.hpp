@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "ImGuiDefinitions.hpp"
+#include "gui/ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include "imgui_internal.h" // For ImRect
 #include "gui/GUIConstants.hpp"

@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "ImGuiDefinitions.hpp"
+#include "gui/ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include "audio/core/Waveform.hpp"
 #include <GLFW/glfw3.h>

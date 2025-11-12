@@ -3,7 +3,7 @@
 
 #include "audio/layout/SynthLayout.hpp"
 #include "audio/effects/dsp/Time.hpp"
-#include "gui/KeyboardWindow.hpp"
+#include "gui/windows/KeyboardWindow.hpp"
 #include "util/NormalizedFloat.hpp"
 #include <cassert>
 

@@ -3,18 +3,20 @@
 
 #pragma once
 
-#include "ImGuiDefinitions.hpp"
+#include "gui/ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include "ImGuiFileDialog.h"
 #include "audio/preset/AudioPreset.hpp"
 
-class GlobalSettingsWindow {
+class PresetLoaderWindow {
 public:
-    static inline const int WINDOW_HEIGHT = 60;
+    static inline const int WINDOW_HEIGHT = 84;
 
     void Render(Audio::Preset::AudioPreset& preset) const;
 
 private:
     void ConfigureWindow() const;
-    void DrawGlobalSettings(Audio::Preset::AudioPreset& preset) const;
+
+    // Display export/load preset buttons
+    void DrawPresetLoader(Audio::Preset::AudioPreset& preset) const;
 };

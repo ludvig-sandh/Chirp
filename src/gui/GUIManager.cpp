@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "GUIManager.hpp"
-#include "ColorThemeApplier.hpp"
+#include "gui/GUIManager.hpp"
+#include "gui/ColorThemeApplier.hpp"
 #include <utility>
 #include <iostream>
 

@@ -3,10 +3,11 @@
 
 #pragma once
 
-#include "ImGuiDefinitions.hpp"
+#include "gui/ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include <array>
 
+// Color theme etc.
 namespace GUIConstants {
     namespace Colors {
         // Used more for the images on screen

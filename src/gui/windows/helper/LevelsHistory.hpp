@@ -5,6 +5,7 @@
 
 #include <deque>
 
+// Keeps track of audio levels over time so that the LevelsWindow can display both current and recent audio levels. 
 class LevelsHistory {
 public:
     void Add(float db);

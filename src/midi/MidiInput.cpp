@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Ludvig Sandh
 
 #include "MidiInput.hpp"
-#include "gui/KeyboardWindow.hpp"
+#include "gui/windows/KeyboardWindow.hpp"
 
 MidiInput::MidiInput() {
     m_midiIn.ignoreTypes(false, false, false);

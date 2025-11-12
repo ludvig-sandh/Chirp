@@ -1,8 +1,8 @@
-#include "gui/WaveformWindow.hpp"
+#include "gui/windows/WaveformWindow.hpp"
 
-#include "gui/SpectrogramWindow.hpp"
-#include "gui/LevelsWindow.hpp"
-#include "gui/KeyboardWindow.hpp"
+#include "gui/windows/SpectrogramWindow.hpp"
+#include "gui/windows/LevelsWindow.hpp"
+#include "gui/windows/KeyboardWindow.hpp"
 #include "gui/GUIConstants.hpp"
 
 WaveformWindow::WaveformWindow(Audio::Core::WaveformInfo::Type waveformType, const std::string& windowName)

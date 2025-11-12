@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "ImGuiDefinitions.hpp"
+#include "gui/ImGuiDefinitions.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -14,15 +14,15 @@
 #include <GLFW/glfw3.h>
 
 #include "audio/preset/AudioPreset.hpp"
-#include "gui/SpectrogramWindow.hpp"
+#include "gui/windows/SpectrogramWindow.hpp"
 #include "fft/FFTComputer.hpp"
-#include "gui/LevelsWindow.hpp"
-#include "gui/KeyboardWindow.hpp"
-#include "gui/PresetWindow.hpp"
-#include "gui/GlobalSettingsWindow.hpp"
-#include "gui/PresetLoaderWindow.hpp"
-#include "gui/WaveformWindow.hpp"
-#include "gui/SpectrumWindow.hpp"
+#include "gui/windows/LevelsWindow.hpp"
+#include "gui/windows/KeyboardWindow.hpp"
+#include "gui/windows/PresetWindow.hpp"
+#include "gui/windows/GlobalSettingsWindow.hpp"
+#include "gui/windows/PresetLoaderWindow.hpp"
+#include "gui/windows/WaveformWindow.hpp"
+#include "gui/windows/SpectrumWindow.hpp"
 #include "midi/MidiInput.hpp"
 
 #include <memory>
