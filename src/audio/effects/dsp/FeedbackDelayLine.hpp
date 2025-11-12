@@ -12,8 +12,8 @@
 class FeedbackDelayLine {
 public:
     // Constants for safety
-    static constexpr DSP::Seconds MIN_DELAY_SEC = DSP::Seconds(0.05f);
-    static constexpr DSP::Seconds MAX_DELAY_SEC = DSP::Seconds(10.0f);
+    static constexpr DSP::Seconds MIN_DELAY_SEC{0.05f};
+    static constexpr DSP::Seconds MAX_DELAY_SEC{10.0f};
     static constexpr float MAX_FEEDBACK = 0.99f;
     static constexpr float MIN_FEEDBACK = 0.01f;
 

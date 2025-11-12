@@ -6,13 +6,14 @@
 #include <cassert>
 #include "audio/modulation/LFO.hpp"
 #include "util/NormalizedFloat.hpp"
+#include "audio/effects/dsp/Time.hpp"
 
 // Models a typical ASDR envelope
 class Envelope : public LFO {
 public:
     // "invisible" envelope, just lets the signal pass through
     Envelope() noexcept : attack(0.0f), hold(0.0f), decay(0.0f), sustain(1.0f), release(0.0f) {}
-    Envelope(float atk, float hld, float dec, NormalizedFloat sus, float rel) noexcept;
+    Envelope(DSP::Seconds atk, DSP::Seconds hld, DSP::Seconds dec, NormalizedFloat sus, DSP::Seconds rel) noexcept;
 
     // Returns the amplitude of the amplitude at the current time and progresses time forward by the sample period
     float GetNextSample() noexcept override;
@@ -26,16 +27,16 @@ public:
     // Returns true if the envelope has gone through all stages and will be quiet until it is restarted.
     bool IsComplete() const noexcept;
 
-    float attack;
-    float hold;
-    float decay;
+    DSP::Seconds attack;
+    DSP::Seconds hold;
+    DSP::Seconds decay;
     NormalizedFloat sustain;
-    float release;
+    DSP::Seconds release;
     
 private:
     float GetNextSampleHelper() noexcept;
 
-    float m_timeSinceStart = 0.0;
+    DSP::Seconds m_timeSinceStart{0.0f};
     bool m_hasBeenReleased = false;
     float m_lastValueBeforeRelease = 0.0f;
 };

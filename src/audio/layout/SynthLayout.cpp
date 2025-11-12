@@ -4,6 +4,7 @@
 #include "audio/layout/SynthLayout.hpp"
 #include "audio/effects/dsp/Time.hpp"
 #include "gui/Keyboard.hpp"
+#include "util/NormalizedFloat.hpp"
 
 #include <cassert>
 
@@ -21,7 +22,12 @@ SynthLayout::SynthLayout()
     , m_lfo2Periodic(std::make_shared<PeriodicLFO>())
     , m_lfo2Env(std::make_shared<Envelope>())
     , m_lfo2Rnd(std::make_shared<RandomLFO>())
-    , m_filterEnv(std::make_shared<Envelope>(0.0f, 0.0f, 0.0f, 0.0f, 0.0f))
+    , m_filterEnv(std::make_shared<Envelope>(
+        DSP::Seconds(0.0f),
+        DSP::Seconds(0.0f),
+        DSP::Seconds(0.0f),
+        NormalizedFloat(0.0f),
+        DSP::Seconds(0.0f)))
 {
     // Now connect all nodes into a graph
     m_lpFilter->AddChild(m_oscA);
@@ -67,30 +73,26 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
         ++note;
     }
 
+    Envelope volEnvelope = Envelope(
+        DSP::Seconds(preset.synthOscAttack.load()),
+        DSP::Seconds(preset.synthOscHold.load()),
+        DSP::Seconds(preset.synthOscDec.load()),
+        NormalizedFloat(preset.synthOscSus.load()),
+        DSP::Seconds(preset.synthOscRel.load())
+    );
+
     m_oscA->isOn = preset.synthOscAOn.load();
     m_oscA->gain.SetLinear(preset.synthOscAVolume.load());
     m_oscA->pan.Set(preset.synthOscAPan.load());
     m_oscA->SetWaveformType(preset.synthOscAWaveform.load());
-    m_oscA->SetEnvelope(Envelope(
-        preset.synthOscAttack.load(),
-        preset.synthOscHold.load(),
-        preset.synthOscDec.load(),
-        preset.synthOscSus.load(),
-        preset.synthOscRel.load()
-    ));
+    m_oscA->SetEnvelope(volEnvelope);
     m_oscA->SetOctave(preset.synthOscAOctave.load());
 
     m_oscB->isOn = preset.synthOscBOn.load();
     m_oscB->gain.SetLinear(preset.synthOscBVolume.load());
     m_oscB->pan.Set(preset.synthOscBPan.load());
     m_oscB->SetWaveformType(preset.synthOscBWaveform.load());
-    m_oscB->SetEnvelope(Envelope(
-        preset.synthOscAttack.load(),
-        preset.synthOscHold.load(),
-        preset.synthOscDec.load(),
-        preset.synthOscSus.load(),
-        preset.synthOscRel.load()
-    ));
+    m_oscB->SetEnvelope(volEnvelope);
     m_oscB->SetOctave(preset.synthOscBOctave.load());
 
     m_lpFilter->isOn = preset.synthLpFilterOn.load();
@@ -115,8 +117,8 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     // Update LFOs
     m_modMatrix.ClearRoutes();
 
-    m_filterEnv->attack = preset.synthOscLpCutoffAttack.load();
-    m_filterEnv->decay = preset.synthOscLpCutoffDec.load();
+    m_filterEnv->attack = DSP::Seconds(preset.synthOscLpCutoffAttack.load());
+    m_filterEnv->decay = DSP::Seconds(preset.synthOscLpCutoffDec.load());
     m_modMatrix.AddRoute(ModulationRoute(m_filterEnv, m_lpFilter, ModulationType::Cutoff, preset.synthOscLpCutoffAmount.load()));
 
     // Lfo1
@@ -125,10 +127,10 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     m_lfo1Periodic->SetWaveformType(preset.synthLFO1Waveform.load());
     m_lfo1Periodic->SetFrequency(lfo1Freq);
     
-    m_lfo1Env->attack = preset.synthLFO1EnvAttack.load();
-    m_lfo1Env->hold = preset.synthLFO1EnvHold.load();
-    m_lfo1Env->decay = preset.synthLFO1EnvDec.load();
-    m_lfo1Env->sustain = preset.synthLFO1EnvSus.load();
+    m_lfo1Env->attack = DSP::Seconds(preset.synthLFO1EnvAttack.load());
+    m_lfo1Env->hold = DSP::Seconds(preset.synthLFO1EnvHold.load());
+    m_lfo1Env->decay = DSP::Seconds(preset.synthLFO1EnvDec.load());
+    m_lfo1Env->sustain = NormalizedFloat(preset.synthLFO1EnvSus.load());
 
     m_lfo1Rnd->SetFrequency(lfo1Freq);
 
@@ -138,10 +140,10 @@ void SynthLayout::LoadPreset(AudioPreset& preset) {
     m_lfo2Periodic->SetWaveformType(preset.synthLFO2Waveform.load());
     m_lfo2Periodic->SetFrequency(lfo2Freq);
     
-    m_lfo2Env->attack = preset.synthLFO2EnvAttack.load();
-    m_lfo2Env->hold = preset.synthLFO2EnvHold.load();
-    m_lfo2Env->decay = preset.synthLFO2EnvDec.load();
-    m_lfo2Env->sustain = preset.synthLFO2EnvSus.load();
+    m_lfo2Env->attack = DSP::Seconds(preset.synthLFO2EnvAttack.load());
+    m_lfo2Env->hold = DSP::Seconds(preset.synthLFO2EnvHold.load());
+    m_lfo2Env->decay = DSP::Seconds(preset.synthLFO2EnvDec.load());
+    m_lfo2Env->sustain = NormalizedFloat(preset.synthLFO2EnvSus.load());
 
     m_lfo2Rnd->SetFrequency(lfo2Freq);
 

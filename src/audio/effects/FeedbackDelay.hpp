@@ -26,7 +26,7 @@ private:
     void UpdateDelayLines() noexcept;
 
     FeedbackDelayInfo::Type m_delayType = FeedbackDelayInfo::Type::Mono;
-    DSP::Seconds m_delayTime = DSP::Seconds(0.2f);
+    DSP::Seconds m_delayTime{0.2f};
     float m_feedback = 0.5;
 
     FeedbackDelayLine m_leftLine;
