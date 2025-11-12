@@ -7,7 +7,7 @@
 
 namespace Audio::Engine {
 
-AudioEngine::AudioEngine(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
+AudioEngine::AudioEngine(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFT::FFTComputer> fftComputer)
     : m_preset(preset)
     , m_fftComputer(fftComputer)
     , m_backend(this)

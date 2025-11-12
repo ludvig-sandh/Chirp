@@ -7,6 +7,8 @@
 #include <cassert>
 #include <cmath>
 
+namespace FFT {
+
 std::shared_ptr<std::vector<float>> FFTComputer::GetLastFFTResult() const {
     return std::atomic_load(&m_lastResult);
 }
@@ -64,7 +66,7 @@ void FFTComputer::Start(std::atomic<bool>& running) {
         m_fftBuffer.insert(m_fftBuffer.end(), audioToExtend->begin(), audioToExtend->end());
 
         if (std::ssize(m_fftBuffer) > 1024) {
-            std::shared_ptr<std::vector<float>> fft_magnitude = FFTHelper::ComputeFFTMagnitudeInDecibels(m_fftBuffer);
+            std::shared_ptr<std::vector<float>> fft_magnitude = Helper::ComputeFFTMagnitudeInDecibels(m_fftBuffer);
 
             // Pop oldest audio chunk from the fft buffer
             m_fftBuffer.erase(m_fftBuffer.begin(), m_fftBuffer.begin() + audioToExtend->size());
@@ -78,3 +80,5 @@ void FFTComputer::Start(std::atomic<bool>& running) {
 void FFTComputer::FinishedProducing() {
     m_producerConsumer.Close();
 }
+
+} // namespace FFT

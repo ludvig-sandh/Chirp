@@ -12,7 +12,10 @@
 #include <limits>
 #include <numeric>
 
-namespace FFTHelper {
+namespace FFT::Helper {
+
+constexpr double MIN_DB = -100.0; // floor value for normalization
+constexpr double MAX_DB = 0.0;    // top of range
 
 size_t NextPow2(size_t v) {
     // Check for overflow
@@ -99,4 +102,4 @@ std::shared_ptr<std::vector<float>> ComputeFFTMagnitudeInDecibels(const std::vec
     return result;
 }
 
-}
+} // namespace FFT:Helper

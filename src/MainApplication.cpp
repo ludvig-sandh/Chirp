@@ -8,7 +8,7 @@ namespace Chirp {
 
 MainApplication::MainApplication()
     : m_preset(std::make_shared<Audio::Preset::AudioPreset>())
-    , m_fftComputer(std::make_shared<FFTComputer>())
+    , m_fftComputer(std::make_shared<FFT::FFTComputer>())
     , m_gui(m_preset, m_fftComputer)
     , m_audioEngine(m_preset, m_fftComputer)
 {}

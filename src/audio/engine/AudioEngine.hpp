@@ -20,7 +20,7 @@ namespace Audio::Engine {
 
 class AudioEngine {
 public:
-    AudioEngine(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
+    AudioEngine(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFT::FFTComputer> fftComputer);
 
     // Recurse from the root of the tree
     AudioBuffer ProcessBuffer(int numFrames);
@@ -46,7 +46,7 @@ private:
     };
 
     std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
-    std::shared_ptr<FFTComputer> m_fftComputer;
+    std::shared_ptr<FFT::FFTComputer> m_fftComputer;
     AudioBackend m_backend;
     Audio::Layout::SynthLayout m_synthLayout;
 };

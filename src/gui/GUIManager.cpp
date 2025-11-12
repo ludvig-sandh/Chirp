@@ -9,7 +9,7 @@
 namespace GUI {
 
 // RAII class for managing the GLFW window
-GUIManager::GUIManager(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
+GUIManager::GUIManager(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFT::FFTComputer> fftComputer)
     : m_preset(preset)
     , m_fftComputer(fftComputer)
     , m_keyboard(SCREEN_WIDTH)

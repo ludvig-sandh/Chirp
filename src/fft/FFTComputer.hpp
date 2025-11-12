@@ -10,6 +10,8 @@
 #include <mutex>
 #include <utility>
 
+namespace FFT {
+
 class FFTComputer {
 public:
     std::shared_ptr<std::vector<float>> GetLastFFTResult() const;
@@ -37,3 +39,5 @@ private:
 
     std::mutex m_resultMtx;
 };
+
+} // namespace FFT

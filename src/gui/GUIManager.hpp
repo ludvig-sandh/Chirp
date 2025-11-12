@@ -34,7 +34,7 @@ namespace GUI {
 class GUIManager {
 public:
     // Constructs the GUI manager with the given audio preset and FFT processor
-    GUIManager(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer);
+    GUIManager(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFT::FFTComputer> fftComputer);
 
     // Cleans up GUI resources and shuts down the window system
     ~GUIManager();
@@ -59,7 +59,7 @@ private:
     std::set<Audio::Core::Note> GetAllPressedNotes();
 
     std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
-    std::shared_ptr<FFTComputer> m_fftComputer;
+    std::shared_ptr<FFT::FFTComputer> m_fftComputer;
     Window::KeyboardWindow m_keyboard;
     Window::PresetWindow m_presetWindow;
     Window::WaveformWindow m_oscAWaveformWindow;
