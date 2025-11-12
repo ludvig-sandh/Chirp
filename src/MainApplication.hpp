@@ -14,6 +14,8 @@
 #include <thread>
 #include <atomic>
 
+namespace Chirp {
+
 class MainApplication {
 public:
     MainApplication();
@@ -28,3 +30,5 @@ private:
 
     std::atomic<bool> m_isRunning = true;
 };
+
+} // namespace Chirp

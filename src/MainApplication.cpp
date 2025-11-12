@@ -4,6 +4,8 @@
 #include "MainApplication.hpp"
 #include "audio/preset/BuiltInPresetsLoader.hpp"
 
+namespace Chirp {
+
 MainApplication::MainApplication()
     : m_preset(std::make_shared<Audio::Preset::AudioPreset>())
     , m_fftComputer(std::make_shared<FFTComputer>())
@@ -32,3 +34,5 @@ void MainApplication::Start() {
     audioThread.join();
     fftThread.join();
 }
+
+} // namespace Chirp

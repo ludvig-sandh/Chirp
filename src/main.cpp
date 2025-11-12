@@ -4,7 +4,7 @@
 #include "MainApplication.hpp"
 
 int main(int, char**) {
-    MainApplication app;
+    Chirp::MainApplication app;
     app.Start();
     return 0;
 }
