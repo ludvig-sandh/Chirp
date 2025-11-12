@@ -11,10 +11,10 @@
 // https://webaudio.github.io/Audio-EQ-Cookbook/audio-eq-cookbook.html?utm_source=chatgpt.com
 class BiquadFilter {
 public:
-    void SetCoefficients(float b0, float b1, float b2, float a1, float a2);
+    void SetCoefficients(float b0, float b1, float b2, float a1, float a2) noexcept;
 
     // Uses x as input to the filter and progresses to the next step, providing the output y
-    float Step(float x);
+    float Step(float x) noexcept;
 
 private:
     // Just placeholder values

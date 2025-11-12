@@ -9,8 +9,8 @@
 // Represents an AudioProcessorNode base class that specifically generates sound, in contrast to one that modifies sound (Effects)
 class Generator : public AudioProcessorNode {
 public:
-    Generator();
-    virtual ~Generator() = default;
+    Generator() noexcept;
+    virtual ~Generator() noexcept = default;
 
     void ProcessFrame(AudioFrame& output) override;
 
@@ -19,5 +19,5 @@ public:
 
 private:
     Gain m_headroom;
-    float s_headroomLeveldB = -12.0f; // Generate signal with some headroom, not at max volume.
+    static constexpr float HEADROOM_LEVEL_DB = -12.0f; // Generate signal with some headroom, not at max volume.
 };

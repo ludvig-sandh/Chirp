@@ -9,25 +9,25 @@
 
 class Frequency {
 public:
-    explicit Frequency(float hertz);
-    Frequency(Note note);
+    explicit Frequency(float hertz) noexcept;
+    Frequency(Note note) noexcept;
 
     // Sets the base frequency.
-    void SetFrequency(float hertz);
+    void SetFrequency(float hertz) noexcept;
 
     // Sets the pitch in semitones, relative to the base frequency
-    void SetPitch(float semitones);
+    void SetPitch(float semitones) noexcept;
 
-    void ClearModulations();
+    void ClearModulations() noexcept;
 
     // Adds pitch modulation in semitones, which is added to the relative pitch from the base frequency
-    void AddPitchModulation(float semitones);
+    void AddPitchModulation(float semitones) noexcept;
 
     // Get the frequency accounting for any pitch and modulation relative to base frequency
-    float GetAbsolute() const;
+    float GetAbsolute() const noexcept;
 
 private:
-    static float ConvertNoteToHz(Note note);
+    static float ConvertNoteToHz(Note note) noexcept;
 
     float m_hertz = 440;
     float m_pitchBase = 0.0; // In semitones (can be negative)

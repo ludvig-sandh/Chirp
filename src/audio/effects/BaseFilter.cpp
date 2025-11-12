@@ -8,35 +8,35 @@
 
 #include <algorithm>
 
-BaseFilter::BaseFilter(Frequency cutoff, float Q) : m_cutoff(cutoff), m_Q(Q) {}
+BaseFilter::BaseFilter(Frequency cutoff, float Q) noexcept : m_cutoff(cutoff), m_Q(Q) {}
 
-void BaseFilter::ProcessFrame(AudioFrame& output) {
+void BaseFilter::ProcessFrame(AudioFrame& output) noexcept {
     output.left = m_leftFilter.Step(output.left);
     output.right = m_rightFilter.Step(output.right);
 }
 
-void BaseFilter::SetCutoff(Frequency cutoff) {
+void BaseFilter::SetCutoff(Frequency cutoff) noexcept {
     m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), MIN_CUTOFF, MAX_CUTOFF));
     ComputeAndApplyCoefficients();
 }
 
-void BaseFilter::SetPeaking(float Q) {
+void BaseFilter::SetPeaking(float Q) noexcept {
     m_Q = std::clamp(Q, MIN_Q, MAX_Q);
     ComputeAndApplyCoefficients();
 }
 
-void BaseFilter::SetCutoffAndPeaking(Frequency cutoff, float Q) {
+void BaseFilter::SetCutoffAndPeaking(Frequency cutoff, float Q) noexcept {
     m_cutoff.SetFrequency(std::clamp(cutoff.GetAbsolute(), MIN_CUTOFF, MAX_CUTOFF));
     m_Q = std::clamp(Q, MIN_Q, MAX_Q);
     ComputeAndApplyCoefficients();
 }
 
-void BaseFilter::ClearModulationsImpl() {
+void BaseFilter::ClearModulationsImpl() noexcept {
     m_cutoff.ClearModulations();
     m_modulationQ = 0.0f;
 }
 
-void BaseFilter::ApplyModulation(float amount, ModulationType modType) {
+void BaseFilter::ApplyModulation(float amount, ModulationType modType) noexcept {
     if (modType == ModulationType::Cutoff) {
         m_cutoff.AddPitchModulation(amount);
     }else if (modType == ModulationType::Peaking) {

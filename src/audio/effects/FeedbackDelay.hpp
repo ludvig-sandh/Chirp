@@ -20,7 +20,7 @@ public:
     void SetDelayTime(DSP::Seconds delayTime) noexcept;
     void SetFeedback(float feedback) noexcept;
 
-    void ProcessFrame(AudioFrame& output) override;
+    void ProcessFrame(AudioFrame& output) noexcept override;
 
 private:
     void UpdateDelayLines() noexcept;

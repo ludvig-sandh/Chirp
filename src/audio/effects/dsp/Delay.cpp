@@ -25,7 +25,7 @@ void Delay::SetDelay(DSP::Seconds delayTime) {
 }
 
 // Process one sample at a time
-float Delay::Process(float input) {
+float Delay::Process(float input) noexcept {
     if (m_buffer.empty()) {
         return input;
     }

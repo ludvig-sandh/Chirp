@@ -25,30 +25,30 @@ std::unique_ptr<Waveform> Waveform::ConstructWaveform(WaveformInfo::Type type) {
     return nullptr;
 }
 
-float Saw::GetSampleAt(NormalizedFloat phase) {
+float Saw::GetSampleAt(NormalizedFloat phase) noexcept {
     return -1.0f + 2.0f * phase.get();
 }
 
-float Sine::GetSampleAt(NormalizedFloat phase) {
+float Sine::GetSampleAt(NormalizedFloat phase) noexcept {
     return std::sin(phase.get() * 2.0f * std::numbers::pi);
 }
 
-float Square::GetSampleAt(NormalizedFloat phase) {
+float Square::GetSampleAt(NormalizedFloat phase) noexcept {
     return phase.get() >= 0.5f ? 1.0f : -1.0f;
 }
 
-float WhiteNoise::GetSampleAt(NormalizedFloat phase) {
+float WhiteNoise::GetSampleAt(NormalizedFloat phase) noexcept {
     (void)phase;
     
     // Generate a random sample in range [-1.0, 1.0]
     return m_dist(m_gen);
 }
 
-float Triangle::GetSampleAt(NormalizedFloat phase) {
+float Triangle::GetSampleAt(NormalizedFloat phase) noexcept {
     return -4.0f * std::fabs(phase.get() - 0.5f) + 1.0f;
 }
 
-float Organ::GetSampleAt(NormalizedFloat phase) {
+float Organ::GetSampleAt(NormalizedFloat phase) noexcept {
     float fundamental = std::sin(phase.get() * 2.0 * std::numbers::pi);
     float third = 0.4f * std::sin(phase.get() * 2.0 * std::numbers::pi * 3.0f);
     float sixth = 0.2f * std::sin(phase.get() * 2.0 * std::numbers::pi * 6.0f);

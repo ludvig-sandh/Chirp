@@ -76,7 +76,7 @@ void Oscillator::SetOctave(int octave) {
     }
 }
 
-void Oscillator::ApplyModulation(float amount, ModulationType modType) {
+void Oscillator::ApplyModulation(float amount, ModulationType modType) noexcept {
     if (modType == ModulationType::Pitch) {
         // Modulates the pitch of all voices
         for (auto& voice : m_voices) {
@@ -89,7 +89,7 @@ void Oscillator::ApplyModulation(float amount, ModulationType modType) {
     }
 }
 
-void Oscillator::ClearModulationsImpl() {
+void Oscillator::ClearModulationsImpl() noexcept {
     for (auto& voice : m_voices) {
         voice.freq.ClearModulations();
     }

@@ -10,10 +10,10 @@
 class Pan {
 public:
     // Sets the pan value, accepts values between 0.0 and 1.0. 0.0 => only left channel, 1.0 => only right channel
-    void Set(NormalizedFloat pan);
-    void AddModulation(NormalizedFloat modulation);
-    void ClearModulations();
-    AudioFrame Apply(const AudioFrame& frame);
+    void Set(NormalizedFloat pan) noexcept;
+    void AddModulation(NormalizedFloat modulation) noexcept;
+    void ClearModulations() noexcept;
+    AudioFrame Apply(const AudioFrame& frame) noexcept;
 private:
     NormalizedFloat m_pan = 0.5f; // Center
     NormalizedFloat m_modulation = 0.0f;

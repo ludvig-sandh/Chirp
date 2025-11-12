@@ -20,13 +20,13 @@
 class AudioProcessorNode {
 public:
     AudioProcessorNode() = default;
-    virtual ~AudioProcessorNode() = default;
+    virtual ~AudioProcessorNode() noexcept = default;
 
     void AddChild(std::shared_ptr<AudioProcessorNode> child);
     
-    void ClearModulations();
-    virtual void ClearModulationsImpl() {};
-    virtual void ApplyModulation(float amount, ModulationType modType);
+    void ClearModulations() noexcept;
+    virtual void ClearModulationsImpl() noexcept {};
+    virtual void ApplyModulation(float amount, ModulationType modType) noexcept;
 
     AudioFrame GenerateFrame(const AudioPreset& preset);
     

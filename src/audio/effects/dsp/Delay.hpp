@@ -18,7 +18,7 @@ public:
     void SetDelay(DSP::Seconds delayTime);
 
     // Process one sample at a time
-    float Process(float input);
+    float Process(float input) noexcept;
 
 private:
     DSP::Seconds m_delayTime;

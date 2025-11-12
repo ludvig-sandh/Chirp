@@ -11,14 +11,14 @@ void AudioProcessorNode::AddChild(std::shared_ptr<AudioProcessorNode> child) {
     m_children.insert(child);
 }
 
-void AudioProcessorNode::ClearModulations() {
+void AudioProcessorNode::ClearModulations() noexcept {
     ClearModulationsImpl(); // Clears for this node
     for (const auto& child : m_children) { // Clears all children nodes
         child->ClearModulations();
     }
 }
 
-void AudioProcessorNode::ApplyModulation(float amount, ModulationType modType) {
+void AudioProcessorNode::ApplyModulation(float amount, ModulationType modType) noexcept {
     (void)amount;
     (void)modType;
     std::cerr << "WARNING: Tried to apply modulation on a node that doesn't support it.\n";

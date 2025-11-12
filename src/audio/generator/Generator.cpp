@@ -3,8 +3,8 @@
 
 #include "audio/generator/Generator.hpp"
 
-Generator::Generator() {
-    m_headroom.SetDecibels(s_headroomLeveldB);
+Generator::Generator() noexcept {
+    m_headroom.SetDecibels(HEADROOM_LEVEL_DB);
 }
 
 void Generator::ProcessFrame(AudioFrame& output) {

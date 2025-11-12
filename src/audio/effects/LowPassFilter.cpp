@@ -5,11 +5,11 @@
 #include "audio/engine/AudioEngine.hpp"
 #include <numbers>
 
-LowPassFilter::LowPassFilter(Frequency cutoff, float Q) : BaseFilter(cutoff, Q) {
+LowPassFilter::LowPassFilter(Frequency cutoff, float Q) noexcept : BaseFilter(cutoff, Q) {
     ComputeAndApplyCoefficients();
 }
 
-void LowPassFilter::ComputeAndApplyCoefficients() {
+void LowPassFilter::ComputeAndApplyCoefficients() noexcept {
     float cutoffHz = std::clamp(m_cutoff.GetAbsolute(), MIN_CUTOFF, MAX_CUTOFF);
     float omega0 = 2.0f * std::numbers::pi * cutoffHz / SAMPLE_RATE;
     float Q = std::clamp(m_Q + m_modulationQ, MIN_Q, MAX_Q);

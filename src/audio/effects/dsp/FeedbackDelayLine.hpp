@@ -29,7 +29,7 @@ public:
     float Process(float input) noexcept;
 
     // Reset the delay line buffer to silence
-    void Clear() noexcept;
+    void Clear();
 
 private:
     static inline const int BUFFER_SIZE = static_cast<int>(std::ceil(MAX_DELAY_SEC.count() * 44100)) + 1; // TODO: Provide sample rate at runtime

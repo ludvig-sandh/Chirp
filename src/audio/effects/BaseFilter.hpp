@@ -13,23 +13,24 @@
 // LP IIR filter using biquad transfer function
 class BaseFilter : public AudioProcessorNode {
 public:
-    BaseFilter(Frequency cutoff, float Q);
+    BaseFilter(Frequency cutoff, float Q) noexcept;
+    virtual ~BaseFilter() noexcept {}
 
-    void ProcessFrame(AudioFrame& output) override;
+    void ProcessFrame(AudioFrame& output) noexcept override;
 
-    void SetCutoff(Frequency cutoff);
+    void SetCutoff(Frequency cutoff) noexcept;
 
-    void SetPeaking(float Q);
+    void SetPeaking(float Q) noexcept;
 
     // If you want to set both, this call will only compute the coefficients once
-    void SetCutoffAndPeaking(Frequency cutoff, float Q);
+    void SetCutoffAndPeaking(Frequency cutoff, float Q) noexcept;
 
-    void ClearModulationsImpl() override;
-    void ApplyModulation(float amount, ModulationType modType) override;
+    void ClearModulationsImpl() noexcept override;
+    void ApplyModulation(float amount, ModulationType modType) noexcept override;
 
 protected:
     // Is called every time cutoff or Q is modified, otherwise the changes won't take effect.
-    virtual void ComputeAndApplyCoefficients() = 0;
+    virtual void ComputeAndApplyCoefficients() noexcept = 0;
 
     // Cutoff frequency
     Frequency m_cutoff;

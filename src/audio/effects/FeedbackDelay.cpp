@@ -47,7 +47,7 @@ void FeedbackDelay::SetFeedback(float feedback) noexcept {
     m_monoLine.SetFeedback(feedback);
 }
 
-void FeedbackDelay::ProcessFrame(AudioFrame& output) {
+void FeedbackDelay::ProcessFrame(AudioFrame& output) noexcept {
     float dryL = output.left;
     float dryR = output.right;
     float avg = (dryL + dryR) / 2.0f;

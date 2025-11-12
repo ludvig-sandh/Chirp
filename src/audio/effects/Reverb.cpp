@@ -5,17 +5,13 @@
 
 #include <numbers>
 
-Reverb::Reverb()
-    : combDelays{1116, 1188, 1277, 1356} // Choose reasonable delay lengths (prime numbers help)
-    , allpassDelays{225, 556}
-    , combFilterState(4) {
-
+Reverb::Reverb() {
     // Initialize buffers
     for (auto d : combDelays) combBuffers.emplace_back(d, AudioFrame());
     for (auto d : allpassDelays) allpassBuffers.emplace_back(d, AudioFrame());
 }
 
-void Reverb::SetParams(float feedback, float damping, float wet) {
+void Reverb::SetParams(float feedback, float damping, float wet) noexcept {
     feedback = feedback;
     damp = damping;
     wetMix = wet;

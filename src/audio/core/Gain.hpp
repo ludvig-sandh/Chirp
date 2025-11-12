@@ -10,21 +10,21 @@
 class Gain {
 public:
     // Updates the target gain with a value between 0 and 1
-    void SetLinear(float linear);
+    void SetLinear(float linear) noexcept;
 
     // Updates the target gain with a value between -100.0 and 0.0 decibels
-    void SetDecibels(float dB);
+    void SetDecibels(float dB) noexcept;
 
     // Adds a modulation on the gain (linear addition)
-    void AddModulationLinear(float linearMod);
+    void AddModulationLinear(float linearMod) noexcept;
 
     // Removes all modulations on this object
-    void ClearModulations();
+    void ClearModulations() noexcept;
 
     // Applies the current gain and updates it towards the target gain.
     // Should be called once for each sample.
-    float Apply(float sample);
-    AudioFrame Apply(const AudioFrame& frame);
+    float Apply(float sample) noexcept;
+    AudioFrame Apply(const AudioFrame& frame) noexcept;
 
 private:
     float m_currentLinear = 0.0;

@@ -15,7 +15,7 @@ FeedbackDelayLine::FeedbackDelayLine(DSP::Seconds delayTime, float feedback)
     SetFeedback(feedback);
 }
 
-void FeedbackDelayLine::SetDelayTime(DSP::Seconds delayTime) noexcept{
+void FeedbackDelayLine::SetDelayTime(DSP::Seconds delayTime) noexcept {
     // Clamp to available buffer size
     float clamped = std::clamp(delayTime.count(), MIN_DELAY_SEC.count(), static_cast<float>(BUFFER_SIZE - 1) / SAMPLE_RATE);
     m_delaySamples = static_cast<int>(clamped * SAMPLE_RATE);
@@ -38,7 +38,7 @@ float FeedbackDelayLine::Process(float input) noexcept {
     return delayed;
 }
 
-void FeedbackDelayLine::Clear() noexcept {
+void FeedbackDelayLine::Clear() {
     std::fill(m_buffer.begin(), m_buffer.end(), 0.0f);
     m_writeIndex = 0;
 }

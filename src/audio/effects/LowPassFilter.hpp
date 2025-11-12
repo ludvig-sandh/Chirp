@@ -10,8 +10,8 @@
 // LP IIR filter using biquad transfer function
 class LowPassFilter final : public BaseFilter {
 public:
-    LowPassFilter(Frequency cutoff = Frequency(1000.0f), float Q = BaseFilter::DEFAULT_Q);
+    LowPassFilter(Frequency cutoff = Frequency(1000.0f), float Q = BaseFilter::DEFAULT_Q) noexcept;
 
 private:
-    void ComputeAndApplyCoefficients() override;
+    void ComputeAndApplyCoefficients() noexcept override;
 };
