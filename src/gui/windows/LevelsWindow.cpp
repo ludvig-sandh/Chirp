@@ -8,6 +8,8 @@
 #include <cmath>
 #include <algorithm>
 
+namespace GUI::Window {
+
 void LevelsWindow::SetPixelHelper(std::vector<unsigned char>& pixels, int x, int y, const std::array<unsigned char, 4>& rgba) {
     int pixelIndex = 4 * ((TEXTURE_HEIGHT - y - 1) * TEXTURE_WIDTH + x);
     pixels[pixelIndex] = rgba[0];
@@ -42,12 +44,12 @@ void LevelsWindow::UpdateLevels(const Audio::Engine::AudioFrame& levels) {
         int y = bar + 1;
         if (bar < numVolumeBarsLeft) {
             // Current vol
-            SetPixelHelper(pixels, 1, y, GUIConstants::Colors::HIGHLIGHT);
-            SetPixelHelper(pixels, 2, y, GUIConstants::Colors::HIGHLIGHT);
+            SetPixelHelper(pixels, 1, y, GUI::Constants::Colors::HIGHLIGHT);
+            SetPixelHelper(pixels, 2, y, GUI::Constants::Colors::HIGHLIGHT);
         }else {
             // Recent max
-            SetPixelHelper(pixels, 1, y, GUIConstants::Colors::MIDTONE);
-            SetPixelHelper(pixels, 2, y, GUIConstants::Colors::MIDTONE);
+            SetPixelHelper(pixels, 1, y, GUI::Constants::Colors::MIDTONE);
+            SetPixelHelper(pixels, 2, y, GUI::Constants::Colors::MIDTONE);
         }
     }
 
@@ -56,12 +58,12 @@ void LevelsWindow::UpdateLevels(const Audio::Engine::AudioFrame& levels) {
         int y = bar + 1;
         if (bar < numVolumeBarsRight) {
             // Current vol
-            SetPixelHelper(pixels, 4, y, GUIConstants::Colors::HIGHLIGHT);
-            SetPixelHelper(pixels, 5, y, GUIConstants::Colors::HIGHLIGHT);
+            SetPixelHelper(pixels, 4, y, GUI::Constants::Colors::HIGHLIGHT);
+            SetPixelHelper(pixels, 5, y, GUI::Constants::Colors::HIGHLIGHT);
         }else {
             // Recent max
-            SetPixelHelper(pixels, 4, y, GUIConstants::Colors::MIDTONE);
-            SetPixelHelper(pixels, 5, y, GUIConstants::Colors::MIDTONE);
+            SetPixelHelper(pixels, 4, y, GUI::Constants::Colors::MIDTONE);
+            SetPixelHelper(pixels, 5, y, GUI::Constants::Colors::MIDTONE);
         }
     }
 
@@ -114,3 +116,5 @@ void LevelsWindow::InitTexture() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
+
+} // namespace GUI::Window

@@ -13,6 +13,8 @@
 #include <utility>
 #include <deque>
 
+namespace GUI::Window {
+
 class LevelsWindow {
 public:
     static const int WINDOW_HEIGHT = 294;
@@ -42,8 +44,10 @@ private:
 
     static const int maxVolumeBars = TEXTURE_HEIGHT - 2; // Leave 1 pixel gap on top and bottom
 
-    LevelsHistory m_leftHistory;
-    LevelsHistory m_rightHistory;
+    Helper::LevelsHistory m_leftHistory;
+    Helper::LevelsHistory m_rightHistory;
 
     GLuint m_levelsTex = 0;
 };
+
+} // namespace GUI::Window

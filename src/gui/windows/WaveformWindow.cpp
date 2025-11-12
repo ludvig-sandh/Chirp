@@ -5,6 +5,8 @@
 #include "gui/windows/KeyboardWindow.hpp"
 #include "gui/GUIConstants.hpp"
 
+namespace GUI::Window {
+
 WaveformWindow::WaveformWindow(Audio::Core::WaveformInfo::Type waveformType, const std::string& windowName)
     : m_waveformType(waveformType)
     , m_windowName(windowName)
@@ -128,7 +130,7 @@ void WaveformWindow::UpdateTexture() {
         // Paint the "shadow" of the waveform
         const int midRow = TEXTURE_HEIGHT / 2;
         for (int shadowRow = std::min(row, midRow); shadowRow < std::max(row, midRow); shadowRow++) {
-            paintFn(shadowRow, col, 0, GUIConstants::Colors::MIDTONE);
+            paintFn(shadowRow, col, 0, GUI::Constants::Colors::MIDTONE);
         }
 
         // Linear interpolation between last point and this one: (col-1, prevRow) to (col, row)
@@ -141,7 +143,7 @@ void WaveformWindow::UpdateTexture() {
             int err = dx + dy;
 
             while (true) {
-                paintFn(y0, x0, 1, GUIConstants::Colors::HIGHLIGHT);
+                paintFn(y0, x0, 1, GUI::Constants::Colors::HIGHLIGHT);
                 if (x0 == x1 && y0 == y1) {
                     break;
                 }
@@ -163,3 +165,5 @@ void WaveformWindow::UpdateTexture() {
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT,
                     GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 }
+
+} // namespace GUI::Window

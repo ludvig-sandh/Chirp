@@ -5,6 +5,8 @@
 
 #include <deque>
 
+namespace GUI::Window::Helper {
+
 // Keeps track of audio levels over time so that the LevelsWindow can display both current and recent audio levels. 
 class LevelsHistory {
 public:
@@ -22,3 +24,5 @@ private:
     float s_decay = 0.02;
     int s_historySize = 30;
 };
+
+} // namespace GUI::Window::Helper

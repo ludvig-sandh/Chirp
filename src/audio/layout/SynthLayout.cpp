@@ -44,7 +44,7 @@ std::shared_ptr<Audio::Engine::AudioProcessorNode> SynthLayout::GetRootNode() {
 }
 
 void SynthLayout::LoadPreset(Audio::Preset::AudioPreset& preset) {
-    Audio::Core::Note note = KeyboardWindow::FIRST_NOTE;
+    Audio::Core::Note note = GUI::Window::KeyboardWindow::FIRST_NOTE;
     for (auto& isPressed : preset.noteStates) {
         if (isPressed.load()) {
             if (m_pressedNotes.find(note) == m_pressedNotes.end()) {

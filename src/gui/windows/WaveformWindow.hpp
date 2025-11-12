@@ -9,6 +9,8 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 
+namespace GUI::Window {
+
 class WaveformWindow {
 public:
     WaveformWindow(Audio::Core::WaveformInfo::Type waveformType, const std::string& windowName);
@@ -38,3 +40,5 @@ private:
     static inline const float ON_OPACITY = 1.0f;
     static inline const float OFF_OPACITY = 0.2f;
 };
+
+} // namespace GUI::Window

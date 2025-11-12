@@ -8,6 +8,8 @@
 #include "ImGuiFileDialog.h"
 #include "audio/preset/AudioPreset.hpp"
 
+namespace GUI::Window {
+
 class GlobalSettingsWindow {
 public:
     static inline const int WINDOW_HEIGHT = 60;
@@ -18,3 +20,5 @@ private:
     void ConfigureWindow() const;
     void DrawGlobalSettings(Audio::Preset::AudioPreset& preset) const;
 };
+
+} // namespace GUI::Window

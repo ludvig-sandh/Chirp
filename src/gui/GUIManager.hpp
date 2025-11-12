@@ -28,6 +28,8 @@
 #include <memory>
 #include <set>
 
+namespace GUI {
+
 // Responsible for managing the GLFW window and running the main loop
 class GUIManager {
 public:
@@ -58,20 +60,22 @@ private:
 
     std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
-    KeyboardWindow m_keyboard;
-    PresetWindow m_presetWindow;
-    WaveformWindow m_oscAWaveformWindow;
-    WaveformWindow m_oscBWaveformWindow;
-    SpectrumWindow m_spectrumWindow;
+    Window::KeyboardWindow m_keyboard;
+    Window::PresetWindow m_presetWindow;
+    Window::WaveformWindow m_oscAWaveformWindow;
+    Window::WaveformWindow m_oscBWaveformWindow;
+    Window::SpectrumWindow m_spectrumWindow;
 
     GLFWwindow *m_window;
     ImGuiIO *m_io;
-    SpectrogramWindow m_spectrogram;
-    LevelsWindow m_levelsDisplay;
-    GlobalSettingsWindow m_globalSettingsWindow;
-    PresetLoaderWindow m_presetLoaderWindow;
+    Window::SpectrogramWindow m_spectrogram;
+    Window::LevelsWindow m_levelsDisplay;
+    Window::GlobalSettingsWindow m_globalSettingsWindow;
+    Window::PresetLoaderWindow m_presetLoaderWindow;
     MidiInput m_midiInput;
 
     static inline const int SCREEN_WIDTH = 1280;
     static inline const int SCREEN_HEIGHT = 800;
-}; 
+};
+
+} // namespace GUI

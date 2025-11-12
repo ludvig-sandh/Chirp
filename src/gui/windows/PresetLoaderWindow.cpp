@@ -12,6 +12,8 @@
 #include <optional>
 #include <cassert>
 
+namespace GUI::Window {
+
 void PresetLoaderWindow::Render(Audio::Preset::AudioPreset& preset) const {
     ConfigureWindow();
     DrawPresetLoader(preset);
@@ -151,3 +153,5 @@ void PresetLoaderWindow::DrawPresetLoader(Audio::Preset::AudioPreset& preset) co
         ImGui::EndPopup();
     }
 }
+
+} // namespace GUI::Window

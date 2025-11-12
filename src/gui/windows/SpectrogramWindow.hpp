@@ -8,6 +8,8 @@
 #include <vector>
 #include <array>
 
+namespace GUI::Window {
+
 class SpectrogramWindow {
 public:
     // Dimensions of spectrogram window
@@ -41,3 +43,5 @@ private:
     static constexpr int SPEC_WIDTH = 256; // number of time slices visible
     std::vector<std::vector<float>> m_magnitudeHistory;
 };
+
+} // namespace GUI::Window

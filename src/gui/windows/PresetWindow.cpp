@@ -15,6 +15,8 @@
 #include "audio/modulation/LFO.hpp"
 #include "audio/core/Frequency.hpp"
 
+namespace GUI::Window {
+
 void PresetWindow::Render(float framerate) const {
     ConfigureWindow();
 
@@ -492,3 +494,5 @@ void PresetWindow::DrawLFO2() const {
         }
     }
 }
+
+} // namespace GUI::Window

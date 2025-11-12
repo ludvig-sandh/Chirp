@@ -8,7 +8,7 @@
 #include <array>
 
 // Color theme etc.
-namespace GUIConstants::Colors {
+namespace GUI::Constants::Colors {
     // Used more for the images on screen
     inline constexpr std::array<unsigned char, 4> MIDTONE{31, 64, 132, 255};
     inline constexpr std::array<unsigned char, 4> HIGHLIGHT{107, 201, 255, 255};

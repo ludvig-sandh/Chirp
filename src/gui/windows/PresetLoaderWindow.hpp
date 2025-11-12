@@ -8,6 +8,8 @@
 #include "ImGuiFileDialog.h"
 #include "audio/preset/AudioPreset.hpp"
 
+namespace GUI::Window {
+
 class PresetLoaderWindow {
 public:
     static inline const int WINDOW_HEIGHT = 84;
@@ -20,3 +22,5 @@ private:
     // Display export/load preset buttons
     void DrawPresetLoader(Audio::Preset::AudioPreset& preset) const;
 };
+
+} // namespace GUI::Window

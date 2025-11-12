@@ -10,6 +10,8 @@
 #include "gui/GUIConstants.hpp"
 #include <algorithm>
 
+namespace GUI::Window {
+
 void SpectrumWindow::PushMagnitudes(const std::vector<float>& magnitudes) {
     if (std::ssize(m_magnitudes) != std::ssize(magnitudes)) {
         m_magnitudes = magnitudes;
@@ -44,10 +46,10 @@ void SpectrumWindow::Render() {
         float m = 1.0f - (1.0f - mag) * (1.0f - mag);
         m = std::min(m * 2, 1.0f);
         ImU32 color = IM_COL32(
-            GUIConstants::Colors::HIGHLIGHT[0] * m + GUIConstants::Colors::MIDTONE[0] * (1.0f - m),
-            GUIConstants::Colors::HIGHLIGHT[1] * m + GUIConstants::Colors::MIDTONE[1] * (1.0f - m),
-            GUIConstants::Colors::HIGHLIGHT[2] * m + GUIConstants::Colors::MIDTONE[2] * (1.0f - m),
-            GUIConstants::Colors::HIGHLIGHT[3] * m + GUIConstants::Colors::MIDTONE[3] * (1.0f - m)
+            GUI::Constants::Colors::HIGHLIGHT[0] * m + GUI::Constants::Colors::MIDTONE[0] * (1.0f - m),
+            GUI::Constants::Colors::HIGHLIGHT[1] * m + GUI::Constants::Colors::MIDTONE[1] * (1.0f - m),
+            GUI::Constants::Colors::HIGHLIGHT[2] * m + GUI::Constants::Colors::MIDTONE[2] * (1.0f - m),
+            GUI::Constants::Colors::HIGHLIGHT[3] * m + GUI::Constants::Colors::MIDTONE[3] * (1.0f - m)
         );
 
         ImVec2 p0(pos.x + i * barWidth, pos.y + size.y);
@@ -87,3 +89,5 @@ void SpectrumWindow::ConfigureWindow() const {
 
     ImGui::SeparatorText("Spectrum");
 }
+
+} // namespace GUI::Window

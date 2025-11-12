@@ -8,6 +8,8 @@
 #include "audio/preset/AudioPreset.hpp"
 #include <memory>
 
+namespace GUI::Window {
+
 class PresetWindow {
 public:
     PresetWindow(std::shared_ptr<Audio::Preset::AudioPreset> preset)
@@ -33,3 +35,5 @@ private:
 
     std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
 };
+
+} // namespace GUI::Window

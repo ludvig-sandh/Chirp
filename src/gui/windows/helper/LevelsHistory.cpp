@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+namespace GUI::Window::Helper {
+
 void LevelsHistory::Add(float db) {
     m_history.push_back(db);
     if (std::ssize(m_history) > s_historySize) {
@@ -31,3 +33,5 @@ float LevelsHistory::GetMax() {
 
     return *maxIt;
 }
+
+} // namespace GUI::Window::Helper

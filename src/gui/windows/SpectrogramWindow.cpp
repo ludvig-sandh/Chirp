@@ -8,6 +8,8 @@
 #include <cmath>
 #include <algorithm>
 
+namespace GUI::Window {
+
 // update per audio block
 void SpectrogramWindow::PushColumn(const std::vector<float>& magnitudes) {
     // Detect size change and reallocate magnitude history if needed
@@ -104,17 +106,17 @@ std::array<unsigned char, 4> SpectrogramWindow::MagnitudeToRGBA(float mag) {
     if (mag < 0.5f) {
         // interpolate c0 -> c1
         float t = mag / 0.5f;
-        r_f = GUIConstants::Colors::MIDTONE[0];
-        g_f = GUIConstants::Colors::MIDTONE[1];
-        b_f = GUIConstants::Colors::MIDTONE[2];
-        a_f = t * GUIConstants::Colors::MIDTONE[3];
+        r_f = GUI::Constants::Colors::MIDTONE[0];
+        g_f = GUI::Constants::Colors::MIDTONE[1];
+        b_f = GUI::Constants::Colors::MIDTONE[2];
+        a_f = t * GUI::Constants::Colors::MIDTONE[3];
     } else {
         // interpolate c1 -> c2
         float t = (mag - 0.5f) / 0.5f;
-        r_f = (1 - t) * GUIConstants::Colors::MIDTONE[0] + t * GUIConstants::Colors::HIGHLIGHT[0];
-        g_f = (1 - t) * GUIConstants::Colors::MIDTONE[1] + t * GUIConstants::Colors::HIGHLIGHT[1];
-        b_f = (1 - t) * GUIConstants::Colors::MIDTONE[2] + t * GUIConstants::Colors::HIGHLIGHT[2];
-        a_f = (1 - t) * GUIConstants::Colors::MIDTONE[3] + t * GUIConstants::Colors::HIGHLIGHT[3];
+        r_f = (1 - t) * GUI::Constants::Colors::MIDTONE[0] + t * GUI::Constants::Colors::HIGHLIGHT[0];
+        g_f = (1 - t) * GUI::Constants::Colors::MIDTONE[1] + t * GUI::Constants::Colors::HIGHLIGHT[1];
+        b_f = (1 - t) * GUI::Constants::Colors::MIDTONE[2] + t * GUI::Constants::Colors::HIGHLIGHT[2];
+        a_f = (1 - t) * GUI::Constants::Colors::MIDTONE[3] + t * GUI::Constants::Colors::HIGHLIGHT[3];
     }
     
     return {
@@ -124,3 +126,5 @@ std::array<unsigned char, 4> SpectrogramWindow::MagnitudeToRGBA(float mag) {
         static_cast<unsigned char>(std::clamp(a_f, 0.0f, 255.0f)),
     };
 }
+
+} // namespace GUI::Window

@@ -6,6 +6,8 @@
 #include <utility>
 #include <iostream>
 
+namespace GUI {
+
 // RAII class for managing the GLFW window
 GUIManager::GUIManager(std::shared_ptr<Audio::Preset::AudioPreset> preset, std::shared_ptr<FFTComputer> fftComputer)
     : m_preset(preset)
@@ -91,8 +93,8 @@ void GUIManager::Run() {
             allPressedNotes = m_keyboard.Render(allPressedNotes);
 
             // Store keyboard state (all pressed notes returned) via the shared preset
-            for (Audio::Core::Note note = KeyboardWindow::FIRST_NOTE; note <= KeyboardWindow::LAST_NOTE; ++note) {
-                int noteIdx = note - KeyboardWindow::FIRST_NOTE;
+            for (Audio::Core::Note note = GUI::Window::KeyboardWindow::FIRST_NOTE; note <= GUI::Window::KeyboardWindow::LAST_NOTE; ++note) {
+                int noteIdx = note - GUI::Window::KeyboardWindow::FIRST_NOTE;
                 bool isPressed = allPressedNotes.find(note) != allPressedNotes.end();
                 m_preset->noteStates[noteIdx].store(isPressed);
             }
@@ -171,7 +173,7 @@ GLFWwindow *GUIManager::InitAux() {
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Set background color
-    ImVec4 bgColor = GUIConstants::Colors::ToImVec(GUIConstants::Colors::BG);
+    ImVec4 bgColor = GUI::Constants::Colors::ToImVec(GUI::Constants::Colors::BG);
     glClearColor(bgColor.x * bgColor.w, bgColor.y * bgColor.w, bgColor.z * bgColor.w, bgColor.w);
 
     // Load Fonts
@@ -259,3 +261,5 @@ std::set<Audio::Core::Note> GUIManager::GetAllPressedNotes() {
     allPressedNotes.insert(midiNotes.begin(), midiNotes.end());
     return allPressedNotes;
 }
+
+} // namespace GUI

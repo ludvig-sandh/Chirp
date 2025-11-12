@@ -3,12 +3,14 @@
 
 #include "gui/windows/KeyboardWindow.hpp"
 
+namespace GUI::Window {
+
 void UIKey::Draw(const ImVec2& offset, ImDrawList* drawList, bool isPressed) const {
     static const ImU32 pressedKeyColor = IM_COL32(
-        GUIConstants::Colors::HIGHLIGHT[0],
-        GUIConstants::Colors::HIGHLIGHT[1],
-        GUIConstants::Colors::HIGHLIGHT[2],
-        GUIConstants::Colors::HIGHLIGHT[3]
+        GUI::Constants::Colors::HIGHLIGHT[0],
+        GUI::Constants::Colors::HIGHLIGHT[1],
+        GUI::Constants::Colors::HIGHLIGHT[2],
+        GUI::Constants::Colors::HIGHLIGHT[3]
     );
     ImU32 color = isPressed
         ? pressedKeyColor
@@ -141,3 +143,5 @@ void KeyboardWindow::DrawAllKeys(const ImVec2& offset, std::set<Audio::Core::Not
     drawFilteredKeys(WHITE_FILTER);
     drawFilteredKeys(BLACK_FILTER);
 }
+
+} // namespace GUI::Window

@@ -110,7 +110,7 @@ std::set<Audio::Core::Note> MidiInput::GetPressedNotes() {
             Audio::Core::Note note = MidiNoteToNote(static_cast<int>(data1));
 
             // Don't allow playing notes outside the keyboard range
-            if (note < KeyboardWindow::FIRST_NOTE || note > KeyboardWindow::LAST_NOTE) {
+            if (note < GUI::Window::KeyboardWindow::FIRST_NOTE || note > GUI::Window::KeyboardWindow::LAST_NOTE) {
                 continue;
             }
 

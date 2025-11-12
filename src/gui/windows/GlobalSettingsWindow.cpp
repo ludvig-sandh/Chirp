@@ -6,6 +6,8 @@
 #include "gui/windows/SpectrogramWindow.hpp"
 #include "gui/windows/LevelsWindow.hpp"
 
+namespace GUI::Window {
+
 void GlobalSettingsWindow::Render(Audio::Preset::AudioPreset& preset) const {
     ConfigureWindow();
     DrawGlobalSettings(preset);
@@ -39,3 +41,5 @@ void GlobalSettingsWindow::DrawGlobalSettings(Audio::Preset::AudioPreset& preset
     ImGui::SliderFloat("Master volume", &volumeTemp, 0.0f, 1.0f);
     preset.synthMasterVolume.store(volumeTemp);
 }
+
+} // namespace GUI::Window

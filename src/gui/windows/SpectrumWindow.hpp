@@ -5,6 +5,8 @@
 
 #include <vector>
 
+namespace GUI::Window {
+
 class SpectrumWindow {
 public:
     static const int WINDOW_WIDTH = 528;
@@ -24,3 +26,6 @@ private:
 
     const float SMOOTHING_FACTOR = 0.65f; // lower = faster response
 };
+
+} // namespace GUI::Window
+

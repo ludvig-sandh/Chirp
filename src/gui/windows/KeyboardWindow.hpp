@@ -13,6 +13,8 @@
 #include <optional>
 #include <set>
 
+namespace GUI::Window {
+
 struct UIKey {
     Audio::Core::Note note; // Corresponding note
     ImRect rect; // Relative coordinates to top left of keyboard
@@ -69,3 +71,5 @@ private:
     static inline const auto BLACK_FILTER = [](UIKey const& k){ return k.note.IsBlackKey(); };
     static inline const auto WHITE_FILTER = [](UIKey const& k){ return !k.note.IsBlackKey(); };
 };
+
+} // namespace GUI::Window

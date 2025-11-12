@@ -23,7 +23,7 @@ public:
 private:
     std::shared_ptr<Audio::Preset::AudioPreset> m_preset;
     std::shared_ptr<FFTComputer> m_fftComputer;
-    GUIManager m_gui;
+    GUI::GUIManager m_gui;
     Audio::Engine::AudioEngine m_audioEngine;
 
     std::atomic<bool> m_isRunning = true;
