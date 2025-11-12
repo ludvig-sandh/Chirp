@@ -8,7 +8,7 @@
 #include <vector>
 #include <array>
 
-class Spectrogram {
+class SpectrogramWindow {
 public:
     // Dimensions of spectrogram window
     static const int WINDOW_HEIGHT = 294;

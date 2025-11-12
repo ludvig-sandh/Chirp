@@ -14,7 +14,7 @@
 #include <GLFW/glfw3.h>
 
 #include "audio/preset/AudioPreset.hpp"
-#include "gui/Spectrogram.hpp"
+#include "gui/SpectrogramWindow.hpp"
 #include "fft/FFTComputer.hpp"
 #include "gui/LevelsWindow.hpp"
 #include "gui/KeyboardWindow.hpp"
@@ -57,7 +57,7 @@ private:
 
     GLFWwindow *m_window;
     ImGuiIO *m_io;
-    Spectrogram m_spectrogram;
+    SpectrogramWindow m_spectrogram;
     LevelsWindow m_levelsDisplay;
     GlobalSettingsWindow m_globalSettingsWindow;
     PresetLoaderWindow m_presetLoaderWindow;

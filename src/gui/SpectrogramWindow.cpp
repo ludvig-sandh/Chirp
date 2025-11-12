@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Ludvig Sandh
 
-#include "gui/Spectrogram.hpp"
+#include "gui/SpectrogramWindow.hpp"
 #include "gui/LevelsWindow.hpp"
 #include "gui/GUIConstants.hpp"
 
@@ -9,7 +9,7 @@
 #include <algorithm>
 
 // update per audio block
-void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
+void SpectrogramWindow::PushColumn(const std::vector<float>& magnitudes) {
     // Detect size change and reallocate magnitude history if needed
     if (m_specHeight != std::ssize(magnitudes)) {
         m_specHeight = std::ssize(magnitudes);
@@ -28,7 +28,7 @@ void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
         int x = (m_currentColumn + column_idx) % SPEC_WIDTH;
         for (int y = 0; y < m_specHeight; y++) {
             float mag = std::clamp(m_magnitudeHistory[x][y], 0.0f, 1.0f);
-            std::array<unsigned char, 4> rgba = Spectrogram::MagnitudeToRGBA(mag);
+            std::array<unsigned char, 4> rgba = SpectrogramWindow::MagnitudeToRGBA(mag);
 
             int pixel_idx = ((m_specHeight - y - 1) * SPEC_WIDTH + column_idx) * 4;
             pixels[pixel_idx + 0] = rgba[0];
@@ -44,7 +44,7 @@ void Spectrogram::PushColumn(const std::vector<float>& magnitudes) {
                     GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 }
 
-void Spectrogram::Render() {
+void SpectrogramWindow::Render() {
     if (m_specHeight == 0) return;
 
     ConfigureWindow();
@@ -53,7 +53,7 @@ void Spectrogram::Render() {
     ImGui::End();
 }
 
-void Spectrogram::ConfigureWindow() const {
+void SpectrogramWindow::ConfigureWindow() const {
     // Get viewport (the main window area)
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
@@ -75,11 +75,11 @@ void Spectrogram::ConfigureWindow() const {
     ImGui::SeparatorText("Spectrogram");
 }
 
-void Spectrogram::InitTexture() {
+void SpectrogramWindow::InitTexture() {
     ReallocateTexture();
 }
 
-void Spectrogram::ReallocateTexture() {
+void SpectrogramWindow::ReallocateTexture() {
     if (m_spectrogramTex) {
         glDeleteTextures(1, &m_spectrogramTex);
     }
@@ -94,7 +94,7 @@ void Spectrogram::ReallocateTexture() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-std::array<unsigned char, 4> Spectrogram::MagnitudeToRGBA(float mag) {
+std::array<unsigned char, 4> SpectrogramWindow::MagnitudeToRGBA(float mag) {
     mag *= 2;
     mag = std::clamp(mag, 0.0f, 1.0f);
 
