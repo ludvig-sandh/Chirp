@@ -28,21 +28,17 @@ struct Note {
 
     // Order notes first by octave, then by key
     bool operator<(const Note& other) const;
-
     bool operator>(const Note& other) const;
-
-    // Order notes first by octave, then by key
     bool operator<=(const Note& other) const;
-
     bool operator==(const Note& other) const;
 
     // Returns the number of notes from this to the other.
     // If other is higher in pitch than this, returns a negative value.
     int operator-(const Note& other) const;
 
-    // Returns the next key
+    // Returns the next note
     Note& operator++();
 
-    // Returns true if the note is a black key
+    // Returns true if the note would be a black key on a piano
     bool IsBlackKey() const;
 };
