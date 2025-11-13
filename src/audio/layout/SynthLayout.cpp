@@ -47,6 +47,7 @@ void SynthLayout::LoadPreset(Audio::Preset::AudioPreset& preset) {
     Audio::Core::Note note = GUI::Window::KeyboardWindow::FIRST_NOTE;
     for (auto& isPressed : preset.noteStates) {
         if (isPressed.load()) {
+            // If the note isn't already playing, start playing it
             if (m_pressedNotes.find(note) == m_pressedNotes.end()) {
                 m_pressedNotes.insert(note);
 
@@ -57,11 +58,14 @@ void SynthLayout::LoadPreset(Audio::Preset::AudioPreset& preset) {
                 if (m_oscB->isOn) {
                     m_oscB->NoteOn(note);
                 }
+
+                // Restart all envelopes
                 m_filterEnv->Restart();
                 m_lfo1Env->Restart();
                 m_lfo2Env->Restart();
             }
         }else {
+            // If the note is already playing, stop playing it
             if (m_pressedNotes.find(note) != m_pressedNotes.end()) {
                 m_pressedNotes.erase(note);
 

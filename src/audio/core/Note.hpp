@@ -26,7 +26,7 @@ struct Note {
 
     static const int NOTES_PER_OCTAVE = 12;
 
-    Note(Key key, int octave = 5) noexcept;
+    Note(Key key, int octave = 0) noexcept;
 
     // Order notes first by octave, then by key
     bool operator<(const Note& other) const noexcept;

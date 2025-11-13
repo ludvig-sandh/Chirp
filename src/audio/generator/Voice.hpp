@@ -22,7 +22,7 @@ public:
     // Updates the waveform
     void SetWaveformType(Audio::Core::WaveformInfo::Type type);
 
-    // Updates the octave number
+    // Updates the octave offset number
     void SetOctave(int octave);
     
     // Tells the envelope to go into "release" state to fade out the note

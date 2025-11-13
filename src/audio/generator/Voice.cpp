@@ -30,7 +30,7 @@ void Voice::SetWaveformType(Audio::Core::WaveformInfo::Type type) {
 }
 
 void Voice::SetOctave(int octave) {
-    freq.SetPitch((octave - 5) * 12);
+    freq.SetPitch(octave * Audio::Core::Note::NOTES_PER_OCTAVE);
 }
 
 void Voice::Release() {

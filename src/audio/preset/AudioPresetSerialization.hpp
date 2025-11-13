@@ -98,7 +98,7 @@ inline void FromJson(const json& j, AudioPreset& p) {
     get(p.synthOscAOn, "synthOscAOn", true);
     get(p.synthOscAVolume, "synthOscAVolume", 0.7f);
     get(p.synthOscAPan, "synthOscAPan", 0.5f);
-    get(p.synthOscAOctave, "synthOscAOctave", 5);
+    get(p.synthOscAOctave, "synthOscAOctave", 0);
 
     p.synthOscBWaveform.store(static_cast<Audio::Core::WaveformInfo::Type>(
         j.value("synthOscBWaveform", static_cast<int>(Audio::Core::WaveformInfo::Type::Saw))
@@ -106,7 +106,7 @@ inline void FromJson(const json& j, AudioPreset& p) {
     get(p.synthOscBOn, "synthOscBOn", false);
     get(p.synthOscBVolume, "synthOscBVolume", 0.7f);
     get(p.synthOscBPan, "synthOscBPan", 0.5f);
-    get(p.synthOscBOctave, "synthOscBOctave", 5);
+    get(p.synthOscBOctave, "synthOscBOctave", 0);
 
     get(p.synthOscAttack, "synthOscAttack", 0.0f);
     get(p.synthOscHold, "synthOscHold", 0.0f);

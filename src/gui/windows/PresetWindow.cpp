@@ -92,7 +92,7 @@ void PresetWindow::DrawOscillatorA() const {
     m_preset->synthOscAPan.store(oscAPanTemp);
 
     int oscAOctaveTemp = m_preset->synthOscAOctave.load();
-    ImGui::SliderInt("Octave##A", &oscAOctaveTemp, 1, 7);
+    ImGui::SliderInt("Octave##A", &oscAOctaveTemp, -4, 4);
     m_preset->synthOscAOctave.store(oscAOctaveTemp);
 }
 
@@ -131,7 +131,7 @@ void PresetWindow::DrawOscillatorB() const {
     m_preset->synthOscBPan.store(oscBPanTemp);
 
     int oscBOctaveTemp = m_preset->synthOscBOctave.load();
-    ImGui::SliderInt("Octave##B", &oscBOctaveTemp, 1, 7);
+    ImGui::SliderInt("Octave##B", &oscBOctaveTemp, -4, 4);
     m_preset->synthOscBOctave.store(oscBOctaveTemp);
 }
 

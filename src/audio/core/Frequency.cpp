@@ -35,14 +35,26 @@ void Frequency::AddPitchModulation(float semitones) noexcept {
 float Frequency::GetAbsolute() const noexcept {
     // The maximum pitch we should support is half the sample rate (Nyquist theorem)
     // Otherwise we'd get foldback aliasing.
-    float actual = m_hertz * std::pow(2.0, (m_pitchBase + m_pitchModulation) / Note::NOTES_PER_OCTAVE);
+    float actual = m_hertz * std::exp2((m_pitchBase + m_pitchModulation) / Note::NOTES_PER_OCTAVE);
     return std::min(actual, static_cast<float>(Audio::Engine::Constants::SAMPLE_RATE / 2.0));
 }
 
 float Frequency::ConvertNoteToHz(Note note) noexcept {
-    const float A5 = 440.0f;
-    static const float twelvethSq2 = std::pow(2.0f, 1.0f / 12.0f); // Twelveth square root of two
-    float hz = A5 * std::pow(twelvethSq2, static_cast<float>(note.key)) * std::pow(2.0f, static_cast<float>(note.octave - 5));
+    static const float A5 = 440.0f;
+    static const float A0 = A5 / 32.0f; // Divide by 2 five times to go down five octaves
+    static const float numKeysFromCToA = 9;
+    
+    // Go down from A to C
+    static const float C0 = A0 * std::exp2(-numKeysFromCToA / 12.0f); // C0 = A0 * 2^(-9/12)
+
+    // keyFactor = 2^(key/12)
+    const float keyFactor = std::exp2(static_cast<float>(note.key) / 12.0f);
+    
+    // octaveFactor = 2^octave
+    const float octaveFactor = std::exp2(static_cast<float>(note.octave));
+
+    // Compute relative to C0, because that's what note {0, 0} represents
+    const float hz = C0 * keyFactor * octaveFactor;
     return hz;
 }
 

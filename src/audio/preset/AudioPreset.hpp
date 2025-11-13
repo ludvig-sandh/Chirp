@@ -19,13 +19,13 @@ struct AudioPreset {
     std::atomic<bool> synthOscAOn { true };
     std::atomic<float> synthOscAVolume { 0.7f };
     std::atomic<float> synthOscAPan { 0.5f };
-    std::atomic<int> synthOscAOctave { 5 };
+    std::atomic<int> synthOscAOctave { 0 };
 
     std::atomic<Audio::Core::WaveformInfo::Type> synthOscBWaveform { Audio::Core::WaveformInfo::Type::Saw };
     std::atomic<bool> synthOscBOn { false };
     std::atomic<float> synthOscBVolume { 0.7f };
     std::atomic<float> synthOscBPan { 0.5f };
-    std::atomic<int> synthOscBOctave { 5 };
+    std::atomic<int> synthOscBOctave { 0 };
 
     std::atomic<float> synthOscAttack { 0.0f };
     std::atomic<float> synthOscHold { 0.0f };

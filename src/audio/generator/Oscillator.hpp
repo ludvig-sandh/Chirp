@@ -29,9 +29,10 @@ public:
     // Update the envelope used for note volume
     void SetEnvelope(Audio::Modulation::Envelope envelope);
 
-    // Updates the octave used for the root note A5 at 440Hz (5 is default, per definition)
+    // Updates the octave offset (for example 1 means every note is played 1 octave higher)
     void SetOctave(int octave);
 
+    // Apply a modulation to this destination
     void ApplyModulation(float amount, Modulation::Type modType) noexcept override;
 
     // Clears all modulations accumulated from LFOs in the last frame so they can modulate the next one
@@ -47,7 +48,6 @@ private:
     Audio::Core::WaveformInfo::Type m_waveformType;
     Audio::Modulation::Envelope m_env;
     std::vector<Voice> m_voices;
-    int octave = 5;
 };
 
 } // namespace Audio::Generator
