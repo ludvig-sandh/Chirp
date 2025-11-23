@@ -80,9 +80,9 @@ std::vector<UIKey> KeyboardWindow::HelpCreateKeys(int keyboardWidth) {
     std::vector<UIKey> result;
     result.reserve(std::abs(FIRST_NOTE - LAST_NOTE) + 1);
 
-    int numWhiteKeys = HelpCountWhiteKeys();
-    float whiteKeyWidth = static_cast<float>(keyboardWidth - KEYBOARD_PADDING) / numWhiteKeys;
-    float blackKeyWidth = whiteKeyWidth / WHITE_TO_BLACK_KEY_WIDTH_RATIO;
+    const int numWhiteKeys = HelpCountWhiteKeys();
+    const float whiteKeyWidth = static_cast<float>(keyboardWidth - KEYBOARD_PADDING) / numWhiteKeys;
+    const float blackKeyWidth = whiteKeyWidth / WHITE_TO_BLACK_KEY_WIDTH_RATIO;
     float x = 0.0f;
     for (Audio::Core::Note note = FIRST_NOTE; note <= LAST_NOTE; ++note) {
         ImVec2 keyMin;
