@@ -78,7 +78,7 @@ void KeyboardWindow::ConfigureWindow() const {
 
 std::vector<UIKey> KeyboardWindow::HelpCreateKeys(int keyboardWidth) {
     std::vector<UIKey> result;
-    result.reserve(std::abs(FIRST_NOTE - LAST_NOTE));
+    result.reserve(std::abs(FIRST_NOTE - LAST_NOTE) + 1);
 
     int numWhiteKeys = HelpCountWhiteKeys();
     float whiteKeyWidth = static_cast<float>(keyboardWidth - KEYBOARD_PADDING) / numWhiteKeys;
