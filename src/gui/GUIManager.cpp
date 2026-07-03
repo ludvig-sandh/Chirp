@@ -196,6 +196,8 @@ GLFWwindow *GUIManager::InitAux() {
 }
 
 void GUIManager::DeinitAux() {
+    m_spectrogram.Shutdown();
+
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

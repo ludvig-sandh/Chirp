@@ -34,7 +34,7 @@ endif()
 #
 # Collect only the core sources (not src/external)
 #
-file(GLOB CHIRP_CORE_SRCS
+file(GLOB CHIRP_CORE_SRCS CONFIGURE_DEPENDS
     src/*.cpp
     src/audio/*.cpp
     src/audio/core/*.cpp

@@ -3,10 +3,9 @@
 
 #pragma once
 
+#include "gui/windows/helper/SpectrogramRenderer.hpp"
 #include "imgui.h"
-#include <GLFW/glfw3.h>
 #include <vector>
-#include <array>
 
 namespace GUI::Window {
 
@@ -25,23 +24,20 @@ public:
     // create texture once. Must be done after GL context has been initialized
     void InitTexture();
 
-    void ReallocateTexture();
+    // release GPU resources before the OpenGL context is destroyed
+    void Shutdown();
 
 private:
     void ConfigureWindow() const;
-
-    // Turns a magnitude in range [0, 1] into an array of RGBA colors
-    static std::array<unsigned char, 4> MagnitudeToRGBA(float mag);
 
     // Dimensions of spectrogram image element
     static const int UI_IMAGE_HEIGHT = 256;
     static const int UI_IMAGE_WIDTH = 512;
 
-    GLuint m_spectrogramTex = 0;
     int m_currentColumn = 0;
     int m_specHeight = 0; // dynamically set from magnitudes size
     static constexpr int SPEC_WIDTH = 256; // number of time slices visible
-    std::vector<std::vector<float>> m_magnitudeHistory;
+    Helper::SpectrogramRenderer m_renderer;
 };
 
 } // namespace GUI::Window
